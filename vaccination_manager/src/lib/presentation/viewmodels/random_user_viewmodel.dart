@@ -1,15 +1,24 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vaccination_manager/data/models/random_user_model.dart';
 import 'package:vaccination_manager/data/repositories/random_user_repository.dart';
+import 'package:vaccination_manager/domain/entities/random_user_entity.dart';
 import 'package:vaccination_manager/domain/usecases/fetch_random_user_usecase.dart';
 
-final randomUserProvider = AsyncNotifierProvider<RandomUserViewModel, RandomUser>(RandomUserViewModel.new);
+final randomUserRepositoryProvider = Provider<RandomUserRepositoryImpl>((ref) {
+  return RandomUserRepositoryImpl();
+});
 
-class RandomUserViewModel extends AsyncNotifier<RandomUser> {
-  final FetchRandomUserUseCase _fetchUser = FetchRandomUserUseCase(RandomUserRepository());
+final fetchRandomUserUseCaseProvider = Provider<FetchRandomUserUseCase>((ref) {
+  return FetchRandomUserUseCase(ref.read(randomUserRepositoryProvider));
+});
+
+final randomUserProvider = AsyncNotifierProvider<RandomUserViewModel, RandomUserEntity>(RandomUserViewModel.new);
+
+class RandomUserViewModel extends AsyncNotifier<RandomUserEntity> {
+  late final FetchRandomUserUseCase _fetchUser;
 
   @override
-  Future<RandomUser> build() async {
+  Future<RandomUserEntity> build() async {
+    _fetchUser = ref.read(fetchRandomUserUseCaseProvider);
     return await _fetchUser();
   }
 

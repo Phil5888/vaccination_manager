@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:vaccination_manager/data/models/random_user_model.dart';
+import 'package:vaccination_manager/domain/entities/random_user_entity.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 
 class RandomUserInfoCard extends StatelessWidget {
-  final RandomUser user;
+  final RandomUserEntity user;
   final VoidCallback? onEdit;
 
   const RandomUserInfoCard({super.key, required this.user, this.onEdit});
