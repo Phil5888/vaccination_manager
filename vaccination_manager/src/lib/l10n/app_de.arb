@@ -7,20 +7,14 @@
     "german": "Deutsch",
     "theme": "Thema",
     "darkMode": "Dunkelmodus",
-    "randomUser": "Zufälliger Benutzer",
     "error": "Fehler",
-    "gender": "Geschlecht",
     "menue": "Menü",
     "dashboard": "Dashboard",
-    "firstName": "Vorname",
-    "lastName": "Nachname",
     "save": "Speichern",
     "cancel": "Abbrechen",
     "edit": "Bearbeiten",
-    "saveNameSuccess": "Name erfolgreich gespeichert!",
     "on": "An",
     "off": "Aus",
-    "nameSaved": "Name gespeichert",
     "users": "Benutzer",
     "welcomeTitle": "Willkommen beim Impfmanager",
     "welcomeBody": "Erstellen Sie das erste Benutzerprofil, um Impfungen zu verwalten.",
@@ -41,6 +35,13 @@
     "currentUser": "Aktuell",
     "singleUserHint": "Nur ein Benutzer ist auf diesem Gerät gespeichert.",
     "multipleUsersHint": "{count} Benutzer sind auf diesem Gerät gespeichert.",
+    "@multipleUsersHint": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
     "saveUserSuccess": "Benutzer erfolgreich gespeichert.",
     "usernameValidation": "Bitte geben Sie einen Benutzernamen ein."
 }

@@ -28,17 +28,9 @@
     "@darkMode": {
         "description": "Toggle label for dark mode switch"
     },
-    "randomUser": "Random User",
-    "@randomUser": {
-        "description": "Label for the Random User screen or drawer item"
-    },
     "error": "Error",
     "@error": {
         "description": "Generic error message label"
-    },
-    "gender": "Gender",
-    "@gender": {
-        "description": "Label used to describe user gender"
     },
     "menue": "Menu",
     "@menue": {
@@ -47,14 +39,6 @@
     "dashboard": "Dashboard",
     "@dashboard": {
         "description": "Title for the dashboard screen"
-    },
-    "firstName": "First Name",
-    "@firstName": {
-        "description": "Label for the first name input field"
-    },
-    "lastName": "Last Name",
-    "@lastName": {
-        "description": "Label for the last name input field"
     },
     "save": "Save",
     "@save": {
@@ -68,10 +52,6 @@
     "@edit": {
         "description": "Label for the edit button"
     },
-    "saveNameSuccess": "Name saved successfully!",
-    "@saveNameSuccess": {
-        "description": "Message displayed when the user's name is saved successfully"
-    },
     "on": "on",
     "@on": {
         "description": "Label indicating that a feature is enabled or active"
@@ -79,10 +59,6 @@
     "off": "off",
     "@off": {
         "description": "Label indicating that a feature is disabled or inactive"
-    },
-    "nameSaved": "Name saved successfully",
-    "@nameSaved": {
-        "description": "Toast message shown after the user's name is updated"
     },
     "users": "Users",
     "@users": {

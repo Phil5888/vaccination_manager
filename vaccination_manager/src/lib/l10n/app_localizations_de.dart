@@ -30,25 +30,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get darkMode => 'Dunkelmodus';
 
   @override
-  String get randomUser => 'Zufälliger Benutzer';
-
-  @override
   String get error => 'Fehler';
-
-  @override
-  String get gender => 'Geschlecht';
 
   @override
   String get menue => 'Menü';
 
   @override
   String get dashboard => 'Dashboard';
-
-  @override
-  String get firstName => 'Vorname';
-
-  @override
-  String get lastName => 'Nachname';
 
   @override
   String get save => 'Speichern';
@@ -60,16 +48,10 @@ class AppLocalizationsDe extends AppLocalizations {
   String get edit => 'Bearbeiten';
 
   @override
-  String get saveNameSuccess => 'Name erfolgreich gespeichert!';
-
-  @override
   String get on => 'An';
 
   @override
   String get off => 'Aus';
-
-  @override
-  String get nameSaved => 'Name gespeichert';
 
   @override
   String get users => 'Benutzer';

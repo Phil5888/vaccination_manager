@@ -11,13 +11,8 @@ dependencies:
         sdk: flutter
     file_selector: ^1.0.3
     flutter_riverpod: ^3.1.0
-    freezed: ^3.0.6
-    freezed_annotation: ^3.0.0
-    http: ^1.4.0
-    json_serializable: ^6.9.5
-    riverpod_annotation: ^4.0.0
-    json_annotation: ^4.9.0
     path: ^1.9.1
+    riverpod_annotation: ^4.0.0
     shared_preferences: ^2.5.3
     sqflite: ^2.4.2
     flutter_localizations:
@@ -28,9 +23,8 @@ dev_dependencies:
     flutter_test:
         sdk: flutter
     flutter_lints: ^6.0.0
-    riverpod_generator: ^4.0.0+1
-    build_runner: ^2.5.3
     custom_lint: ^0.8.1
+    riverpod_generator: ^4.0.0+1
     riverpod_lint: ^3.1.0
 
 flutter:

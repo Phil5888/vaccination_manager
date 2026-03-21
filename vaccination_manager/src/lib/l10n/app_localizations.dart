@@ -137,23 +137,11 @@ abstract class AppLocalizations {
   /// **'Dark Mode'**
   String get darkMode;
 
-  /// Label for the Random User screen or drawer item
-  ///
-  /// In en, this message translates to:
-  /// **'Random User'**
-  String get randomUser;
-
   /// Generic error message label
   ///
   /// In en, this message translates to:
   /// **'Error'**
   String get error;
-
-  /// Label used to describe user gender
-  ///
-  /// In en, this message translates to:
-  /// **'Gender'**
-  String get gender;
 
   /// Drawer header title
   ///
@@ -166,18 +154,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Dashboard'**
   String get dashboard;
-
-  /// Label for the first name input field
-  ///
-  /// In en, this message translates to:
-  /// **'First Name'**
-  String get firstName;
-
-  /// Label for the last name input field
-  ///
-  /// In en, this message translates to:
-  /// **'Last Name'**
-  String get lastName;
 
   /// Label for the save button
   ///
@@ -197,12 +173,6 @@ abstract class AppLocalizations {
   /// **'Edit'**
   String get edit;
 
-  /// Message displayed when the user's name is saved successfully
-  ///
-  /// In en, this message translates to:
-  /// **'Name saved successfully!'**
-  String get saveNameSuccess;
-
   /// Label indicating that a feature is enabled or active
   ///
   /// In en, this message translates to:
@@ -214,12 +184,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'off'**
   String get off;
-
-  /// Toast message shown after the user's name is updated
-  ///
-  /// In en, this message translates to:
-  /// **'Name saved successfully'**
-  String get nameSaved;
 
   /// Label for the user management section
   ///
