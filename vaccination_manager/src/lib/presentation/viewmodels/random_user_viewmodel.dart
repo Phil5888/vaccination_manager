@@ -6,12 +6,10 @@ import 'package:vaccination_manager/domain/usecases/fetch_random_user_usecase.da
 final randomUserProvider = AsyncNotifierProvider<RandomUserViewModel, RandomUser>(RandomUserViewModel.new);
 
 class RandomUserViewModel extends AsyncNotifier<RandomUser> {
-  late final FetchRandomUserUseCase _fetchUser;
+  final FetchRandomUserUseCase _fetchUser = FetchRandomUserUseCase(RandomUserRepository());
 
   @override
   Future<RandomUser> build() async {
-    final repository = RandomUserRepository();
-    _fetchUser = FetchRandomUserUseCase(repository);
     return await _fetchUser();
   }
 
