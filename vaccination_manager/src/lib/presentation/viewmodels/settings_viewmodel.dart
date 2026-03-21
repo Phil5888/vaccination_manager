@@ -13,11 +13,14 @@ class SettingsState {
   }
 }
 
-class SettingsViewModel extends StateNotifier<SettingsState> {
-  final SettingsRepository _repo;
+class SettingsViewModel extends Notifier<SettingsState> {
+  late final SettingsRepository _repo;
 
-  SettingsViewModel(this._repo) : super(SettingsState(locale: Locale('en'), isDarkMode: false)) {
+  @override
+  SettingsState build() {
+    _repo = SettingsRepository();
     _load();
+    return SettingsState(locale: const Locale('en'), isDarkMode: false);
   }
 
   Future<void> _load() async {
@@ -39,4 +42,4 @@ class SettingsViewModel extends StateNotifier<SettingsState> {
   }
 }
 
-final settingsProvider = StateNotifierProvider<SettingsViewModel, SettingsState>((ref) => SettingsViewModel(SettingsRepository()));
+final settingsProvider = NotifierProvider<SettingsViewModel, SettingsState>(SettingsViewModel.new);
