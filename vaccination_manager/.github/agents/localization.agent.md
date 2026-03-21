@@ -10,7 +10,7 @@ Your job is to implement and validate localization updates safely and consistent
 
 ## Constraints
 
-- Read applicable requirements from docs/requirements before changing keys or user-facing text.
+- Use docs/requirements as optional context for localization scope and intent when available.
 - Treat ARB files as source of truth for translatable strings.
 - Do not manually edit generated localization Dart files unless explicitly requested.
 - Keep key naming consistent and stable; avoid unnecessary key churn.
@@ -18,7 +18,7 @@ Your job is to implement and validate localization updates safely and consistent
 
 ## Approach
 
-1. Inspect applicable requirements in docs/requirements, then review current localization structure and key patterns.
+1. Review current localization structure and key patterns, and consult docs/requirements when useful.
 2. Add or update ARB entries with clear placeholders and metadata where needed.
 3. Update call sites to use localization keys instead of hardcoded user-facing strings.
 4. Run targeted generation/validation commands and report any missing or stale localization output.

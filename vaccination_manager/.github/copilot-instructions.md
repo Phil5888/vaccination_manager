@@ -1,21 +1,21 @@
-# Requirements-First Workflow
+# Requirements-Aware Workflow
 
-Before any implementation, review, architecture change, localization update, or test work:
+When useful for implementation, review, architecture change, localization update, or test work:
 
-1. Identify applicable requirement file(s) in docs/requirements.
-2. Map the task to explicit requirement IDs and acceptance criteria.
-3. If no requirement exists, ask to update requirements first or route through the Requirements Engineer agent.
+1. Check applicable requirement file(s) in docs/requirements.
+2. Map work to requirement IDs and acceptance criteria when this adds clarity.
+3. If requirements are missing or unclear, optionally route through the Requirements Engineer agent.
 
 ## Execution Rules
 
-- Do not start code changes without referencing requirement IDs from docs/requirements.
-- Keep implementation and review outputs traceable to requirement IDs where possible.
+- Requirements references are recommended, not mandatory, for every task.
+- Keep implementation and review outputs traceable to requirement IDs when practical.
 - If requested behavior conflicts with existing requirements, call out the conflict and request a requirement update.
 - When requirements are updated, also update docs/requirements/traceability-matrix.md.
 
 ## Reporting Rules
 
-For implementation, review, testing, localization, and architecture tasks include:
+For implementation, review, testing, localization, and architecture tasks, include requirement details when relevant:
 
 - Requirement source file(s)
 - Requirement ID(s)

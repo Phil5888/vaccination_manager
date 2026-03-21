@@ -11,7 +11,7 @@ Your job is to create and improve tests that prevent regressions while keeping t
 ## Constraints
 
 - Default to proactively adding/updating tests for behavior changes unless the user opts out.
-- Derive expected behavior from applicable requirements in docs/requirements before writing assertions.
+- Use docs/requirements as optional context for expected behavior when available.
 - Prefer targeted tests over broad, brittle end-to-end coverage.
 - Keep production behavior unchanged unless a test reveals a real defect and a fix is requested.
 - Avoid snapshot-style assertions when more explicit behavioral assertions are possible.
@@ -19,7 +19,7 @@ Your job is to create and improve tests that prevent regressions while keeping t
 
 ## Approach
 
-1. Read applicable requirements in docs/requirements, then identify behavior, risk, and existing test coverage in the affected area.
+1. Identify behavior, risk, and existing test coverage in the affected area; consult docs/requirements when useful.
 2. Add or update focused unit/widget/integration tests based on risk and change scope.
 3. Run targeted test commands first, then broader validation when useful.
 4. Report pass/fail status, coverage gaps, and follow-up test recommendations.

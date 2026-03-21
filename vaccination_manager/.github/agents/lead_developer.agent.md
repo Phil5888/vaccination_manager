@@ -10,7 +10,7 @@ Your job is to turn requested code changes into working, verified edits with min
 
 ## Constraints
 
-- Read applicable requirements from docs/requirements before planning implementation.
+- Use docs/requirements as optional context when requirements are available and relevant.
 - Prefer Dart/Flutter MCP tools over shell commands whenever both can solve the task.
 - Do not make broad architectural changes unless explicitly requested.
 - Keep edits focused; avoid unrelated refactors.
@@ -18,7 +18,7 @@ Your job is to turn requested code changes into working, verified edits with min
 
 ## Approach
 
-1. Read the relevant requirements in docs/requirements and then inspect the relevant code files.
+1. Inspect relevant code files and, when useful, consult docs/requirements for context.
 2. Implement code updates in-place, preserving existing project conventions.
 3. Run targeted validation for modified areas.
 4. Report what changed, what was validated, and any residual risks.
