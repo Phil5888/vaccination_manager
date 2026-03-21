@@ -1,0 +1,87 @@
+{
+    "@@locale": "en",
+    "title": "Flutter Playground",
+    "@title": {
+        "description": "The app's main title displayed in the AppBar"
+    },
+    "settings": "Settings",
+    "@settings": {
+        "description": "Label for the settings page or drawer item"
+    },
+    "language": "Language",
+    "@language": {
+        "description": "Label for the language selection dropdown"
+    },
+    "english": "English",
+    "@english": {
+        "description": "English language label"
+    },
+    "german": "German",
+    "@german": {
+        "description": "German language label"
+    },
+    "theme": "Theme",
+    "@theme": {
+        "description": "Label for the theme settings section"
+    },
+    "darkMode": "Dark Mode",
+    "@darkMode": {
+        "description": "Toggle label for dark mode switch"
+    },
+    "randomUser": "Random User",
+    "@randomUser": {
+        "description": "Label for the Random User screen or drawer item"
+    },
+    "error": "Error",
+    "@error": {
+        "description": "Generic error message label"
+    },
+    "gender": "Gender",
+    "@gender": {
+        "description": "Label used to describe user gender"
+    },
+    "menue": "Menu",
+    "@menue": {
+        "description": "Drawer header title"
+    },
+    "dashboard": "Dashboard",
+    "@dashboard": {
+        "description": "Title for the dashboard screen"
+    },
+    "firstName": "First Name",
+    "@firstName": {
+        "description": "Label for the first name input field"
+    },
+    "lastName": "Last Name",
+    "@lastName": {
+        "description": "Label for the last name input field"
+    },
+    "save": "Save",
+    "@save": {
+        "description": "Label for the save button"
+    },
+    "cancel": "Cancel",
+    "@cancel": {
+        "description": "Label for the cancel button"
+    },
+    "edit": "Edit",
+    "@edit": {
+        "description": "Label for the edit button"
+    },
+    "saveNameSuccess": "Name saved successfully!",
+    "@saveNameSuccess": {
+        "description": "Message displayed when the user's name is saved successfully"
+    },
+    "on": "on",
+    "@on": {
+        "description": "Label indicating that a feature is enabled or active"
+    },
+    "off": "off",
+    "@off": {
+        "description": "Label indicating that a feature is disabled or inactive"
+    },
+    "nameSaved": "Name saved successfully",
+    "@nameSaved": {
+        "description": "Toast message shown after the user's name is updated"
+    }
+}

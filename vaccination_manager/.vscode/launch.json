@@ -1,0 +1,78 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "debug mobile",
+            "cwd": "src",
+            "request": "launch",
+            "flutterMode": "debug",
+            "type": "dart"
+        },
+        {
+            "name": "release mobile",
+            "cwd": "src",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        // {
+        //     "name": "src (release mode)",
+        //     "cwd": "src",
+        //     "request": "launch",
+        //     "type": "dart",
+        //     "flutterMode": "release"
+        // },
+        {
+            "name": "debug web",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "args": ["-d", "chrome", "--web-port=3000"],
+            "program": "src/lib/main.dart"
+        },
+        {
+            "name": "release web",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "args": ["-d", "chrome"],
+            "program": "src/lib/main.dart"
+        },
+        {
+            "name": "debug desktop",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "debug",
+            "program": "src/lib/main.dart"
+        },
+        {
+            "name": "release desktop",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release",
+            "program": "src/lib/main.dart"
+        },
+        {
+            "name": "debug server",
+            "request": "launch",
+            "type": "dart",
+            "program": "src/bin/server.dart"
+        },
+        {
+            "name": "release server",
+            "request": "launch",
+            "type": "dart",
+            "program": "src/bin/server.dart",
+            "args": ["--release"]
+        },
+        {
+            "name": "All Tests",
+            "type": "dart",
+            "request": "launch",
+            "program": "src/test/" // or test/foo for a subset of tests
+        }
+    ]
+}
