@@ -4,9 +4,9 @@ import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:vaccination_manager/presentation/navigation/route_aware_widget.dart';
 import 'package:vaccination_manager/presentation/screens/dashboard/dashboard_screen.dart';
-import 'package:vaccination_manager/presentation/screens/random_user/random_user_edit_screen.dart';
-import 'package:vaccination_manager/presentation/screens/random_user/random_user_screen.dart';
 import 'package:vaccination_manager/presentation/screens/settings/settings_screen.dart';
+import 'package:vaccination_manager/presentation/screens/users/user_edit_screen.dart';
+import 'package:vaccination_manager/presentation/screens/users/user_management_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -20,7 +20,7 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   bool _isRailExtended = true;
 
-  final _routes = [Routes.dashboard, Routes.randomUser, Routes.settings];
+  final _routes = [Routes.dashboard, Routes.users, Routes.settings];
 
   void _onItemTapped(int index) {
     if (_selectedIndex == index) return;
@@ -61,13 +61,13 @@ class _MainScreenState extends State<MainScreen> {
                   onGenerateRoute: (settings) {
                     switch (settings.name) {
                       case Routes.dashboard:
-                        return _buildRoute(Routes.dashboard, DashboardScreen());
-                      case Routes.randomUser:
-                        return _buildRoute(Routes.randomUser, RandomUserScreen());
-                      case Routes.randomUserEdit:
-                        return _buildRoute(Routes.randomUserEdit, RandomUserEditScreen());
+                        return _buildRoute(Routes.dashboard, const DashboardScreen());
+                      case Routes.users:
+                        return _buildRoute(Routes.users, const UserManagementScreen());
+                      case Routes.userEdit:
+                        return _buildRoute(Routes.userEdit, UserEditScreen(initialUser: settings.arguments as dynamic));
                       case Routes.settings:
-                        return _buildRoute(Routes.settings, SettingsScreen());
+                        return _buildRoute(Routes.settings, const SettingsScreen());
                       default:
                         return MaterialPageRoute(
                           builder: (_) => const Scaffold(body: Center(child: Text('404 - Route Not Found'))),
@@ -105,7 +105,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       destinations: [
         NavigationRailDestination(icon: const Icon(Icons.dashboard), label: Text(local.dashboard)),
-        NavigationRailDestination(icon: const Icon(Icons.person), label: Text(local.randomUser)),
+        NavigationRailDestination(icon: const Icon(Icons.people), label: Text(local.users)),
         NavigationRailDestination(icon: const Icon(Icons.settings), label: Text(local.settings)),
       ],
     );
@@ -129,8 +129,8 @@ class _MainScreenState extends State<MainScreen> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.person),
-            title: Text(local.randomUser),
+            leading: const Icon(Icons.people),
+            title: Text(local.users),
             selected: _selectedIndex == 1,
             onTap: () {
               _onItemTapped(1);

@@ -62,8 +62,7 @@ import 'app_localizations_en.dart';
 /// be consistent with the languages listed in the AppLocalizations.supportedLocales
 /// property.
 abstract class AppLocalizations {
-  AppLocalizations(String locale)
-    : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
 
   final String localeName;
 
@@ -71,8 +70,7 @@ abstract class AppLocalizations {
     return Localizations.of<AppLocalizations>(context, AppLocalizations);
   }
 
-  static const LocalizationsDelegate<AppLocalizations> delegate =
-      _AppLocalizationsDelegate();
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
 
   /// A list of this localizations delegate along with the default localizations
   /// delegates.
@@ -84,18 +82,17 @@ abstract class AppLocalizations {
   /// Additional delegates can be added by appending to this list in
   /// MaterialApp. This list does not have to be used at all if a custom list
   /// of delegates is preferred or required.
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
-      <LocalizationsDelegate<dynamic>>[
-        delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-      ];
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = <LocalizationsDelegate<dynamic>>[
+    delegate,
+    GlobalMaterialLocalizations.delegate,
+    GlobalCupertinoLocalizations.delegate,
+    GlobalWidgetsLocalizations.delegate,
+  ];
 
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('de'),
-    Locale('en'),
+    Locale('en')
   ];
 
   /// The app's main title displayed in the AppBar
@@ -223,10 +220,141 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Name saved successfully'**
   String get nameSaved;
+
+  /// Label for the user management section
+  ///
+  /// In en, this message translates to:
+  /// **'Users'**
+  String get users;
+
+  /// Title shown when no user exists yet
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Vaccination Manager'**
+  String get welcomeTitle;
+
+  /// Body text shown on the welcome screen
+  ///
+  /// In en, this message translates to:
+  /// **'Create the first user profile to start managing vaccinations.'**
+  String get welcomeBody;
+
+  /// Primary action label to create the first user
+  ///
+  /// In en, this message translates to:
+  /// **'Create first user'**
+  String get createFirstUser;
+
+  /// Label for the username field
+  ///
+  /// In en, this message translates to:
+  /// **'Username'**
+  String get username;
+
+  /// Label for the profile picture selector
+  ///
+  /// In en, this message translates to:
+  /// **'Profile picture'**
+  String get profilePicture;
+
+  /// Button label to pick a profile picture
+  ///
+  /// In en, this message translates to:
+  /// **'Choose picture'**
+  String get choosePicture;
+
+  /// Button label to replace the current profile picture
+  ///
+  /// In en, this message translates to:
+  /// **'Change picture'**
+  String get changePicture;
+
+  /// Button label to remove the selected profile picture
+  ///
+  /// In en, this message translates to:
+  /// **'Remove picture'**
+  String get removePicture;
+
+  /// Button label to switch the active user
+  ///
+  /// In en, this message translates to:
+  /// **'Switch user'**
+  String get switchUser;
+
+  /// Label for the user management screen
+  ///
+  /// In en, this message translates to:
+  /// **'Manage users'**
+  String get manageUsers;
+
+  /// Button label to add a new user
+  ///
+  /// In en, this message translates to:
+  /// **'Add user'**
+  String get addUser;
+
+  /// Button label to edit an existing user
+  ///
+  /// In en, this message translates to:
+  /// **'Edit profile'**
+  String get editProfile;
+
+  /// Label for the currently active user
+  ///
+  /// In en, this message translates to:
+  /// **'Active user'**
+  String get activeUser;
+
+  /// Headline shown when the app has no user profiles
+  ///
+  /// In en, this message translates to:
+  /// **'No users yet'**
+  String get noUsersTitle;
+
+  /// Help text shown when no users exist
+  ///
+  /// In en, this message translates to:
+  /// **'Add a user to personalize the app with a name and profile picture.'**
+  String get noUsersBody;
+
+  /// Title for the quick user switch sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Switch active user'**
+  String get quickSwitchTitle;
+
+  /// Label shown next to the current active user
+  ///
+  /// In en, this message translates to:
+  /// **'Current'**
+  String get currentUser;
+
+  /// Hint shown when there is only one user
+  ///
+  /// In en, this message translates to:
+  /// **'Only one user is stored on this device.'**
+  String get singleUserHint;
+
+  /// Hint shown when multiple users are available
+  ///
+  /// In en, this message translates to:
+  /// **'{count} users are stored on this device.'**
+  String multipleUsersHint(int count);
+
+  /// Message shown after a user profile is saved
+  ///
+  /// In en, this message translates to:
+  /// **'User saved successfully.'**
+  String get saveUserSuccess;
+
+  /// Validation message shown when the username is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a username.'**
+  String get usernameValidation;
 }
 
-class _AppLocalizationsDelegate
-    extends LocalizationsDelegate<AppLocalizations> {
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
   const _AppLocalizationsDelegate();
 
   @override
@@ -235,26 +363,25 @@ class _AppLocalizationsDelegate
   }
 
   @override
-  bool isSupported(Locale locale) =>
-      <String>['de', 'en'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['de', 'en'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
 }
 
 AppLocalizations lookupAppLocalizations(Locale locale) {
+
+
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
-    case 'de':
-      return AppLocalizationsDe();
-    case 'en':
-      return AppLocalizationsEn();
+    case 'de': return AppLocalizationsDe();
+    case 'en': return AppLocalizationsEn();
   }
 
   throw FlutterError(
     'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
     'an issue with the localizations generation tool. Please file an issue '
     'on GitHub with a reproducible sample app and the gen-l10n configuration '
-    'that was used.',
+    'that was used.'
   );
 }

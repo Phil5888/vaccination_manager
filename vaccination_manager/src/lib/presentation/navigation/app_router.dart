@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:vaccination_manager/core/constants/routes.dart';
-import 'package:vaccination_manager/presentation/screens/main/main_screen.dart';
-import 'package:vaccination_manager/presentation/screens/random_user/random_user_edit_screen.dart';
+import 'package:vaccination_manager/domain/entities/app_user_entity.dart';
+import 'package:vaccination_manager/presentation/screens/users/user_edit_screen.dart';
+import 'package:vaccination_manager/presentation/screens/users/user_management_screen.dart';
+import 'package:vaccination_manager/presentation/screens/welcome/welcome_screen.dart';
 
 class AppRouter {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case Routes.dashboard:
-        return MaterialPageRoute(builder: (_) => const MainScreen());
-      case Routes.randomUserEdit:
-        return MaterialPageRoute(builder: (_) => const RandomUserEditScreen());
+      case Routes.welcome:
+        return MaterialPageRoute(builder: (_) => const WelcomeScreen());
+      case Routes.users:
+        return MaterialPageRoute(builder: (_) => const UserManagementScreen());
+      case Routes.userEdit:
+        return MaterialPageRoute(builder: (_) => UserEditScreen(initialUser: settings.arguments as AppUserEntity?));
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(body: Center(child: Text('No route defined'))),

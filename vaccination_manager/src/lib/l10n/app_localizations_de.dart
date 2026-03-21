@@ -70,4 +70,72 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get nameSaved => 'Name gespeichert';
+
+  @override
+  String get users => 'Benutzer';
+
+  @override
+  String get welcomeTitle => 'Willkommen beim Impfmanager';
+
+  @override
+  String get welcomeBody => 'Erstellen Sie das erste Benutzerprofil, um Impfungen zu verwalten.';
+
+  @override
+  String get createFirstUser => 'Ersten Benutzer erstellen';
+
+  @override
+  String get username => 'Benutzername';
+
+  @override
+  String get profilePicture => 'Profilbild';
+
+  @override
+  String get choosePicture => 'Bild auswählen';
+
+  @override
+  String get changePicture => 'Bild ändern';
+
+  @override
+  String get removePicture => 'Bild entfernen';
+
+  @override
+  String get switchUser => 'Benutzer wechseln';
+
+  @override
+  String get manageUsers => 'Benutzer verwalten';
+
+  @override
+  String get addUser => 'Benutzer hinzufügen';
+
+  @override
+  String get editProfile => 'Profil bearbeiten';
+
+  @override
+  String get activeUser => 'Aktiver Benutzer';
+
+  @override
+  String get noUsersTitle => 'Noch keine Benutzer';
+
+  @override
+  String get noUsersBody => 'Fügen Sie einen Benutzer hinzu, um die App mit Namen und Profilbild zu personalisieren.';
+
+  @override
+  String get quickSwitchTitle => 'Aktiven Benutzer wechseln';
+
+  @override
+  String get currentUser => 'Aktuell';
+
+  @override
+  String get singleUserHint => 'Nur ein Benutzer ist auf diesem Gerät gespeichert.';
+
+  @override
+  String multipleUsersHint(int count) {
+    return '$count Benutzer sind auf diesem Gerät gespeichert.';
+  }
+
+  @override
+  String get saveUserSuccess => 'Benutzer erfolgreich gespeichert.';
+
+  @override
+  String get usernameValidation => 'Bitte geben Sie einen Benutzernamen ein.';
 }

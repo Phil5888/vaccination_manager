@@ -3,6 +3,9 @@ import 'package:vaccination_manager/core/utils/localization_utils.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vaccination_manager/presentation/viewmodels/settings_viewmodel.dart';
+import 'package:vaccination_manager/presentation/viewmodels/user_management_viewmodel.dart';
+import 'package:vaccination_manager/presentation/widgets/user_avatar.dart';
+import 'package:vaccination_manager/presentation/widgets/user_switcher_sheet.dart';
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -10,6 +13,7 @@ class SettingsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(settingsProvider);
+    final usersState = ref.watch(userManagementProvider);
     final notifier = ref.read(settingsProvider.notifier);
     final local = AppLocalizations.of(context)!;
 
@@ -27,6 +31,28 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: 24),
           Text(local.theme, style: TextStyle(fontSize: 18)),
           SwitchListTile(title: Text(local.darkMode), value: settings.isDarkMode, onChanged: notifier.setDarkMode),
+          const SizedBox(height: 24),
+          Text(local.activeUser, style: const TextStyle(fontSize: 18)),
+          const SizedBox(height: 12),
+          usersState.when(
+            loading: () => const LinearProgressIndicator(),
+            error: (error, _) => Text('${local.error}: $error'),
+            data: (state) {
+              final activeUser = state.activeUser;
+              if (activeUser == null) {
+                return Text(local.noUsersBody);
+              }
+
+              return Card(
+                child: ListTile(
+                  leading: UserAvatar(user: activeUser, radius: 22),
+                  title: Text(activeUser.username),
+                  subtitle: Text(state.users.length == 1 ? local.singleUserHint : local.multipleUsersHint(state.users.length)),
+                  trailing: FilledButton.tonal(onPressed: () => showUserSwitcherSheet(context, ref), child: Text(local.switchUser)),
+                ),
+              );
+            },
+          ),
         ],
       ),
     );

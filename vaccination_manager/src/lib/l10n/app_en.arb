@@ -83,5 +83,98 @@
     "nameSaved": "Name saved successfully",
     "@nameSaved": {
         "description": "Toast message shown after the user's name is updated"
+    },
+    "users": "Users",
+    "@users": {
+        "description": "Label for the user management section"
+    },
+    "welcomeTitle": "Welcome to Vaccination Manager",
+    "@welcomeTitle": {
+        "description": "Title shown when no user exists yet"
+    },
+    "welcomeBody": "Create the first user profile to start managing vaccinations.",
+    "@welcomeBody": {
+        "description": "Body text shown on the welcome screen"
+    },
+    "createFirstUser": "Create first user",
+    "@createFirstUser": {
+        "description": "Primary action label to create the first user"
+    },
+    "username": "Username",
+    "@username": {
+        "description": "Label for the username field"
+    },
+    "profilePicture": "Profile picture",
+    "@profilePicture": {
+        "description": "Label for the profile picture selector"
+    },
+    "choosePicture": "Choose picture",
+    "@choosePicture": {
+        "description": "Button label to pick a profile picture"
+    },
+    "changePicture": "Change picture",
+    "@changePicture": {
+        "description": "Button label to replace the current profile picture"
+    },
+    "removePicture": "Remove picture",
+    "@removePicture": {
+        "description": "Button label to remove the selected profile picture"
+    },
+    "switchUser": "Switch user",
+    "@switchUser": {
+        "description": "Button label to switch the active user"
+    },
+    "manageUsers": "Manage users",
+    "@manageUsers": {
+        "description": "Label for the user management screen"
+    },
+    "addUser": "Add user",
+    "@addUser": {
+        "description": "Button label to add a new user"
+    },
+    "editProfile": "Edit profile",
+    "@editProfile": {
+        "description": "Button label to edit an existing user"
+    },
+    "activeUser": "Active user",
+    "@activeUser": {
+        "description": "Label for the currently active user"
+    },
+    "noUsersTitle": "No users yet",
+    "@noUsersTitle": {
+        "description": "Headline shown when the app has no user profiles"
+    },
+    "noUsersBody": "Add a user to personalize the app with a name and profile picture.",
+    "@noUsersBody": {
+        "description": "Help text shown when no users exist"
+    },
+    "quickSwitchTitle": "Switch active user",
+    "@quickSwitchTitle": {
+        "description": "Title for the quick user switch sheet"
+    },
+    "currentUser": "Current",
+    "@currentUser": {
+        "description": "Label shown next to the current active user"
+    },
+    "singleUserHint": "Only one user is stored on this device.",
+    "@singleUserHint": {
+        "description": "Hint shown when there is only one user"
+    },
+    "multipleUsersHint": "{count} users are stored on this device.",
+    "@multipleUsersHint": {
+        "description": "Hint shown when multiple users are available",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "saveUserSuccess": "User saved successfully.",
+    "@saveUserSuccess": {
+        "description": "Message shown after a user profile is saved"
+    },
+    "usernameValidation": "Please enter a username.",
+    "@usernameValidation": {
+        "description": "Validation message shown when the username is empty"
     }
 }
