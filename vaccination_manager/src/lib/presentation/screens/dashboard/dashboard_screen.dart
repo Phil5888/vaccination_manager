@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
+import 'package:vaccination_manager/presentation/screens/dashboard/widgets/vaccination_preview.dart';
 import 'package:vaccination_manager/presentation/screens/dashboard/widgets/settings_preview.dart';
 import 'package:vaccination_manager/presentation/screens/dashboard/widgets/user_preview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -23,10 +24,12 @@ class DashboardScreen extends ConsumerWidget {
                     children: const [
                       Expanded(child: UserPreviewCard()),
                       SizedBox(width: 16),
+                      Expanded(child: VaccinationPreviewCard()),
+                      SizedBox(width: 16),
                       Expanded(child: SettingsPreviewCard()),
                     ],
                   )
-                : Column(children: const [UserPreviewCard(), SizedBox(height: 16), SettingsPreviewCard()]);
+                : Column(children: const [UserPreviewCard(), SizedBox(height: 16), VaccinationPreviewCard(), SizedBox(height: 16), SettingsPreviewCard()]);
           },
         ),
       ),

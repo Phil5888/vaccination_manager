@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/domain/entities/app_user_entity.dart';
+import 'package:vaccination_manager/presentation/screens/vaccinations/vaccination_edit_screen.dart';
+import 'package:vaccination_manager/presentation/screens/vaccinations/vaccinations_screen.dart';
 import 'package:vaccination_manager/presentation/screens/users/user_edit_screen.dart';
 import 'package:vaccination_manager/presentation/screens/users/user_management_screen.dart';
 import 'package:vaccination_manager/presentation/screens/welcome/welcome_screen.dart';
@@ -10,6 +12,10 @@ class AppRouter {
     switch (settings.name) {
       case Routes.welcome:
         return MaterialPageRoute(builder: (_) => const WelcomeScreen());
+      case Routes.vaccinations:
+        return MaterialPageRoute(builder: (_) => const VaccinationsScreen());
+      case Routes.vaccinationEdit:
+        return MaterialPageRoute(builder: (_) => VaccinationEditScreen(arguments: settings.arguments as VaccinationEditArguments?));
       case Routes.users:
         return MaterialPageRoute(builder: (_) => const UserManagementScreen());
       case Routes.userEdit:

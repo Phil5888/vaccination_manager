@@ -191,6 +191,12 @@ abstract class AppLocalizations {
   /// **'Users'**
   String get users;
 
+  /// Label for the vaccination section
+  ///
+  /// In en, this message translates to:
+  /// **'Vaccinations'**
+  String get vaccinations;
+
   /// Title shown when no user exists yet
   ///
   /// In en, this message translates to:
@@ -316,6 +322,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter a username.'**
   String get usernameValidation;
+
+  /// Title for the dashboard vaccination summary card
+  ///
+  /// In en, this message translates to:
+  /// **'Vaccination status'**
+  String get vaccinationStatus;
+
+  /// Empty-state title shown when a user has no vaccination records
+  ///
+  /// In en, this message translates to:
+  /// **'No vaccination records yet'**
+  String get noVaccinationsTitle;
+
+  /// Empty-state body for the vaccination feature
+  ///
+  /// In en, this message translates to:
+  /// **'Add the first vaccination for this user to track shot history and upcoming due dates.'**
+  String get noVaccinationsBody;
+
+  /// Primary action label to add a new vaccination
+  ///
+  /// In en, this message translates to:
+  /// **'Add vaccination'**
+  String get addVaccination;
+
+  /// Action label to add another shot to an existing vaccination series
+  ///
+  /// In en, this message translates to:
+  /// **'Add shot'**
+  String get addShot;
+
+  /// Screen title label for editing a vaccination entry
+  ///
+  /// In en, this message translates to:
+  /// **'Edit vaccination'**
+  String get editVaccination;
+
+  /// Label for the vaccination name text field
+  ///
+  /// In en, this message translates to:
+  /// **'Vaccination'**
+  String get vaccinationName;
+
+  /// Label for the vaccination date field
+  ///
+  /// In en, this message translates to:
+  /// **'Date of vaccination'**
+  String get vaccinationDate;
+
+  /// Label for the next vaccination required date field
+  ///
+  /// In en, this message translates to:
+  /// **'Next vaccination required'**
+  String get nextVaccinationRequired;
+
+  /// Label for the number of shots in a vaccination series
+  ///
+  /// In en, this message translates to:
+  /// **'Shots recorded'**
+  String get shotsRecorded;
+
+  /// Label for the most recent shot date
+  ///
+  /// In en, this message translates to:
+  /// **'Last shot'**
+  String get lastShot;
+
+  /// Label for the next due vaccination date
+  ///
+  /// In en, this message translates to:
+  /// **'Next due'**
+  String get nextDue;
+
+  /// Status label for overdue vaccinations
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get overdue;
+
+  /// Status label for soon-due vaccinations
+  ///
+  /// In en, this message translates to:
+  /// **'Due soon'**
+  String get dueSoon;
+
+  /// Status label for vaccinations that are not due soon
+  ///
+  /// In en, this message translates to:
+  /// **'Up to date'**
+  String get upToDate;
+
+  /// Headline showing the active user for the vaccination list
+  ///
+  /// In en, this message translates to:
+  /// **'Records for {username}'**
+  String recordForUser(String username);
+
+  /// Label for the count of upcoming vaccination courses
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming vaccinations'**
+  String get upcomingVaccinations;
+
+  /// Label for the count of overdue vaccination courses
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue vaccinations'**
+  String get overdueVaccinations;
+
+  /// Validation message when vaccination name is empty
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a vaccination name.'**
+  String get vaccinationNameValidation;
+
+  /// Validation message when vaccination date is missing
+  ///
+  /// In en, this message translates to:
+  /// **'Please select the vaccination date.'**
+  String get vaccinationDateValidation;
+
+  /// Validation message when next vaccination date is missing
+  ///
+  /// In en, this message translates to:
+  /// **'Please select the next vaccination date.'**
+  String get nextVaccinationDateValidation;
+
+  /// Validation message when next vaccination date is not after the vaccination date
+  ///
+  /// In en, this message translates to:
+  /// **'The next vaccination date must be after the vaccination date.'**
+  String get nextVaccinationDateOrderValidation;
+
+  /// Snackbar text after a vaccination entry is saved
+  ///
+  /// In en, this message translates to:
+  /// **'Vaccination saved successfully.'**
+  String get saveVaccinationSuccess;
+
+  /// Button label used to open a date picker
+  ///
+  /// In en, this message translates to:
+  /// **'Choose date'**
+  String get chooseDate;
+
+  /// Label for an item in a multi-shot vaccination history
+  ///
+  /// In en, this message translates to:
+  /// **'Shot {count}'**
+  String shotNumber(int count);
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

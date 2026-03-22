@@ -57,6 +57,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get users => 'Users';
 
   @override
+  String get vaccinations => 'Vaccinations';
+
+  @override
   String get welcomeTitle => 'Welcome to Vaccination Manager';
 
   @override
@@ -120,4 +123,83 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get usernameValidation => 'Please enter a username.';
+
+  @override
+  String get vaccinationStatus => 'Vaccination status';
+
+  @override
+  String get noVaccinationsTitle => 'No vaccination records yet';
+
+  @override
+  String get noVaccinationsBody => 'Add the first vaccination for this user to track shot history and upcoming due dates.';
+
+  @override
+  String get addVaccination => 'Add vaccination';
+
+  @override
+  String get addShot => 'Add shot';
+
+  @override
+  String get editVaccination => 'Edit vaccination';
+
+  @override
+  String get vaccinationName => 'Vaccination';
+
+  @override
+  String get vaccinationDate => 'Date of vaccination';
+
+  @override
+  String get nextVaccinationRequired => 'Next vaccination required';
+
+  @override
+  String get shotsRecorded => 'Shots recorded';
+
+  @override
+  String get lastShot => 'Last shot';
+
+  @override
+  String get nextDue => 'Next due';
+
+  @override
+  String get overdue => 'Overdue';
+
+  @override
+  String get dueSoon => 'Due soon';
+
+  @override
+  String get upToDate => 'Up to date';
+
+  @override
+  String recordForUser(String username) {
+    return 'Records for $username';
+  }
+
+  @override
+  String get upcomingVaccinations => 'Upcoming vaccinations';
+
+  @override
+  String get overdueVaccinations => 'Overdue vaccinations';
+
+  @override
+  String get vaccinationNameValidation => 'Please enter a vaccination name.';
+
+  @override
+  String get vaccinationDateValidation => 'Please select the vaccination date.';
+
+  @override
+  String get nextVaccinationDateValidation => 'Please select the next vaccination date.';
+
+  @override
+  String get nextVaccinationDateOrderValidation => 'The next vaccination date must be after the vaccination date.';
+
+  @override
+  String get saveVaccinationSuccess => 'Vaccination saved successfully.';
+
+  @override
+  String get chooseDate => 'Choose date';
+
+  @override
+  String shotNumber(int count) {
+    return 'Shot $count';
+  }
 }

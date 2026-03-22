@@ -16,6 +16,7 @@
     "on": "An",
     "off": "Aus",
     "users": "Benutzer",
+    "vaccinations": "Impfungen",
     "welcomeTitle": "Willkommen beim Impfmanager",
     "welcomeBody": "Erstellen Sie das erste Benutzerprofil, um Impfungen zu verwalten.",
     "createFirstUser": "Ersten Benutzer erstellen",
@@ -36,6 +37,7 @@
     "singleUserHint": "Nur ein Benutzer ist auf diesem Gerät gespeichert.",
     "multipleUsersHint": "{count} Benutzer sind auf diesem Gerät gespeichert.",
     "@multipleUsersHint": {
+        "description": "Hinweis, wenn mehrere Benutzer verfügbar sind",
         "placeholders": {
             "count": {
                 "type": "int"
@@ -43,5 +45,46 @@
         }
     },
     "saveUserSuccess": "Benutzer erfolgreich gespeichert.",
-    "usernameValidation": "Bitte geben Sie einen Benutzernamen ein."
+    "usernameValidation": "Bitte geben Sie einen Benutzernamen ein.",
+    "vaccinationStatus": "Impfstatus",
+    "noVaccinationsTitle": "Noch keine Impfeinträge",
+    "noVaccinationsBody": "Fügen Sie die erste Impfung für diesen Benutzer hinzu, um Impfverlauf und nächste Termine zu verfolgen.",
+    "addVaccination": "Impfung hinzufügen",
+    "addShot": "Impfdosis hinzufügen",
+    "editVaccination": "Impfung bearbeiten",
+    "vaccinationName": "Impfung",
+    "vaccinationDate": "Impfdatum",
+    "nextVaccinationRequired": "Nächste Impfung fällig",
+    "shotsRecorded": "Erfasste Dosen",
+    "lastShot": "Letzte Dosis",
+    "nextDue": "Nächster Termin",
+    "overdue": "Überfällig",
+    "dueSoon": "Bald fällig",
+    "upToDate": "Aktuell",
+    "recordForUser": "Einträge für {username}",
+    "upcomingVaccinations": "Bevorstehende Impfungen",
+    "overdueVaccinations": "Überfällige Impfungen",
+    "vaccinationNameValidation": "Bitte geben Sie einen Impfnamen ein.",
+    "vaccinationDateValidation": "Bitte wählen Sie das Impfdatum aus.",
+    "nextVaccinationDateValidation": "Bitte wählen Sie das Datum für die nächste Impfung aus.",
+    "nextVaccinationDateOrderValidation": "Das Datum der nächsten Impfung muss nach dem Impfdatum liegen.",
+    "saveVaccinationSuccess": "Impfung erfolgreich gespeichert.",
+    "chooseDate": "Datum wählen",
+    "shotNumber": "Dosis {count}",
+    "@recordForUser": {
+        "description": "Überschrift mit aktivem Benutzer für die Impfliste",
+        "placeholders": {
+            "username": {
+                "type": "String"
+            }
+        }
+    },
+    "@shotNumber": {
+        "description": "Bezeichnung für einen Eintrag in einer Mehrfachimpfserie",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    }
 }

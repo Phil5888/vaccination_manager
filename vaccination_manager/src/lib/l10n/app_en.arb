@@ -64,6 +64,10 @@
     "@users": {
         "description": "Label for the user management section"
     },
+    "vaccinations": "Vaccinations",
+    "@vaccinations": {
+        "description": "Label for the vaccination section"
+    },
     "welcomeTitle": "Welcome to Vaccination Manager",
     "@welcomeTitle": {
         "description": "Title shown when no user exists yet"
@@ -152,5 +156,115 @@
     "usernameValidation": "Please enter a username.",
     "@usernameValidation": {
         "description": "Validation message shown when the username is empty"
+    },
+    "vaccinationStatus": "Vaccination status",
+    "@vaccinationStatus": {
+        "description": "Title for the dashboard vaccination summary card"
+    },
+    "noVaccinationsTitle": "No vaccination records yet",
+    "@noVaccinationsTitle": {
+        "description": "Empty-state title shown when a user has no vaccination records"
+    },
+    "noVaccinationsBody": "Add the first vaccination for this user to track shot history and upcoming due dates.",
+    "@noVaccinationsBody": {
+        "description": "Empty-state body for the vaccination feature"
+    },
+    "addVaccination": "Add vaccination",
+    "@addVaccination": {
+        "description": "Primary action label to add a new vaccination"
+    },
+    "addShot": "Add shot",
+    "@addShot": {
+        "description": "Action label to add another shot to an existing vaccination series"
+    },
+    "editVaccination": "Edit vaccination",
+    "@editVaccination": {
+        "description": "Screen title label for editing a vaccination entry"
+    },
+    "vaccinationName": "Vaccination",
+    "@vaccinationName": {
+        "description": "Label for the vaccination name text field"
+    },
+    "vaccinationDate": "Date of vaccination",
+    "@vaccinationDate": {
+        "description": "Label for the vaccination date field"
+    },
+    "nextVaccinationRequired": "Next vaccination required",
+    "@nextVaccinationRequired": {
+        "description": "Label for the next vaccination required date field"
+    },
+    "shotsRecorded": "Shots recorded",
+    "@shotsRecorded": {
+        "description": "Label for the number of shots in a vaccination series"
+    },
+    "lastShot": "Last shot",
+    "@lastShot": {
+        "description": "Label for the most recent shot date"
+    },
+    "nextDue": "Next due",
+    "@nextDue": {
+        "description": "Label for the next due vaccination date"
+    },
+    "overdue": "Overdue",
+    "@overdue": {
+        "description": "Status label for overdue vaccinations"
+    },
+    "dueSoon": "Due soon",
+    "@dueSoon": {
+        "description": "Status label for soon-due vaccinations"
+    },
+    "upToDate": "Up to date",
+    "@upToDate": {
+        "description": "Status label for vaccinations that are not due soon"
+    },
+    "recordForUser": "Records for {username}",
+    "@recordForUser": {
+        "description": "Headline showing the active user for the vaccination list",
+        "placeholders": {
+            "username": {
+                "type": "String"
+            }
+        }
+    },
+    "upcomingVaccinations": "Upcoming vaccinations",
+    "@upcomingVaccinations": {
+        "description": "Label for the count of upcoming vaccination courses"
+    },
+    "overdueVaccinations": "Overdue vaccinations",
+    "@overdueVaccinations": {
+        "description": "Label for the count of overdue vaccination courses"
+    },
+    "vaccinationNameValidation": "Please enter a vaccination name.",
+    "@vaccinationNameValidation": {
+        "description": "Validation message when vaccination name is empty"
+    },
+    "vaccinationDateValidation": "Please select the vaccination date.",
+    "@vaccinationDateValidation": {
+        "description": "Validation message when vaccination date is missing"
+    },
+    "nextVaccinationDateValidation": "Please select the next vaccination date.",
+    "@nextVaccinationDateValidation": {
+        "description": "Validation message when next vaccination date is missing"
+    },
+    "nextVaccinationDateOrderValidation": "The next vaccination date must be after the vaccination date.",
+    "@nextVaccinationDateOrderValidation": {
+        "description": "Validation message when next vaccination date is not after the vaccination date"
+    },
+    "saveVaccinationSuccess": "Vaccination saved successfully.",
+    "@saveVaccinationSuccess": {
+        "description": "Snackbar text after a vaccination entry is saved"
+    },
+    "chooseDate": "Choose date",
+    "@chooseDate": {
+        "description": "Button label used to open a date picker"
+    },
+    "shotNumber": "Shot {count}",
+    "@shotNumber": {
+        "description": "Label for an item in a multi-shot vaccination history",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
     }
 }

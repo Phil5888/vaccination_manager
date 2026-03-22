@@ -35,6 +35,10 @@ final switchActiveUserUseCaseProvider = Provider<SwitchActiveUserUseCase>((ref) 
 
 final userManagementProvider = AsyncNotifierProvider<UserManagementViewModel, UserManagementState>(UserManagementViewModel.new);
 
+final activeUserProvider = Provider<AppUserEntity?>((ref) {
+  return ref.watch(userManagementProvider).asData?.value.activeUser;
+});
+
 class UserManagementViewModel extends AsyncNotifier<UserManagementState> {
   late final GetUsersUseCase _getUsers;
   late final SaveUserUseCase _saveUser;

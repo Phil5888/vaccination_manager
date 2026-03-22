@@ -5,6 +5,8 @@ import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:vaccination_manager/presentation/navigation/route_aware_widget.dart';
 import 'package:vaccination_manager/presentation/screens/dashboard/dashboard_screen.dart';
 import 'package:vaccination_manager/presentation/screens/settings/settings_screen.dart';
+import 'package:vaccination_manager/presentation/screens/vaccinations/vaccination_edit_screen.dart';
+import 'package:vaccination_manager/presentation/screens/vaccinations/vaccinations_screen.dart';
 import 'package:vaccination_manager/presentation/screens/users/user_edit_screen.dart';
 import 'package:vaccination_manager/presentation/screens/users/user_management_screen.dart';
 
@@ -20,7 +22,7 @@ class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
   bool _isRailExtended = true;
 
-  final _routes = [Routes.dashboard, Routes.users, Routes.settings];
+  final _routes = [Routes.dashboard, Routes.vaccinations, Routes.users, Routes.settings];
 
   void _onItemTapped(int index) {
     if (_selectedIndex == index) return;
@@ -62,6 +64,10 @@ class _MainScreenState extends State<MainScreen> {
                     switch (settings.name) {
                       case Routes.dashboard:
                         return _buildRoute(Routes.dashboard, const DashboardScreen());
+                      case Routes.vaccinations:
+                        return _buildRoute(Routes.vaccinations, const VaccinationsScreen());
+                      case Routes.vaccinationEdit:
+                        return _buildRoute(Routes.vaccinationEdit, VaccinationEditScreen(arguments: settings.arguments as VaccinationEditArguments?));
                       case Routes.users:
                         return _buildRoute(Routes.users, const UserManagementScreen());
                       case Routes.userEdit:
@@ -105,6 +111,7 @@ class _MainScreenState extends State<MainScreen> {
       ),
       destinations: [
         NavigationRailDestination(icon: const Icon(Icons.dashboard), label: Text(local.dashboard)),
+        NavigationRailDestination(icon: const Icon(Icons.vaccines), label: Text(local.vaccinations)),
         NavigationRailDestination(icon: const Icon(Icons.people), label: Text(local.users)),
         NavigationRailDestination(icon: const Icon(Icons.settings), label: Text(local.settings)),
       ],
@@ -129,8 +136,8 @@ class _MainScreenState extends State<MainScreen> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.people),
-            title: Text(local.users),
+            leading: const Icon(Icons.vaccines),
+            title: Text(local.vaccinations),
             selected: _selectedIndex == 1,
             onTap: () {
               _onItemTapped(1);
@@ -138,11 +145,20 @@ class _MainScreenState extends State<MainScreen> {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.settings),
-            title: Text(local.settings),
+            leading: const Icon(Icons.people),
+            title: Text(local.users),
             selected: _selectedIndex == 2,
             onTap: () {
               _onItemTapped(2);
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: Text(local.settings),
+            selected: _selectedIndex == 3,
+            onTap: () {
+              _onItemTapped(3);
               Navigator.pop(context);
             },
           ),
