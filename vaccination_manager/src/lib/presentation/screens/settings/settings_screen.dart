@@ -6,6 +6,7 @@ import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vaccination_manager/presentation/providers/settings/settings_providers.dart';
 import 'package:vaccination_manager/presentation/providers/user_management/user_management_providers.dart';
+import 'package:vaccination_manager/presentation/widgets/app_labeled_field.dart';
 import 'package:vaccination_manager/presentation/widgets/user_avatar.dart';
 import 'package:vaccination_manager/presentation/widgets/user_switcher_sheet.dart';
 
@@ -24,15 +25,19 @@ class SettingsScreen extends ConsumerWidget {
       body: ListView(
         padding: AppSpacing.listPadding,
         children: [
-          Text(local.language, style: Theme.of(context).textTheme.titleMedium),
-          DropdownButton<String>(
-            value: settings.locale.languageCode,
-            items: AppLocalizations.supportedLocales.map((locale) => DropdownMenuItem<String>(value: locale.languageCode, child: Text(getLanguageLabel(context, locale.languageCode, withFlag: true)))).toList(),
-            onChanged: notifier.setLanguage,
+          AppLabeledField(
+            label: local.language,
+            child: DropdownButton<String>(
+              value: settings.locale.languageCode,
+              items: AppLocalizations.supportedLocales.map((locale) => DropdownMenuItem<String>(value: locale.languageCode, child: Text(getLanguageLabel(context, locale.languageCode, withFlag: true)))).toList(),
+              onChanged: notifier.setLanguage,
+            ),
           ),
           const SizedBox(height: AppSpacing.xl),
-          Text(local.theme, style: Theme.of(context).textTheme.titleMedium),
-          SwitchListTile(title: Text(local.darkMode), value: settings.isDarkMode, onChanged: notifier.setDarkMode),
+          AppLabeledField(
+            label: local.theme,
+            child: SwitchListTile(title: Text(local.darkMode), value: settings.isDarkMode, onChanged: notifier.setDarkMode),
+          ),
           const SizedBox(height: AppSpacing.xl),
           Card(
             child: ListTile(
@@ -44,26 +49,28 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.xl),
-          Text(local.activeUser, style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: AppSpacing.md),
-          usersState.when(
-            loading: () => const LinearProgressIndicator(),
-            error: (error, _) => Text('${local.error}: $error'),
-            data: (state) {
-              final activeUser = state.activeUser;
-              if (activeUser == null) {
-                return Text(local.noUsersBody);
-              }
+          AppLabeledField(
+            label: local.activeUser,
+            labelToFieldSpacing: AppSpacing.md,
+            child: usersState.when(
+              loading: () => const LinearProgressIndicator(),
+              error: (error, _) => Text('${local.error}: $error'),
+              data: (state) {
+                final activeUser = state.activeUser;
+                if (activeUser == null) {
+                  return Text(local.noUsersBody);
+                }
 
-              return Card(
-                child: ListTile(
-                  leading: UserAvatar(user: activeUser, radius: 22),
-                  title: Text(activeUser.username),
-                  subtitle: Text(state.users.length == 1 ? local.singleUserHint : local.multipleUsersHint(state.users.length)),
-                  trailing: FilledButton.tonal(onPressed: () => showUserSwitcherSheet(context, ref), child: Text(local.switchUser)),
-                ),
-              );
-            },
+                return Card(
+                  child: ListTile(
+                    leading: UserAvatar(user: activeUser, radius: 22),
+                    title: Text(activeUser.username),
+                    subtitle: Text(state.users.length == 1 ? local.singleUserHint : local.multipleUsersHint(state.users.length)),
+                    trailing: FilledButton.tonal(onPressed: () => showUserSwitcherSheet(context, ref), child: Text(local.switchUser)),
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),

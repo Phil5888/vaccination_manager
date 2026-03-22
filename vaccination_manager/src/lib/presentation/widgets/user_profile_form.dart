@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
+import 'package:vaccination_manager/presentation/widgets/app_labeled_field.dart';
 
 typedef UserProfileSubmit = Future<void> Function(String username, Uint8List? picture);
 
@@ -47,17 +48,18 @@ class _UserProfileFormState extends State<UserProfileForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(local.username, style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          TextFormField(
-            controller: _usernameController,
-            textInputAction: TextInputAction.done,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return local.usernameValidation;
-              }
-              return null;
-            },
+          AppLabeledField(
+            label: local.username,
+            child: TextFormField(
+              controller: _usernameController,
+              textInputAction: TextInputAction.done,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return local.usernameValidation;
+                }
+                return null;
+              },
+            ),
           ),
           const SizedBox(height: 24),
           Text(local.profilePicture, style: Theme.of(context).textTheme.titleMedium),

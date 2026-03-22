@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
+import 'package:vaccination_manager/presentation/widgets/app_labeled_field.dart';
 
 enum VaccinationCourseMode { oneShot, multiShot }
 
@@ -74,64 +75,66 @@ class _VaccinationEntryFormState extends State<VaccinationEntryForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(local.vaccinationName, style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          TextFormField(
-            controller: _nameController,
-            textInputAction: TextInputAction.next,
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return local.vaccinationNameValidation;
-              }
-              return null;
-            },
+          AppLabeledField(
+            label: local.vaccinationName,
+            child: TextFormField(
+              controller: _nameController,
+              textInputAction: TextInputAction.next,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return local.vaccinationNameValidation;
+                }
+                return null;
+              },
+            ),
           ),
           const SizedBox(height: 16),
-          Text(local.vaccinationModeLabel, style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              ChoiceChip(label: Text(local.vaccinationModeOneShot), selected: _mode == VaccinationCourseMode.oneShot, onSelected: _isSaving ? null : (_) => _changeMode(VaccinationCourseMode.oneShot)),
-              ChoiceChip(label: Text(local.vaccinationModeMultiShot), selected: _mode == VaccinationCourseMode.multiShot, onSelected: _isSaving ? null : (_) => _changeMode(VaccinationCourseMode.multiShot)),
-            ],
+          AppLabeledField(
+            label: local.vaccinationModeLabel,
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                ChoiceChip(label: Text(local.vaccinationModeOneShot), selected: _mode == VaccinationCourseMode.oneShot, onSelected: _isSaving ? null : (_) => _changeMode(VaccinationCourseMode.oneShot)),
+                ChoiceChip(label: Text(local.vaccinationModeMultiShot), selected: _mode == VaccinationCourseMode.multiShot, onSelected: _isSaving ? null : (_) => _changeMode(VaccinationCourseMode.multiShot)),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
-          Text(local.shotDatesLabel, style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          FormField<List<DateTime?>>(
-            initialValue: _shotDates,
-            validator: (_) {
-              if (_shotDates.isEmpty || _shotDates.any((date) => date == null)) {
-                return local.shotDatesValidation;
-              }
+          AppLabeledField(
+            label: local.shotDatesLabel,
+            child: FormField<List<DateTime?>>(
+              initialValue: _shotDates,
+              validator: (_) {
+                if (_shotDates.isEmpty || _shotDates.any((date) => date == null)) {
+                  return local.shotDatesValidation;
+                }
 
-              final uniqueDateKeys = _shotDates.map((date) => _dateKey(date!)).toSet();
-              if (uniqueDateKeys.length != _shotDates.length) {
-                return local.duplicateShotDateValidation;
-              }
+                final uniqueDateKeys = _shotDates.map((date) => _dateKey(date!)).toSet();
+                if (uniqueDateKeys.length != _shotDates.length) {
+                  return local.duplicateShotDateValidation;
+                }
 
-              return null;
-            },
-            builder: (field) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ...List.generate(_shotDates.length, (index) {
-                    final shotDate = _shotDates[index];
-                    final isPlanned = shotDate != null && _dateOnly(shotDate).isAfter(_dateOnly(DateTime.now()));
-                    return Padding(
-                      padding: EdgeInsets.only(bottom: index == _shotDates.length - 1 ? 0 : 12),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(local.shotNumber(index + 1), style: Theme.of(context).textTheme.titleSmall),
-                                const SizedBox(height: 4),
-                                TextFormField(
+                return null;
+              },
+              builder: (field) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ...List.generate(_shotDates.length, (index) {
+                      final shotDate = _shotDates[index];
+                      final isPlanned = shotDate != null && _dateOnly(shotDate).isAfter(_dateOnly(DateTime.now()));
+                      return Padding(
+                        padding: EdgeInsets.only(bottom: index == _shotDates.length - 1 ? 0 : 12),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: AppLabeledField(
+                                label: local.shotNumber(index + 1),
+                                labelStyle: Theme.of(context).textTheme.titleSmall,
+                                labelToFieldSpacing: 4,
+                                helper: Text(isPlanned ? local.plannedShot : local.recordedShot, style: Theme.of(context).textTheme.bodySmall),
+                                child: TextFormField(
                                   controller: _shotDateControllers[index],
                                   readOnly: true,
                                   decoration: InputDecoration(
@@ -152,82 +155,80 @@ class _VaccinationEntryFormState extends State<VaccinationEntryForm> {
                                           field.didChange(_shotDates);
                                         },
                                 ),
-                                const SizedBox(height: 4),
-                                Text(isPlanned ? local.plannedShot : local.recordedShot, style: Theme.of(context).textTheme.bodySmall),
-                              ],
+                              ),
                             ),
-                          ),
-                          if (_mode == VaccinationCourseMode.multiShot && _shotDates.length > 1) ...[
-                            const SizedBox(width: 8),
-                            IconButton(
-                              tooltip: local.removeShot,
-                              onPressed: _isSaving
-                                  ? null
-                                  : () {
-                                      setState(() {
-                                        _removeShotAt(index);
-                                      });
-                                      field.didChange(_shotDates);
-                                    },
-                              icon: const Icon(Icons.remove_circle_outline),
-                            ),
+                            if (_mode == VaccinationCourseMode.multiShot && _shotDates.length > 1) ...[
+                              const SizedBox(width: 8),
+                              IconButton(
+                                tooltip: local.removeShot,
+                                onPressed: _isSaving
+                                    ? null
+                                    : () {
+                                        setState(() {
+                                          _removeShotAt(index);
+                                        });
+                                        field.didChange(_shotDates);
+                                      },
+                                icon: const Icon(Icons.remove_circle_outline),
+                              ),
+                            ],
                           ],
-                        ],
+                        ),
+                      );
+                    }),
+                    if (_mode == VaccinationCourseMode.multiShot) ...[
+                      const SizedBox(height: 8),
+                      OutlinedButton.icon(
+                        onPressed: _isSaving
+                            ? null
+                            : () {
+                                setState(_addShot);
+                                field.didChange(_shotDates);
+                              },
+                        icon: const Icon(Icons.add),
+                        label: Text(local.addAnotherShot),
                       ),
-                    );
-                  }),
-                  if (_mode == VaccinationCourseMode.multiShot) ...[
-                    const SizedBox(height: 8),
-                    OutlinedButton.icon(
-                      onPressed: _isSaving
-                          ? null
-                          : () {
-                              setState(_addShot);
-                              field.didChange(_shotDates);
-                            },
-                      icon: const Icon(Icons.add),
-                      label: Text(local.addAnotherShot),
-                    ),
+                    ],
+                    if (field.errorText != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Text(field.errorText!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                      ),
                   ],
-                  if (field.errorText != null)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: Text(field.errorText!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
-                    ),
-                ],
-              );
-            },
+                );
+              },
+            ),
           ),
           const SizedBox(height: 16),
-          Text(local.vaccinationExpiresOn, style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: 8),
-          TextFormField(
-            controller: _expirationDateController,
-            readOnly: true,
-            decoration: InputDecoration(
-              suffixIcon: IconButton(onPressed: _isSaving ? null : () => _pickExpirationDate(context), icon: const Icon(Icons.event_available)),
-            ),
-            onTap: _isSaving ? null : () => _pickExpirationDate(context),
-            validator: (_) {
-              if (_expirationDate == null) {
-                return local.vaccinationExpiresValidation;
-              }
+          AppLabeledField(
+            label: local.vaccinationExpiresOn,
+            helper: Text(local.futureShotHint, style: Theme.of(context).textTheme.bodySmall),
+            child: TextFormField(
+              controller: _expirationDateController,
+              readOnly: true,
+              decoration: InputDecoration(
+                suffixIcon: IconButton(onPressed: _isSaving ? null : () => _pickExpirationDate(context), icon: const Icon(Icons.event_available)),
+              ),
+              onTap: _isSaving ? null : () => _pickExpirationDate(context),
+              validator: (_) {
+                if (_expirationDate == null) {
+                  return local.vaccinationExpiresValidation;
+                }
 
-              final definedShotDates = _shotDates.whereType<DateTime>().toList();
-              if (definedShotDates.isEmpty) {
+                final definedShotDates = _shotDates.whereType<DateTime>().toList();
+                if (definedShotDates.isEmpty) {
+                  return null;
+                }
+
+                final latestShot = definedShotDates.reduce((a, b) => a.isAfter(b) ? a : b);
+                if (_dateOnly(_expirationDate!).isBefore(_dateOnly(latestShot))) {
+                  return local.vaccinationExpiresOrderValidation;
+                }
+
                 return null;
-              }
-
-              final latestShot = definedShotDates.reduce((a, b) => a.isAfter(b) ? a : b);
-              if (_dateOnly(_expirationDate!).isBefore(_dateOnly(latestShot))) {
-                return local.vaccinationExpiresOrderValidation;
-              }
-
-              return null;
-            },
+              },
+            ),
           ),
-          const SizedBox(height: 8),
-          Text(local.futureShotHint, style: Theme.of(context).textTheme.bodySmall),
           const SizedBox(height: 24),
           Wrap(
             spacing: 12,

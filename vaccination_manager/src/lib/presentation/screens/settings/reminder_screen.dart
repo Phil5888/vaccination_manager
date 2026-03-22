@@ -6,6 +6,7 @@ import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:vaccination_manager/presentation/providers/settings/settings_dependency_providers.dart';
 import 'package:vaccination_manager/presentation/providers/settings/settings_providers.dart';
 import 'package:vaccination_manager/presentation/providers/vaccination/vaccination_providers.dart';
+import 'package:vaccination_manager/presentation/widgets/app_labeled_field.dart';
 
 class ReminderScreen extends ConsumerStatefulWidget {
   const ReminderScreen({super.key});
@@ -27,23 +28,24 @@ class _ReminderScreenState extends ConsumerState<ReminderScreen> {
       body: ListView(
         padding: AppSpacing.listPadding,
         children: [
-          Text(local.notificationLeadTime, style: Theme.of(context).textTheme.titleMedium),
-          const SizedBox(height: AppSpacing.sm),
-          DropdownButtonFormField<ReminderLeadTime>(
-            initialValue: settings.reminderLeadTime,
-            items: [
-              DropdownMenuItem(value: ReminderLeadTime.threeDays, child: Text(local.reminderLeadTime3Days)),
-              DropdownMenuItem(value: ReminderLeadTime.oneWeek, child: Text(local.reminderLeadTime1Week)),
-              DropdownMenuItem(value: ReminderLeadTime.twoWeeks, child: Text(local.reminderLeadTime2Weeks)),
-              DropdownMenuItem(value: ReminderLeadTime.oneMonth, child: Text(local.reminderLeadTime1Month)),
-              DropdownMenuItem(value: ReminderLeadTime.twoMonths, child: Text(local.reminderLeadTime2Months)),
-              DropdownMenuItem(value: ReminderLeadTime.threeMonths, child: Text(local.reminderLeadTime3Months)),
-            ],
-            onChanged: (value) {
-              if (value != null) {
-                ref.read(settingsProvider.notifier).setReminderLeadTime(value);
-              }
-            },
+          AppLabeledField(
+            label: local.notificationLeadTime,
+            child: DropdownButtonFormField<ReminderLeadTime>(
+              initialValue: settings.reminderLeadTime,
+              items: [
+                DropdownMenuItem(value: ReminderLeadTime.threeDays, child: Text(local.reminderLeadTime3Days)),
+                DropdownMenuItem(value: ReminderLeadTime.oneWeek, child: Text(local.reminderLeadTime1Week)),
+                DropdownMenuItem(value: ReminderLeadTime.twoWeeks, child: Text(local.reminderLeadTime2Weeks)),
+                DropdownMenuItem(value: ReminderLeadTime.oneMonth, child: Text(local.reminderLeadTime1Month)),
+                DropdownMenuItem(value: ReminderLeadTime.twoMonths, child: Text(local.reminderLeadTime2Months)),
+                DropdownMenuItem(value: ReminderLeadTime.threeMonths, child: Text(local.reminderLeadTime3Months)),
+              ],
+              onChanged: (value) {
+                if (value != null) {
+                  ref.read(settingsProvider.notifier).setReminderLeadTime(value);
+                }
+              },
+            ),
           ),
           const SizedBox(height: AppSpacing.xl),
           Card(
