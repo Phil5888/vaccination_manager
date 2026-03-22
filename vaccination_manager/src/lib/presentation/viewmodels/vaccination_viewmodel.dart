@@ -81,15 +81,12 @@ class VaccinationOverviewState {
 }
 
 class VaccinationViewModel extends AsyncNotifier<VaccinationOverviewState> {
-  late final GetVaccinationsForUserUseCase _getVaccinationsForUser;
-  late final SaveVaccinationUseCase _saveVaccination;
-  late final DeleteVaccinationUseCase _deleteVaccination;
+  GetVaccinationsForUserUseCase get _getVaccinationsForUser => ref.read(getVaccinationsForUserUseCaseProvider);
+  SaveVaccinationUseCase get _saveVaccination => ref.read(saveVaccinationUseCaseProvider);
+  DeleteVaccinationUseCase get _deleteVaccination => ref.read(deleteVaccinationUseCaseProvider);
 
   @override
   Future<VaccinationOverviewState> build() async {
-    _getVaccinationsForUser = ref.read(getVaccinationsForUserUseCaseProvider);
-    _saveVaccination = ref.read(saveVaccinationUseCaseProvider);
-    _deleteVaccination = ref.read(deleteVaccinationUseCaseProvider);
     final userState = await ref.watch(userManagementProvider.future);
     return _loadState(userState.activeUser);
   }
