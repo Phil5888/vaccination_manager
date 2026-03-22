@@ -4,7 +4,8 @@ import 'package:vaccination_manager/domain/entities/app_user_entity.dart';
 import 'package:vaccination_manager/domain/usecases/get_users_usecase.dart';
 import 'package:vaccination_manager/domain/usecases/save_user_usecase.dart';
 import 'package:vaccination_manager/domain/usecases/switch_active_user_usecase.dart';
-import 'package:vaccination_manager/presentation/viewmodels/user_management_viewmodel.dart';
+import 'package:vaccination_manager/presentation/providers/user_management/user_management_dependency_providers.dart';
+import 'package:vaccination_manager/presentation/providers/user_management/user_management_providers.dart';
 
 import '../../helpers/fakes/fake_app_user_repository.dart';
 

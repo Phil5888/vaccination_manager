@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/domain/entities/app_user_entity.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
+import 'package:vaccination_manager/presentation/providers/user_management/user_management_providers.dart';
 import 'package:vaccination_manager/presentation/screens/users/user_management_screen.dart';
 import 'package:vaccination_manager/presentation/viewmodels/user_management_viewmodel.dart';
 

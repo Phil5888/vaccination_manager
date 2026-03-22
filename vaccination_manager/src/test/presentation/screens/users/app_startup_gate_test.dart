@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
+import 'package:vaccination_manager/presentation/providers/user_management/user_management_providers.dart';
 import 'package:vaccination_manager/presentation/screens/startup/app_startup_gate.dart';
 import 'package:vaccination_manager/presentation/viewmodels/user_management_viewmodel.dart';
 

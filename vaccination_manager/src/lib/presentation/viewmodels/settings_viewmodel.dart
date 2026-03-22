@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vaccination_manager/data/repositories/settings_repository.dart';
+import 'package:vaccination_manager/presentation/providers/settings/settings_dependency_providers.dart';
 
 class SettingsState {
   final Locale locale;
@@ -18,7 +19,7 @@ class SettingsViewModel extends Notifier<SettingsState> {
 
   @override
   SettingsState build() {
-    _repo = SettingsRepository();
+    _repo = ref.read(settingsRepositoryProvider);
     _load();
     return SettingsState(locale: const Locale('en'), isDarkMode: false);
   }
@@ -41,5 +42,3 @@ class SettingsViewModel extends Notifier<SettingsState> {
     state = state.copyWith(isDarkMode: value);
   }
 }
-
-final settingsProvider = NotifierProvider<SettingsViewModel, SettingsState>(SettingsViewModel.new);

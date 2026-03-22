@@ -5,6 +5,9 @@ import 'package:vaccination_manager/domain/entities/vaccination_entry_entity.dar
 import 'package:vaccination_manager/domain/usecases/delete_vaccination_usecase.dart';
 import 'package:vaccination_manager/domain/usecases/get_vaccinations_for_user_usecase.dart';
 import 'package:vaccination_manager/domain/usecases/save_vaccination_usecase.dart';
+import 'package:vaccination_manager/presentation/providers/user_management/user_management_providers.dart';
+import 'package:vaccination_manager/presentation/providers/vaccination/vaccination_dependency_providers.dart';
+import 'package:vaccination_manager/presentation/providers/vaccination/vaccination_providers.dart';
 import 'package:vaccination_manager/presentation/viewmodels/user_management_viewmodel.dart';
 import 'package:vaccination_manager/presentation/viewmodels/vaccination_viewmodel.dart';
 

@@ -3,8 +3,8 @@ import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:vaccination_manager/presentation/navigation/app_router.dart';
+import 'package:vaccination_manager/presentation/providers/settings/settings_providers.dart';
 import 'package:vaccination_manager/presentation/screens/startup/app_startup_gate.dart';
-import 'package:vaccination_manager/presentation/viewmodels/settings_viewmodel.dart';
 import 'package:vaccination_manager/presentation/viewmodels/theme_provider.dart';
 
 class MyApp extends ConsumerWidget {

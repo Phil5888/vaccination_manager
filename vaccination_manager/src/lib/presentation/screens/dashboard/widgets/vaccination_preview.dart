@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
-import 'package:vaccination_manager/presentation/viewmodels/vaccination_viewmodel.dart';
+import 'package:vaccination_manager/presentation/providers/vaccination/vaccination_providers.dart';
 import 'package:vaccination_manager/presentation/widgets/vaccination_status_chip.dart';
 
 class VaccinationPreviewCard extends ConsumerWidget {

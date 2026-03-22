@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:vaccination_manager/core/utils/localization_utils.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vaccination_manager/presentation/viewmodels/settings_viewmodel.dart';
-import 'package:vaccination_manager/presentation/viewmodels/user_management_viewmodel.dart';
+import 'package:vaccination_manager/presentation/providers/settings/settings_providers.dart';
+import 'package:vaccination_manager/presentation/providers/user_management/user_management_providers.dart';
 import 'package:vaccination_manager/presentation/widgets/user_avatar.dart';
 import 'package:vaccination_manager/presentation/widgets/user_switcher_sheet.dart';
 

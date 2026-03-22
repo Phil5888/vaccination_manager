@@ -6,6 +6,7 @@ import 'package:vaccination_manager/domain/entities/app_user_entity.dart';
 import 'package:vaccination_manager/domain/entities/vaccination_entry_entity.dart';
 import 'package:vaccination_manager/domain/entities/vaccination_series_entity.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
+import 'package:vaccination_manager/presentation/providers/vaccination/vaccination_providers.dart';
 import 'package:vaccination_manager/presentation/screens/vaccinations/vaccinations_screen.dart';
 import 'package:vaccination_manager/presentation/viewmodels/vaccination_viewmodel.dart';
 

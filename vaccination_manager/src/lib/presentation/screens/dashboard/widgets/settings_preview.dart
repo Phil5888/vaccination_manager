@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vaccination_manager/core/utils/localization_utils.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vaccination_manager/presentation/viewmodels/settings_viewmodel.dart';
+import 'package:vaccination_manager/presentation/providers/settings/settings_providers.dart';
 
 class SettingsPreviewCard extends ConsumerWidget {
   const SettingsPreviewCard({super.key});
