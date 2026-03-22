@@ -50,7 +50,6 @@ class _MainScreenState extends State<MainScreen> {
         final isDesktop = constraints.maxWidth >= Breakpoints.desktop;
 
         return Scaffold(
-          appBar: isDesktop ? null : AppBar(title: Text(local.title)),
           drawer: isDesktop ? null : _buildDrawer(local),
           body: Row(
             children: [

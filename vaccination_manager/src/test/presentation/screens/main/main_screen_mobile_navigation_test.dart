@@ -62,9 +62,9 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(find.byIcon(Icons.menu), findsOneWidget);
+    expect(find.byIcon(Icons.menu), findsNothing);
 
-    await tester.tap(find.byIcon(Icons.menu));
+    await tester.dragFrom(const Offset(1, 180), const Offset(280, 0));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Users'));
     await tester.pumpAndSettle();
@@ -72,7 +72,7 @@ void main() {
     expect(find.byType(UserManagementScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
 
-    await tester.tap(find.byIcon(Icons.menu));
+    await tester.dragFrom(const Offset(1, 180), const Offset(280, 0));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Vaccinations'));
     await tester.pumpAndSettle();
