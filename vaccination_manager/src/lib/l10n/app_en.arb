@@ -28,6 +28,50 @@
     "@darkMode": {
         "description": "Toggle label for dark mode switch"
     },
+    "reminders": "Reminders",
+    "@reminders": {
+        "description": "Title for reminder settings and sync screen"
+    },
+    "reminderSettingsDescription": "Calendar sync and notification lead time",
+    "@reminderSettingsDescription": {
+        "description": "Subtitle for the reminder settings entry in settings screen"
+    },
+    "notificationLeadTime": "Notification lead time",
+    "@notificationLeadTime": {
+        "description": "Label for the reminder lead-time dropdown"
+    },
+    "reminderLeadTime3Days": "3 days",
+    "reminderLeadTime1Week": "1 week",
+    "reminderLeadTime2Weeks": "2 weeks",
+    "reminderLeadTime1Month": "1 month",
+    "reminderLeadTime2Months": "2 months",
+    "reminderLeadTime3Months": "3 months",
+    "reminderSyncDescription": "Sync vaccination due dates to your calendar and schedule local reminder notifications.",
+    "@reminderSyncDescription": {
+        "description": "Description text on reminder sync screen"
+    },
+    "syncRemindersNow": "Sync reminders now",
+    "@syncRemindersNow": {
+        "description": "Primary button label to trigger reminder synchronization"
+    },
+    "reminderSyncSuccess": "Reminder sync completed. Calendar created: {created}, updated: {updated}, removed: {removed}. Notifications scheduled: {scheduled}.",
+    "@reminderSyncSuccess": {
+        "description": "Feedback text after reminder synchronization",
+        "placeholders": {
+            "created": {
+                "type": "int"
+            },
+            "updated": {
+                "type": "int"
+            },
+            "removed": {
+                "type": "int"
+            },
+            "scheduled": {
+                "type": "int"
+            }
+        }
+    },
     "error": "Error",
     "@error": {
         "description": "Generic error message label"

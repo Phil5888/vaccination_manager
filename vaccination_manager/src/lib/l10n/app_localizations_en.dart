@@ -30,6 +30,44 @@ class AppLocalizationsEn extends AppLocalizations {
   String get darkMode => 'Dark Mode';
 
   @override
+  String get reminders => 'Reminders';
+
+  @override
+  String get reminderSettingsDescription => 'Calendar sync and notification lead time';
+
+  @override
+  String get notificationLeadTime => 'Notification lead time';
+
+  @override
+  String get reminderLeadTime3Days => '3 days';
+
+  @override
+  String get reminderLeadTime1Week => '1 week';
+
+  @override
+  String get reminderLeadTime2Weeks => '2 weeks';
+
+  @override
+  String get reminderLeadTime1Month => '1 month';
+
+  @override
+  String get reminderLeadTime2Months => '2 months';
+
+  @override
+  String get reminderLeadTime3Months => '3 months';
+
+  @override
+  String get reminderSyncDescription => 'Sync vaccination due dates to your calendar and schedule local reminder notifications.';
+
+  @override
+  String get syncRemindersNow => 'Sync reminders now';
+
+  @override
+  String reminderSyncSuccess(int created, int updated, int removed, int scheduled) {
+    return 'Reminder sync completed. Calendar created: $created, updated: $updated, removed: $removed. Notifications scheduled: $scheduled.';
+  }
+
+  @override
   String get error => 'Error';
 
   @override

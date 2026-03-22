@@ -7,6 +7,34 @@
     "german": "Deutsch",
     "theme": "Thema",
     "darkMode": "Dunkelmodus",
+    "reminders": "Erinnerungen",
+    "reminderSettingsDescription": "Kalendersynchronisierung und Vorlaufzeit für Benachrichtigungen",
+    "notificationLeadTime": "Vorlaufzeit für Benachrichtigung",
+    "reminderLeadTime3Days": "3 Tage",
+    "reminderLeadTime1Week": "1 Woche",
+    "reminderLeadTime2Weeks": "2 Wochen",
+    "reminderLeadTime1Month": "1 Monat",
+    "reminderLeadTime2Months": "2 Monate",
+    "reminderLeadTime3Months": "3 Monate",
+    "reminderSyncDescription": "Synchronisieren Sie fällige Impftermine mit dem Kalender und planen Sie lokale Erinnerungsbenachrichtigungen.",
+    "syncRemindersNow": "Erinnerungen jetzt synchronisieren",
+    "reminderSyncSuccess": "Erinnerungssynchronisierung abgeschlossen. Kalender erstellt: {created}, aktualisiert: {updated}, entfernt: {removed}. Benachrichtigungen geplant: {scheduled}.",
+    "@reminderSyncSuccess": {
+        "placeholders": {
+            "created": {
+                "type": "int"
+            },
+            "updated": {
+                "type": "int"
+            },
+            "removed": {
+                "type": "int"
+            },
+            "scheduled": {
+                "type": "int"
+            }
+        }
+    },
     "error": "Fehler",
     "menue": "Menü",
     "dashboard": "Dashboard",

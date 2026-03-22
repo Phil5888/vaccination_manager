@@ -30,6 +30,44 @@ class AppLocalizationsDe extends AppLocalizations {
   String get darkMode => 'Dunkelmodus';
 
   @override
+  String get reminders => 'Erinnerungen';
+
+  @override
+  String get reminderSettingsDescription => 'Kalendersynchronisierung und Vorlaufzeit für Benachrichtigungen';
+
+  @override
+  String get notificationLeadTime => 'Vorlaufzeit für Benachrichtigung';
+
+  @override
+  String get reminderLeadTime3Days => '3 Tage';
+
+  @override
+  String get reminderLeadTime1Week => '1 Woche';
+
+  @override
+  String get reminderLeadTime2Weeks => '2 Wochen';
+
+  @override
+  String get reminderLeadTime1Month => '1 Monat';
+
+  @override
+  String get reminderLeadTime2Months => '2 Monate';
+
+  @override
+  String get reminderLeadTime3Months => '3 Monate';
+
+  @override
+  String get reminderSyncDescription => 'Synchronisieren Sie fällige Impftermine mit dem Kalender und planen Sie lokale Erinnerungsbenachrichtigungen.';
+
+  @override
+  String get syncRemindersNow => 'Erinnerungen jetzt synchronisieren';
+
+  @override
+  String reminderSyncSuccess(int created, int updated, int removed, int scheduled) {
+    return 'Erinnerungssynchronisierung abgeschlossen. Kalender erstellt: $created, aktualisiert: $updated, entfernt: $removed. Benachrichtigungen geplant: $scheduled.';
+  }
+
+  @override
   String get error => 'Fehler';
 
   @override

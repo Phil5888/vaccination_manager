@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vaccination_manager/core/constants/app_spacing.dart';
+import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/core/utils/localization_utils.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -32,6 +33,16 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: AppSpacing.xl),
           Text(local.theme, style: Theme.of(context).textTheme.titleMedium),
           SwitchListTile(title: Text(local.darkMode), value: settings.isDarkMode, onChanged: notifier.setDarkMode),
+          const SizedBox(height: AppSpacing.xl),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.notifications_active_outlined),
+              title: Text(local.reminders),
+              subtitle: Text(local.reminderSettingsDescription),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => Navigator.of(context).pushNamed(Routes.reminders),
+            ),
+          ),
           const SizedBox(height: AppSpacing.xl),
           Text(local.activeUser, style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: AppSpacing.md),

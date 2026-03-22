@@ -5,6 +5,7 @@ import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:vaccination_manager/presentation/navigation/route_aware_widget.dart';
 import 'package:vaccination_manager/presentation/screens/dashboard/dashboard_screen.dart';
+import 'package:vaccination_manager/presentation/screens/settings/reminder_screen.dart';
 import 'package:vaccination_manager/presentation/screens/settings/settings_screen.dart';
 import 'package:vaccination_manager/presentation/screens/vaccinations/vaccination_edit_screen.dart';
 import 'package:vaccination_manager/presentation/screens/vaccinations/vaccinations_screen.dart';
@@ -33,7 +34,7 @@ class _MainScreenState extends State<MainScreen> {
 
   void _updateSelectedIndex(String route) {
     debugPrint('[MainScreen] Update selected index for route: $route');
-    final int index = _routes.indexWhere((r) => route == r || r.startsWith('$route/'));
+    final int index = _routes.indexWhere((r) => route == r || route.startsWith('$r/'));
     if (index != -1 && index != _selectedIndex) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         debugPrint('[MainScreen] Sync index to route: $route → $index');
@@ -74,6 +75,8 @@ class _MainScreenState extends State<MainScreen> {
                         return _buildRoute(Routes.userEdit, UserEditScreen(initialUser: settings.arguments as dynamic));
                       case Routes.settings:
                         return _buildRoute(Routes.settings, const SettingsScreen());
+                      case Routes.reminders:
+                        return _buildRoute(Routes.reminders, const ReminderScreen());
                       default:
                         return MaterialPageRoute(
                           builder: (_) => const Scaffold(body: Center(child: Text('404 - Route Not Found'))),

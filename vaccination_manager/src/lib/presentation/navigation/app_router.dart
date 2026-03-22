@@ -5,6 +5,7 @@ import 'package:vaccination_manager/presentation/screens/vaccinations/vaccinatio
 import 'package:vaccination_manager/presentation/screens/vaccinations/vaccinations_screen.dart';
 import 'package:vaccination_manager/presentation/screens/users/user_edit_screen.dart';
 import 'package:vaccination_manager/presentation/screens/users/user_management_screen.dart';
+import 'package:vaccination_manager/presentation/screens/settings/reminder_screen.dart';
 import 'package:vaccination_manager/presentation/screens/welcome/welcome_screen.dart';
 
 class AppRouter {
@@ -20,6 +21,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => const UserManagementScreen());
       case Routes.userEdit:
         return MaterialPageRoute(builder: (_) => UserEditScreen(initialUser: settings.arguments as AppUserEntity?));
+      case Routes.reminders:
+        return MaterialPageRoute(builder: (_) => const ReminderScreen());
       default:
         return MaterialPageRoute(
           builder: (_) => const Scaffold(body: Center(child: Text('No route defined'))),

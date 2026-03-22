@@ -129,6 +129,66 @@ abstract class AppLocalizations {
   /// **'Dark Mode'**
   String get darkMode;
 
+  /// Title for reminder settings and sync screen
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get reminders;
+
+  /// Subtitle for the reminder settings entry in settings screen
+  ///
+  /// In en, this message translates to:
+  /// **'Calendar sync and notification lead time'**
+  String get reminderSettingsDescription;
+
+  /// Label for the reminder lead-time dropdown
+  ///
+  /// In en, this message translates to:
+  /// **'Notification lead time'**
+  String get notificationLeadTime;
+
+  /// In en, this message translates to:
+  /// **'3 days'**
+  String get reminderLeadTime3Days;
+
+  /// In en, this message translates to:
+  /// **'1 week'**
+  String get reminderLeadTime1Week;
+
+  /// In en, this message translates to:
+  /// **'2 weeks'**
+  String get reminderLeadTime2Weeks;
+
+  /// In en, this message translates to:
+  /// **'1 month'**
+  String get reminderLeadTime1Month;
+
+  /// In en, this message translates to:
+  /// **'2 months'**
+  String get reminderLeadTime2Months;
+
+  /// In en, this message translates to:
+  /// **'3 months'**
+  String get reminderLeadTime3Months;
+
+  /// Description text on reminder sync screen
+  ///
+  /// In en, this message translates to:
+  /// **'Sync vaccination due dates to your calendar and schedule local reminder notifications.'**
+  String get reminderSyncDescription;
+
+  /// Primary button label to trigger reminder synchronization
+  ///
+  /// In en, this message translates to:
+  /// **'Sync reminders now'**
+  String get syncRemindersNow;
+
+  /// Feedback text after reminder synchronization
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder sync completed. Calendar created: {created}, updated: {updated}, removed: {removed}. Notifications scheduled: {scheduled}.'**
+  String reminderSyncSuccess(int created, int updated, int removed, int scheduled);
+
   /// Generic error message label
   ///
   /// In en, this message translates to:
