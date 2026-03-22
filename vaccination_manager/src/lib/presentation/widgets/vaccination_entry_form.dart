@@ -74,10 +74,11 @@ class _VaccinationEntryFormState extends State<VaccinationEntryForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(local.vaccinationName, style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 8),
           TextFormField(
             controller: _nameController,
             textInputAction: TextInputAction.next,
-            decoration: InputDecoration(labelText: local.vaccinationName),
             validator: (value) {
               if (value == null || value.trim().isEmpty) {
                 return local.vaccinationNameValidation;
@@ -125,28 +126,35 @@ class _VaccinationEntryFormState extends State<VaccinationEntryForm> {
                       child: Row(
                         children: [
                           Expanded(
-                            child: TextFormField(
-                              controller: _shotDateControllers[index],
-                              readOnly: true,
-                              decoration: InputDecoration(
-                                labelText: local.shotNumber(index + 1),
-                                helperText: isPlanned ? local.plannedShot : local.recordedShot,
-                                suffixIcon: IconButton(
-                                  onPressed: _isSaving
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(local.shotNumber(index + 1), style: Theme.of(context).textTheme.titleSmall),
+                                const SizedBox(height: 4),
+                                TextFormField(
+                                  controller: _shotDateControllers[index],
+                                  readOnly: true,
+                                  decoration: InputDecoration(
+                                    suffixIcon: IconButton(
+                                      onPressed: _isSaving
+                                          ? null
+                                          : () async {
+                                              await _pickShotDate(context, index);
+                                              field.didChange(_shotDates);
+                                            },
+                                      icon: const Icon(Icons.calendar_today),
+                                    ),
+                                  ),
+                                  onTap: _isSaving
                                       ? null
                                       : () async {
                                           await _pickShotDate(context, index);
                                           field.didChange(_shotDates);
                                         },
-                                  icon: const Icon(Icons.calendar_today),
                                 ),
-                              ),
-                              onTap: _isSaving
-                                  ? null
-                                  : () async {
-                                      await _pickShotDate(context, index);
-                                      field.didChange(_shotDates);
-                                    },
+                                const SizedBox(height: 4),
+                                Text(isPlanned ? local.plannedShot : local.recordedShot, style: Theme.of(context).textTheme.bodySmall),
+                              ],
                             ),
                           ),
                           if (_mode == VaccinationCourseMode.multiShot && _shotDates.length > 1) ...[
@@ -191,11 +199,12 @@ class _VaccinationEntryFormState extends State<VaccinationEntryForm> {
             },
           ),
           const SizedBox(height: 16),
+          Text(local.vaccinationExpiresOn, style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 8),
           TextFormField(
             controller: _expirationDateController,
             readOnly: true,
             decoration: InputDecoration(
-              labelText: local.vaccinationExpiresOn,
               suffixIcon: IconButton(onPressed: _isSaving ? null : () => _pickExpirationDate(context), icon: const Icon(Icons.event_available)),
             ),
             onTap: _isSaving ? null : () => _pickExpirationDate(context),

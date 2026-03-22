@@ -54,11 +54,29 @@ class AppTheme {
         filled: true,
         fillColor: colorScheme.surfaceContainerHighest,
         contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.pill), borderSide: BorderSide.none),
-        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppRadii.pill), borderSide: BorderSide.none),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadii.lg),
+          borderSide: BorderSide(color: colorScheme.outlineVariant),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadii.lg),
+          borderSide: BorderSide(color: colorScheme.outlineVariant),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadii.lg),
+          borderSide: BorderSide(color: colorScheme.outlineVariant),
+        ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppRadii.pill),
-          borderSide: BorderSide(color: colorScheme.primary),
+          borderRadius: BorderRadius.circular(AppRadii.lg),
+          borderSide: BorderSide(color: colorScheme.primary, width: 1.6),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadii.lg),
+          borderSide: BorderSide(color: colorScheme.error),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(AppRadii.lg),
+          borderSide: BorderSide(color: colorScheme.error, width: 1.6),
         ),
       ),
       listTileTheme: base.listTileTheme.copyWith(shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppRadii.md))),
