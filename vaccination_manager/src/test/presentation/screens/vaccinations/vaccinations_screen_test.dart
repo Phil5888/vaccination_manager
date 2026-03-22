@@ -113,6 +113,30 @@ void main() {
     expect(find.text('Add shot'), findsOneWidget);
   });
 
+  testWidgets('shows planned and recorded badges for shot dates', (tester) async {
+    final now = DateTime.now();
+    final series = VaccinationSeriesEntity(
+      name: 'FSME',
+      entries: [
+        VaccinationEntryEntity(id: 1, userId: 1, name: 'FSME', vaccinationDate: now.add(const Duration(days: 12)), nextVaccinationRequiredDate: now.add(const Duration(days: 200)), createdAt: now),
+        VaccinationEntryEntity(id: 2, userId: 1, name: 'FSME', vaccinationDate: now.subtract(const Duration(days: 30)), nextVaccinationRequiredDate: now.add(const Duration(days: 200)), createdAt: now),
+      ],
+    );
+
+    await tester.pumpWidget(
+      _buildTestApp(
+        viewModelFactory: () => _TestVaccinationViewModel(VaccinationOverviewState(activeUser: activeUser, series: [series])),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(ExpansionTile, 'FSME'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Planned shot'), findsOneWidget);
+    expect(find.text('Recorded shot'), findsOneWidget);
+  });
+
   testWidgets('tapping reminder filter calls setFilter with selected status', (tester) async {
     final model = _TestVaccinationViewModel(
       VaccinationOverviewState(

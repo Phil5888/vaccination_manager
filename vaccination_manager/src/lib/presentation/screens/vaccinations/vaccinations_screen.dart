@@ -259,6 +259,7 @@ class _VaccinationEntryTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context)!;
     final materialLocalizations = MaterialLocalizations.of(context);
+    final isPlanned = _isPlanned(entry.vaccinationDate);
 
     return ListTile(
       contentPadding: EdgeInsets.zero,
@@ -268,6 +269,8 @@ class _VaccinationEntryTile extends StatelessWidget {
         children: [
           Text('${local.vaccinationDate}: ${materialLocalizations.formatCompactDate(entry.vaccinationDate)}'),
           Text('${local.nextVaccinationRequired}: ${materialLocalizations.formatCompactDate(entry.nextVaccinationRequiredDate)}'),
+          const SizedBox(height: 6),
+          _ShotStatusBadge(label: isPlanned ? local.plannedShot : local.recordedShot, isPlanned: isPlanned),
         ],
       ),
       trailing: Row(
@@ -289,6 +292,13 @@ class _VaccinationEntryTile extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  bool _isPlanned(DateTime date) {
+    final today = DateTime.now();
+    final dateOnly = DateTime(date.year, date.month, date.day);
+    final todayOnly = DateTime(today.year, today.month, today.day);
+    return dateOnly.isAfter(todayOnly);
   }
 
   Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
@@ -325,5 +335,25 @@ class _VaccinationEntryTile extends StatelessWidget {
       }
       messenger.showSnackBar(SnackBar(content: Text('${local.error}: $error')));
     }
+  }
+}
+
+class _ShotStatusBadge extends StatelessWidget {
+  const _ShotStatusBadge({required this.label, required this.isPlanned});
+
+  final String label;
+  final bool isPlanned;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final foreground = isPlanned ? colorScheme.primary : colorScheme.onSurfaceVariant;
+    final background = isPlanned ? colorScheme.primaryContainer : colorScheme.surfaceContainerHighest;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(color: background, borderRadius: BorderRadius.circular(999)),
+      child: Text(label, style: Theme.of(context).textTheme.labelMedium?.copyWith(color: foreground)),
+    );
   }
 }
