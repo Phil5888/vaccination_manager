@@ -30,7 +30,13 @@ class SettingsViewModel extends Notifier<SettingsState> {
     final String? lang = await _repo.getLanguage();
     final bool dark = await _repo.getDarkMode();
     final reminderLeadTime = ReminderLeadTime.fromStorageKey(await _repo.getReminderLeadTime());
-    state = SettingsState(locale: Locale(lang ?? WidgetsBinding.instance.platformDispatcher.locale.languageCode), isDarkMode: dark, reminderLeadTime: reminderLeadTime);
+
+    // Determine final language: saved pref → system locale if supported → fallback to English
+    final systemLocale = WidgetsBinding.instance.platformDispatcher.locale.languageCode;
+    final supportedLangs = ['en', 'de'];
+    final finalLang = lang ?? (supportedLangs.contains(systemLocale) ? systemLocale : 'en');
+
+    state = SettingsState(locale: Locale(finalLang), isDarkMode: dark, reminderLeadTime: reminderLeadTime);
   }
 
   void setLanguage(String? lang) async {

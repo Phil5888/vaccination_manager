@@ -2,6 +2,6 @@
 
 A new Flutter project.
 
-Todo:
-Add to calendear
-Push notifications for upcomming vaccinations
+## Future improvements
+
+- Improve calendar entries with more text and lead-time reminder configuration
