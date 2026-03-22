@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:vaccination_manager/core/constants/app_spacing.dart';
 
 class AppTheme {
-  static final ColorScheme _lightColorScheme = ColorScheme.fromSeed(seedColor: const Color(0xFF0B6E4F), brightness: Brightness.light);
-  static final ColorScheme _darkColorScheme = ColorScheme.fromSeed(seedColor: const Color(0xFF0B6E4F), brightness: Brightness.dark);
+  static final ColorScheme _lightColorScheme = ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 100, 13, 122), brightness: Brightness.light);
+  static final ColorScheme _darkColorScheme = ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 100, 13, 122), brightness: Brightness.dark);
 
   static final light = _buildTheme(_lightColorScheme);
 
