@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vaccination_manager/core/constants/app_spacing.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:vaccination_manager/presentation/providers/user_management/user_management_providers.dart';
 import 'package:vaccination_manager/presentation/widgets/user_profile_form.dart';
@@ -16,17 +17,17 @@ class WelcomeScreen extends ConsumerWidget {
         child: ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 560),
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(24),
+            padding: AppSpacing.contentPadding,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(local.welcomeTitle, style: Theme.of(context).textTheme.headlineMedium),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.md),
                 Text(local.welcomeBody, style: Theme.of(context).textTheme.bodyLarge),
-                const SizedBox(height: 24),
+                const SizedBox(height: AppSpacing.xl),
                 Card(
                   child: Padding(
-                    padding: const EdgeInsets.all(24),
+                    padding: AppSpacing.contentPadding,
                     child: UserProfileForm(
                       submitLabel: local.createFirstUser,
                       onSubmit: (username, picture) async {

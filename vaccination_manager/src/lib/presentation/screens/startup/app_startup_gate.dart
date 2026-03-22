@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vaccination_manager/core/constants/app_spacing.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:vaccination_manager/presentation/providers/user_management/user_management_providers.dart';
 import 'package:vaccination_manager/presentation/screens/main/main_screen.dart';
@@ -18,7 +19,7 @@ class AppStartupGate extends ConsumerWidget {
       error: (error, _) => Scaffold(
         body: Center(
           child: Padding(
-            padding: const EdgeInsets.all(24),
+            padding: AppSpacing.contentPadding,
             child: Text('${local.error}: $error', textAlign: TextAlign.center),
           ),
         ),

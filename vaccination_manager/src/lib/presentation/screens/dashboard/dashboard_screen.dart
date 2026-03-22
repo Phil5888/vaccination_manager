@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vaccination_manager/core/constants/app_spacing.dart';
 import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/domain/entities/vaccination_series_entity.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
@@ -21,7 +22,7 @@ class DashboardScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(local.dashboard)),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: AppSpacing.screenPadding,
         child: LayoutBuilder(
           builder: (context, constraints) {
             final isWide = constraints.maxWidth > 900;
@@ -33,7 +34,7 @@ class DashboardScreen extends ConsumerWidget {
                         flex: 5,
                         child: _WelcomeDashboardCard(userState: userState, vaccinationState: vaccinationState),
                       ),
-                      SizedBox(width: 16),
+                      const SizedBox(width: AppSpacing.lg),
                       Expanded(
                         flex: 7,
                         child: _UpcomingVaccinationsCard(vaccinationState: vaccinationState, userState: userState),
@@ -43,7 +44,7 @@ class DashboardScreen extends ConsumerWidget {
                 : ListView(
                     children: [
                       _WelcomeDashboardCard(userState: userState, vaccinationState: vaccinationState),
-                      const SizedBox(height: 16),
+                      const SizedBox(height: AppSpacing.lg),
                       _UpcomingVaccinationsCard(vaccinationState: vaccinationState, userState: userState),
                     ],
                   );
@@ -67,7 +68,7 @@ class _WelcomeDashboardCard extends ConsumerWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: AppSpacing.contentPadding,
         child: userState.when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (error, _) => Text('${local.error}: $error'),
@@ -78,9 +79,9 @@ class _WelcomeDashboardCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(local.noUsersTitle, style: Theme.of(context).textTheme.titleLarge),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSpacing.sm),
                   Text(local.noUsersBody),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.lg),
                   FilledButton(onPressed: () => Navigator.of(context).pushNamed(Routes.userEdit), child: Text(local.addUser)),
                 ],
               );
@@ -96,25 +97,25 @@ class _WelcomeDashboardCard extends ConsumerWidget {
                 Row(
                   children: [
                     UserAvatar(user: activeUser, radius: 28),
-                    const SizedBox(width: 12),
+                    const SizedBox(width: AppSpacing.md),
                     Expanded(child: Text(local.dashboardHeroGreeting(activeUser.username), style: Theme.of(context).textTheme.headlineSmall)),
                   ],
                 ),
-                const SizedBox(height: 8),
+                const SizedBox(height: AppSpacing.sm),
                 Text(local.dashboardHeroSubtitle, style: Theme.of(context).textTheme.bodyLarge),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
                   children: [
                     Chip(label: Text('${local.overdue}: $overdue')),
                     Chip(label: Text('${local.dueSoon}: $dueSoon')),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
+                  spacing: AppSpacing.md,
+                  runSpacing: AppSpacing.md,
                   children: [
                     FilledButton.tonalIcon(onPressed: () => showUserSwitcherSheet(context, ref), icon: const Icon(Icons.swap_horiz), label: Text(local.switchUser)),
                     OutlinedButton.icon(onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(Routes.users, (route) => false), icon: const Icon(Icons.manage_accounts_outlined), label: Text(local.manageUsers)),
@@ -142,7 +143,7 @@ class _UpcomingVaccinationsCard extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(20),
+        padding: AppSpacing.contentPadding,
         child: vaccinationState.when(
           loading: () => const LinearProgressIndicator(),
           error: (error, _) => Text('${local.error}: $error'),
@@ -156,9 +157,9 @@ class _UpcomingVaccinationsCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(local.noVaccinationsTitle, style: Theme.of(context).textTheme.titleLarge),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSpacing.sm),
                   Text(local.noVaccinationsBody),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.lg),
                   FilledButton.tonal(onPressed: () => Navigator.of(context).pushNamed(Routes.vaccinationEdit), child: Text(local.addVaccination)),
                 ],
               );
@@ -182,25 +183,25 @@ class _UpcomingVaccinationsCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(local.dashboardUpcomingTitle, style: Theme.of(context).textTheme.titleLarge),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.md),
                 Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
+                  spacing: AppSpacing.sm,
+                  runSpacing: AppSpacing.sm,
                   children: [
                     Chip(label: Text('${local.overdue}: ${state.overdueCountAt(now)}')),
                     Chip(label: Text('${local.dueSoon}: ${state.dueSoonCountAt(now)}')),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 if (dueSeries.isEmpty) ...[
                   Row(
                     children: [
                       Icon(Icons.verified_outlined, color: Theme.of(context).colorScheme.primary),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: AppSpacing.md - 2),
                       Expanded(child: Text(local.dashboardAllGoodTitle, style: Theme.of(context).textTheme.titleMedium)),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSpacing.sm),
                   Text(local.dashboardAllGoodBody),
                 ] else ...[
                   ...dueSeries.map(
@@ -213,7 +214,7 @@ class _UpcomingVaccinationsCard extends StatelessWidget {
                     ),
                   ),
                 ],
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 FilledButton.tonal(onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(Routes.vaccinations, (route) => false), child: Text(local.dashboardOpenVaccinations)),
               ],
             );

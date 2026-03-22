@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vaccination_manager/core/constants/breakpoints.dart';
+import 'package:vaccination_manager/core/constants/app_spacing.dart';
 import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:vaccination_manager/presentation/navigation/route_aware_widget.dart';
@@ -121,15 +122,15 @@ class _MainScreenState extends State<MainScreen> {
     final colorScheme = Theme.of(context).colorScheme;
 
     return SafeArea(
-      minimum: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+      minimum: const EdgeInsets.fromLTRB(AppSpacing.md, 0, AppSpacing.md, AppSpacing.md),
       child: DecoratedBox(
         decoration: BoxDecoration(
           color: colorScheme.surfaceContainerHigh,
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppRadii.xl),
           boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.18), blurRadius: 18, offset: const Offset(0, 8))],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(24),
+          borderRadius: BorderRadius.circular(AppRadii.xl),
           child: NavigationBar(
             selectedIndex: _selectedIndex,
             onDestinationSelected: _onItemTapped,

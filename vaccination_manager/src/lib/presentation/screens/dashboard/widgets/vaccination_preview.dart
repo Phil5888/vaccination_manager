@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vaccination_manager/core/constants/app_spacing.dart';
 import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:vaccination_manager/presentation/providers/vaccination/vaccination_providers.dart';
@@ -16,42 +17,42 @@ class VaccinationPreviewCard extends ConsumerWidget {
 
     return vaccinationState.when(
       loading: () => const Card(
-        child: Padding(padding: EdgeInsets.all(16), child: LinearProgressIndicator()),
+        child: Padding(padding: AppSpacing.cardPadding, child: LinearProgressIndicator()),
       ),
       error: (error, _) => Card(
-        child: Padding(padding: const EdgeInsets.all(16), child: Text('${local.error}: $error')),
+        child: Padding(padding: AppSpacing.cardPadding, child: Text('${local.error}: $error')),
       ),
       data: (state) {
         final nextDue = state.nextDueSeriesAt(today);
         return Card(
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: AppSpacing.cardPadding,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(local.vaccinationStatus, style: Theme.of(context).textTheme.titleLarge),
-                const SizedBox(height: 12),
+                const SizedBox(height: AppSpacing.md),
                 if (!state.hasActiveUser)
                   Text(local.noUsersBody)
                 else if (!state.hasVaccinations) ...[
                   Text(local.noVaccinationsTitle, style: Theme.of(context).textTheme.titleMedium),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSpacing.sm),
                   Text(local.noVaccinationsBody),
                 ] else ...[
                   Text(local.recordForUser(state.activeUser!.username), style: Theme.of(context).textTheme.titleMedium),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: AppSpacing.md),
                   Text('${local.overdueVaccinations}: ${state.overdueCountAt(today)}'),
                   Text('${local.upcomingVaccinations}: ${state.dueSoonCountAt(today)}'),
                   if (nextDue != null) ...[
-                    const SizedBox(height: 12),
+                    const SizedBox(height: AppSpacing.md),
                     Text(nextDue.name, style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.sm),
                     VaccinationStatusChip(status: nextDue.statusAt(today)),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.sm),
                     Text('${local.nextDue}: ${MaterialLocalizations.of(context).formatCompactDate(nextDue.nextRequiredDate)}'),
                   ],
                 ],
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 FilledButton.tonal(onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(Routes.vaccinations, (route) => false), child: Text(local.vaccinations)),
               ],
             ),

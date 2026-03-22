@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vaccination_manager/core/constants/app_component_styles.dart';
+import 'package:vaccination_manager/core/constants/app_spacing.dart';
 import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/domain/entities/app_user_entity.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
@@ -33,7 +35,6 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
   @override
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context)!;
-    final colorScheme = Theme.of(context).colorScheme;
     final userState = ref.watch(userManagementProvider);
     final data = userState.asData?.value;
 
@@ -43,17 +44,12 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
         actions: [
           if (data?.hasUsers ?? false)
             Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: IconButton.filledTonal(icon: const Icon(Icons.search), tooltip: local.searchUsers, onPressed: () => _openSearch(data!)),
+              padding: AppSpacing.actionPadding,
+              child: IconButton.filledTonal(style: AppComponentStyles.appBarSecondaryIconButton(context), icon: const Icon(Icons.search), tooltip: local.searchUsers, onPressed: () => _openSearch(data!)),
             ),
           Padding(
-            padding: const EdgeInsets.only(right: 8),
-            child: IconButton.filled(
-              style: IconButton.styleFrom(backgroundColor: colorScheme.primary, foregroundColor: colorScheme.onPrimary),
-              icon: const Icon(Icons.add),
-              tooltip: local.addUser,
-              onPressed: () => Navigator.of(context).pushNamed(Routes.userEdit),
-            ),
+            padding: AppSpacing.actionPadding,
+            child: IconButton.filled(style: AppComponentStyles.appBarPrimaryIconButton(context), icon: const Icon(Icons.add), tooltip: local.addUser, onPressed: () => Navigator.of(context).pushNamed(Routes.userEdit)),
           ),
           IconButton(icon: const Icon(Icons.swap_horiz), onPressed: () => showUserSwitcherSheet(context, ref)),
         ],
@@ -65,12 +61,12 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
           if (!state.hasUsers) {
             return Center(
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: AppSpacing.contentPadding,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(local.noUsersTitle, style: Theme.of(context).textTheme.titleLarge),
-                    const SizedBox(height: 8),
+                    const SizedBox(height: AppSpacing.sm),
                     Text(local.noUsersBody, textAlign: TextAlign.center),
                   ],
                 ),
@@ -79,14 +75,14 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
           }
 
           return ListView.separated(
-            padding: const EdgeInsets.all(16),
+            padding: AppSpacing.listPadding,
             itemCount: state.users.length,
-            separatorBuilder: (_, _) => const SizedBox(height: 12),
+            separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.md),
             itemBuilder: (context, index) {
               final user = state.users[index];
               return Card(
                 child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  contentPadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.md),
                   leading: UserAvatar(user: user, radius: 24),
                   title: Text(user.username),
                   subtitle: user.isActive ? Text(local.currentUser) : null,
@@ -174,8 +170,6 @@ class _UserSearchScreenState extends State<_UserSearchScreen> {
                 Navigator.of(context).pop();
               },
             ),
-            border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(999))),
-            isDense: true,
           ),
         ),
       ),
@@ -184,7 +178,7 @@ class _UserSearchScreenState extends State<_UserSearchScreen> {
           if (_controller.text.trim().isEmpty) {
             return Center(
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: AppSpacing.contentPadding,
                 child: Text(local.searchUsersStart, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge),
               ),
             );
@@ -193,18 +187,17 @@ class _UserSearchScreenState extends State<_UserSearchScreen> {
           if (matches.isEmpty) {
             return Center(
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: AppSpacing.contentPadding,
                 child: Text(local.searchUsersNoMatches, textAlign: TextAlign.center),
               ),
             );
           }
 
           return ListView.separated(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
+            padding: AppSpacing.searchResultsPadding,
             itemBuilder: (context, index) {
               final user = matches[index];
               return ListTile(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 tileColor: Theme.of(context).colorScheme.surfaceContainerHigh,
                 leading: UserAvatar(user: user, radius: 20),
                 title: Text(user.username),
@@ -213,7 +206,7 @@ class _UserSearchScreenState extends State<_UserSearchScreen> {
                 onTap: () => Navigator.of(context).pop(user),
               );
             },
-            separatorBuilder: (_, _) => const SizedBox(height: 8),
+            separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
             itemCount: matches.length,
           );
         },

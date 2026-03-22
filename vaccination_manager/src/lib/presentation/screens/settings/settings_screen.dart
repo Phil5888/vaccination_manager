@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vaccination_manager/core/constants/app_spacing.dart';
 import 'package:vaccination_manager/core/utils/localization_utils.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,20 +21,20 @@ class SettingsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: MediaQuery.of(context).size.width < 800 ? AppBar(title: Text(local.settings)) : null,
       body: ListView(
-        padding: const EdgeInsets.all(16),
+        padding: AppSpacing.listPadding,
         children: [
-          Text(local.language, style: TextStyle(fontSize: 18)),
+          Text(local.language, style: Theme.of(context).textTheme.titleMedium),
           DropdownButton<String>(
             value: settings.locale.languageCode,
             items: AppLocalizations.supportedLocales.map((locale) => DropdownMenuItem<String>(value: locale.languageCode, child: Text(getLanguageLabel(context, locale.languageCode, withFlag: true)))).toList(),
             onChanged: notifier.setLanguage,
           ),
-          const SizedBox(height: 24),
-          Text(local.theme, style: TextStyle(fontSize: 18)),
+          const SizedBox(height: AppSpacing.xl),
+          Text(local.theme, style: Theme.of(context).textTheme.titleMedium),
           SwitchListTile(title: Text(local.darkMode), value: settings.isDarkMode, onChanged: notifier.setDarkMode),
-          const SizedBox(height: 24),
-          Text(local.activeUser, style: const TextStyle(fontSize: 18)),
-          const SizedBox(height: 12),
+          const SizedBox(height: AppSpacing.xl),
+          Text(local.activeUser, style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: AppSpacing.md),
           usersState.when(
             loading: () => const LinearProgressIndicator(),
             error: (error, _) => Text('${local.error}: $error'),

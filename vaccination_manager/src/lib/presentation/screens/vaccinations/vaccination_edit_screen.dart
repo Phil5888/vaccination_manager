@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vaccination_manager/core/constants/app_spacing.dart';
 import 'package:vaccination_manager/domain/entities/vaccination_entry_entity.dart';
 import 'package:vaccination_manager/domain/entities/vaccination_series_entity.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
@@ -33,13 +34,13 @@ class VaccinationEditScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(initialEntry == null ? local.addVaccination : local.editVaccination)),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: AppSpacing.screenPadding,
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 640),
             child: Card(
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: AppSpacing.contentPadding,
                 child: VaccinationEntryForm(
                   submitLabel: local.save,
                   initialName: initialSeriesName,

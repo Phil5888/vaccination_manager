@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:vaccination_manager/core/constants/app_spacing.dart';
 import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
@@ -17,21 +18,21 @@ class UserPreviewCard extends ConsumerWidget {
     return userState.when(
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, _) => Card(
-        child: Padding(padding: const EdgeInsets.all(16), child: Text('${local.error}: $error')),
+        child: Padding(padding: AppSpacing.cardPadding, child: Text('${local.error}: $error')),
       ),
       data: (state) {
         final activeUser = state.activeUser;
         if (activeUser == null) {
           return Card(
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: AppSpacing.cardPadding,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(local.noUsersTitle, style: Theme.of(context).textTheme.titleMedium),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: AppSpacing.sm),
                   Text(local.noUsersBody),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.lg),
                   FilledButton(onPressed: () => Navigator.of(context).pushNamed(Routes.userEdit), child: Text(local.addUser)),
                 ],
               ),
@@ -41,16 +42,16 @@ class UserPreviewCard extends ConsumerWidget {
 
         return Card(
           child: Padding(
-            padding: const EdgeInsets.all(16),
+            padding: AppSpacing.cardPadding,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(local.activeUser, style: Theme.of(context).textTheme.titleMedium),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 Row(
                   children: [
                     UserAvatar(user: activeUser, radius: 28),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: AppSpacing.lg),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -62,10 +63,10 @@ class UserPreviewCard extends ConsumerWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
+                  spacing: AppSpacing.md,
+                  runSpacing: AppSpacing.md,
                   children: [
                     FilledButton.tonalIcon(onPressed: () => showUserSwitcherSheet(context, ref), icon: const Icon(Icons.swap_horiz), label: Text(local.switchUser)),
                     OutlinedButton.icon(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vaccination_manager/core/constants/app_component_styles.dart';
+import 'package:vaccination_manager/core/constants/app_spacing.dart';
 import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/domain/entities/vaccination_entry_entity.dart';
 import 'package:vaccination_manager/domain/entities/vaccination_series_entity.dart';
@@ -60,7 +62,6 @@ class _VaccinationsScreenState extends ConsumerState<VaccinationsScreen> {
   @override
   Widget build(BuildContext context) {
     final local = AppLocalizations.of(context)!;
-    final colorScheme = Theme.of(context).colorScheme;
     final vaccinationState = ref.watch(vaccinationsProvider);
     final today = DateTime.now();
     final seriesForSearch = vaccinationState.asData?.value.series ?? const <VaccinationSeriesEntity>[];
@@ -71,17 +72,12 @@ class _VaccinationsScreenState extends ConsumerState<VaccinationsScreen> {
         actions: [
           if (seriesForSearch.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.only(right: 8),
-              child: IconButton.filledTonal(icon: const Icon(Icons.search), tooltip: local.searchVaccinations, onPressed: () => _openSearch(seriesForSearch)),
+              padding: AppSpacing.actionPadding,
+              child: IconButton.filledTonal(style: AppComponentStyles.appBarSecondaryIconButton(context), icon: const Icon(Icons.search), tooltip: local.searchVaccinations, onPressed: () => _openSearch(seriesForSearch)),
             ),
           Padding(
-            padding: const EdgeInsets.only(right: 12),
-            child: IconButton.filled(
-              style: IconButton.styleFrom(backgroundColor: colorScheme.primary, foregroundColor: colorScheme.onPrimary),
-              icon: const Icon(Icons.add),
-              tooltip: local.addVaccination,
-              onPressed: () => Navigator.of(context).pushNamed(Routes.vaccinationEdit),
-            ),
+            padding: AppSpacing.actionPaddingLast,
+            child: IconButton.filled(style: AppComponentStyles.appBarPrimaryIconButton(context), icon: const Icon(Icons.add), tooltip: local.addVaccination, onPressed: () => Navigator.of(context).pushNamed(Routes.vaccinationEdit)),
           ),
         ],
       ),
@@ -94,7 +90,7 @@ class _VaccinationsScreenState extends ConsumerState<VaccinationsScreen> {
           if (!state.hasActiveUser) {
             return Center(
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: AppSpacing.contentPadding,
                 child: Text(local.noUsersBody, textAlign: TextAlign.center),
               ),
             );
@@ -103,19 +99,19 @@ class _VaccinationsScreenState extends ConsumerState<VaccinationsScreen> {
           if (!state.hasVaccinations) {
             return Center(
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: AppSpacing.contentPadding,
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 520),
                   child: Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(24),
+                      padding: AppSpacing.contentPadding,
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text(local.noVaccinationsTitle, style: Theme.of(context).textTheme.titleLarge),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: AppSpacing.sm),
                           Text(local.noVaccinationsBody, textAlign: TextAlign.center),
-                          const SizedBox(height: 16),
+                          const SizedBox(height: AppSpacing.lg),
                           FilledButton.icon(onPressed: () => Navigator.of(context).pushNamed(Routes.vaccinationEdit), icon: const Icon(Icons.add), label: Text(local.addVaccination)),
                         ],
                       ),
@@ -128,15 +124,15 @@ class _VaccinationsScreenState extends ConsumerState<VaccinationsScreen> {
 
           if (filteredSeries.isEmpty) {
             return ListView(
-              padding: const EdgeInsets.all(16),
+              padding: AppSpacing.listPadding,
               children: [
                 _VaccinationSummaryCard(state: state, referenceDate: today),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 _VaccinationFilterBar(selectedFilter: state.selectedFilter),
-                const SizedBox(height: 16),
+                const SizedBox(height: AppSpacing.lg),
                 Card(
                   child: Padding(
-                    padding: const EdgeInsets.all(24),
+                    padding: AppSpacing.contentPadding,
                     child: Text(local.noVaccinationsForFilter, textAlign: TextAlign.center),
                   ),
                 ),
@@ -145,17 +141,17 @@ class _VaccinationsScreenState extends ConsumerState<VaccinationsScreen> {
           }
 
           return ListView(
-            padding: const EdgeInsets.all(16),
+            padding: AppSpacing.listPadding,
             children: [
               _VaccinationSummaryCard(state: state, referenceDate: today),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
               _VaccinationFilterBar(selectedFilter: state.selectedFilter),
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
               ...filteredSeries.map((series) {
                 final normalizedName = _seriesKeyFromName(series.name);
                 return Padding(
                   key: _seriesKeyFor(normalizedName),
-                  padding: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.only(bottom: AppSpacing.md),
                   child: _VaccinationSeriesCard(series: series, initiallyExpanded: normalizedName == _expandedSeriesKey),
                 );
               }),
@@ -203,21 +199,21 @@ class _VaccinationSummaryCard extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: AppSpacing.cardPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
                 UserAvatar(user: activeUser, radius: 24),
-                const SizedBox(width: 12),
+                const SizedBox(width: AppSpacing.md),
                 Expanded(child: Text(local.recordForUser(activeUser.username), style: Theme.of(context).textTheme.titleLarge)),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: AppSpacing.lg),
             Wrap(
-              spacing: 16,
-              runSpacing: 12,
+              spacing: AppSpacing.lg,
+              runSpacing: AppSpacing.md,
               children: [
                 _SummaryValue(label: local.shotsRecorded, value: state.series.fold<int>(0, (count, series) => count + series.shotCount).toString()),
                 _SummaryValue(label: local.overdueVaccinations, value: state.overdueCountAt(referenceDate).toString()),
@@ -225,14 +221,14 @@ class _VaccinationSummaryCard extends StatelessWidget {
               ],
             ),
             if (nextDueSeries != null) ...[
-              const SizedBox(height: 16),
+              const SizedBox(height: AppSpacing.lg),
               Text(nextDueSeries.name, style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: 8),
+              const SizedBox(height: AppSpacing.sm),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   VaccinationStatusChip(status: nextDueSeries.statusAt(referenceDate)),
-                  const SizedBox(width: 12),
+                  const SizedBox(width: AppSpacing.md),
                   Expanded(child: Text('${local.nextDue}: ${MaterialLocalizations.of(context).formatCompactDate(nextDueSeries.nextDueDateAt(referenceDate))}')),
                 ],
               ),
@@ -278,11 +274,11 @@ class _VaccinationSeriesCard extends StatelessWidget {
       child: ExpansionTile(
         key: ValueKey('${series.name.toLowerCase()}-${initiallyExpanded ? 'expanded' : 'collapsed'}'),
         initiallyExpanded: initiallyExpanded,
-        tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-        childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+        tilePadding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg, vertical: AppSpacing.sm),
+        childrenPadding: const EdgeInsets.fromLTRB(AppSpacing.lg, 0, AppSpacing.lg, AppSpacing.lg),
         title: Text(series.name, style: Theme.of(context).textTheme.titleMedium),
         subtitle: Padding(
-          padding: const EdgeInsets.only(top: 8),
+          padding: const EdgeInsets.only(top: AppSpacing.sm),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -299,7 +295,7 @@ class _VaccinationSeriesCard extends StatelessWidget {
             final entry = series.entries[index];
             return _VaccinationEntryTile(entry: entry, shotIndex: shotIndex);
           }),
-          const SizedBox(height: 8),
+          const SizedBox(height: AppSpacing.sm),
           Align(
             alignment: Alignment.centerLeft,
             child: FilledButton.tonalIcon(
@@ -416,8 +412,8 @@ class _ShotStatusBadge extends StatelessWidget {
     final background = isPlanned ? colorScheme.primaryContainer : colorScheme.surfaceContainerHighest;
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: background, borderRadius: BorderRadius.circular(999)),
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.md - 2, vertical: AppSpacing.xxs),
+      decoration: BoxDecoration(color: background, borderRadius: BorderRadius.circular(AppRadii.pill)),
       child: Text(label, style: Theme.of(context).textTheme.labelMedium?.copyWith(color: foreground)),
     );
   }
@@ -487,8 +483,6 @@ class _VaccinationSearchScreenState extends State<_VaccinationSearchScreen> {
                 Navigator.of(context).pop();
               },
             ),
-            border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(999))),
-            isDense: true,
           ),
         ),
       ),
@@ -497,7 +491,7 @@ class _VaccinationSearchScreenState extends State<_VaccinationSearchScreen> {
           if (_controller.text.trim().isEmpty) {
             return Center(
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: AppSpacing.contentPadding,
                 child: Text(local.searchVaccinationsStart, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge),
               ),
             );
@@ -506,18 +500,17 @@ class _VaccinationSearchScreenState extends State<_VaccinationSearchScreen> {
           if (matches.isEmpty) {
             return Center(
               child: Padding(
-                padding: const EdgeInsets.all(24),
+                padding: AppSpacing.contentPadding,
                 child: Text(local.searchVaccinationsNoMatches, textAlign: TextAlign.center),
               ),
             );
           }
 
           return ListView.separated(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
+            padding: AppSpacing.searchResultsPadding,
             itemBuilder: (context, index) {
               final item = matches[index];
               return ListTile(
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                 tileColor: Theme.of(context).colorScheme.surfaceContainerHigh,
                 title: Text(item.name),
                 subtitle: Text('${local.shotsRecorded}: ${item.shotCount}'),
@@ -525,7 +518,7 @@ class _VaccinationSearchScreenState extends State<_VaccinationSearchScreen> {
                 onTap: () => Navigator.of(context).pop(item.name),
               );
             },
-            separatorBuilder: (_, _) => const SizedBox(height: 8),
+            separatorBuilder: (_, _) => const SizedBox(height: AppSpacing.sm),
             itemCount: matches.length,
           );
         },

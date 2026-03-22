@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vaccination_manager/core/constants/app_spacing.dart';
 import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/domain/entities/app_user_entity.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
@@ -21,7 +22,7 @@ class UserEditScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(title: Text(initialUser == null ? local.addUser : local.editProfile)),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: AppSpacing.screenPadding,
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 560),
@@ -31,17 +32,17 @@ class UserEditScreen extends ConsumerWidget {
                 if (initialUser != null) ...[
                   Card(
                     child: Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: AppSpacing.cardPadding,
                       child: Wrap(
-                        spacing: 16,
-                        runSpacing: 16,
+                        spacing: AppSpacing.lg,
+                        runSpacing: AppSpacing.lg,
                         crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               UserAvatar(user: initialUser!, radius: 24),
-                              const SizedBox(width: 12),
+                              const SizedBox(width: AppSpacing.md),
                               Text(initialUser!.username, style: Theme.of(context).textTheme.titleMedium),
                             ],
                           ),
@@ -62,7 +63,7 @@ class UserEditScreen extends ConsumerWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: AppSpacing.lg),
                 ],
                 UserProfileForm(
                   initialUsername: initialUser?.username,
