@@ -196,6 +196,8 @@ class _VaccinationSummaryCard extends StatelessWidget {
     final local = AppLocalizations.of(context)!;
     final activeUser = state.activeUser!;
     final nextDueSeries = state.nextDueSeriesAt(referenceDate);
+    final upcomingSeries = state.series.where((series) => series.statusAt(referenceDate) == VaccinationDueStatus.dueSoon).toList()..sort((a, b) => a.nextDueDateAt(referenceDate).compareTo(b.nextDueDateAt(referenceDate)));
+    final compactUpcoming = upcomingSeries.take(3).toList();
 
     return Card(
       child: Padding(
@@ -207,32 +209,60 @@ class _VaccinationSummaryCard extends StatelessWidget {
               children: [
                 UserAvatar(user: activeUser, radius: 24),
                 const SizedBox(width: AppSpacing.md),
-                Expanded(child: Text(local.recordForUser(activeUser.username), style: Theme.of(context).textTheme.titleLarge)),
+                Expanded(child: Text(local.recordForUser(activeUser.username), style: Theme.of(context).textTheme.titleMedium)),
               ],
             ),
-            const SizedBox(height: AppSpacing.lg),
-            Wrap(
-              spacing: AppSpacing.lg,
-              runSpacing: AppSpacing.md,
-              children: [
-                _SummaryValue(label: local.shotsRecorded, value: state.series.fold<int>(0, (count, series) => count + series.shotCount).toString()),
-                _SummaryValue(label: local.overdueVaccinations, value: state.overdueCountAt(referenceDate).toString()),
-                _SummaryValue(label: local.upcomingVaccinations, value: state.dueSoonCountAt(referenceDate).toString()),
-              ],
-            ),
-            if (nextDueSeries != null) ...[
-              const SizedBox(height: AppSpacing.lg),
-              Text(nextDueSeries.name, style: Theme.of(context).textTheme.titleMedium),
-              const SizedBox(height: AppSpacing.sm),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+            const SizedBox(height: AppSpacing.md),
+            Text(local.upcomingVaccinations, style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: AppSpacing.sm),
+            if (compactUpcoming.isEmpty)
+              Text(local.noUpcomingVaccinations, style: Theme.of(context).textTheme.bodyMedium)
+            else
+              ...compactUpcoming.map(
+                (series) => Padding(
+                  padding: const EdgeInsets.only(bottom: AppSpacing.sm),
+                  child: Row(
+                    children: [
+                      Expanded(child: Text('${series.name}  •  ${MaterialLocalizations.of(context).formatCompactDate(series.nextDueDateAt(referenceDate))}', style: Theme.of(context).textTheme.bodyMedium)),
+                      const SizedBox(width: AppSpacing.sm),
+                      VaccinationStatusChip(status: series.statusAt(referenceDate)),
+                    ],
+                  ),
+                ),
+              ),
+            const SizedBox(height: AppSpacing.sm),
+            Theme(
+              data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+              child: ExpansionTile(
+                tilePadding: EdgeInsets.zero,
+                childrenPadding: EdgeInsets.zero,
+                initiallyExpanded: false,
+                title: Text(local.vaccinationStatus, style: Theme.of(context).textTheme.titleSmall),
                 children: [
-                  VaccinationStatusChip(status: nextDueSeries.statusAt(referenceDate)),
-                  const SizedBox(width: AppSpacing.md),
-                  Expanded(child: Text('${local.nextDue}: ${MaterialLocalizations.of(context).formatCompactDate(nextDueSeries.nextDueDateAt(referenceDate))}')),
+                  const SizedBox(height: AppSpacing.sm),
+                  Wrap(
+                    spacing: AppSpacing.lg,
+                    runSpacing: AppSpacing.md,
+                    children: [
+                      _SummaryValue(label: local.shotsRecorded, value: state.series.fold<int>(0, (count, series) => count + series.shotCount).toString()),
+                      _SummaryValue(label: local.overdueVaccinations, value: state.overdueCountAt(referenceDate).toString()),
+                      _SummaryValue(label: local.upcomingVaccinations, value: state.dueSoonCountAt(referenceDate).toString()),
+                    ],
+                  ),
+                  if (nextDueSeries != null) ...[
+                    const SizedBox(height: AppSpacing.md),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        VaccinationStatusChip(status: nextDueSeries.statusAt(referenceDate)),
+                        const SizedBox(width: AppSpacing.md),
+                        Expanded(child: Text('${local.nextDue}: ${MaterialLocalizations.of(context).formatCompactDate(nextDueSeries.nextDueDateAt(referenceDate))}')),
+                      ],
+                    ),
+                  ],
                 ],
               ),
-            ],
+            ),
           ],
         ),
       ),

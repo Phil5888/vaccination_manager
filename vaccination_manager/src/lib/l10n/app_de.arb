@@ -110,6 +110,7 @@
     "upToDate": "Aktuell",
     "recordForUser": "Einträge für {username}",
     "upcomingVaccinations": "Bevorstehende Impfungen",
+    "noUpcomingVaccinations": "Es gibt keine bevorstehenden Impfungen.",
     "overdueVaccinations": "Überfällige Impfungen",
     "vaccinationNameValidation": "Bitte geben Sie einen Impfnamen ein.",
     "vaccinationDateValidation": "Bitte wählen Sie das Impfdatum aus.",

@@ -225,6 +225,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get upcomingVaccinations => 'Upcoming vaccinations';
 
   @override
+  String get noUpcomingVaccinations => 'There are no upcoming vaccinations.';
+
+  @override
   String get overdueVaccinations => 'Overdue vaccinations';
 
   @override

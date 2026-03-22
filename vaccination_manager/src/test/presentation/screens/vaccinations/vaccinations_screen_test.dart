@@ -213,7 +213,7 @@ void main() {
     await tester.pumpWidget(_buildTestApp(viewModelFactory: () => model));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byType(ExpansionTile).first);
+    await tester.tap(find.widgetWithText(ExpansionTile, 'COVID-19').first);
     await tester.pumpAndSettle();
 
     final deleteButton = find.byIcon(Icons.delete_outline).first;

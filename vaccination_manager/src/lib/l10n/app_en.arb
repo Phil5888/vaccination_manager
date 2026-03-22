@@ -295,6 +295,10 @@
     "@upcomingVaccinations": {
         "description": "Label for the count of upcoming vaccination courses"
     },
+    "noUpcomingVaccinations": "There are no upcoming vaccinations.",
+    "@noUpcomingVaccinations": {
+        "description": "Message shown in compact vaccination summary when there are no due-soon vaccinations"
+    },
     "overdueVaccinations": "Overdue vaccinations",
     "@overdueVaccinations": {
         "description": "Label for the count of overdue vaccination courses"
