@@ -166,12 +166,12 @@ class _VaccinationSummaryCard extends StatelessWidget {
               const SizedBox(height: 16),
               Text(nextDueSeries.name, style: Theme.of(context).textTheme.titleMedium),
               const SizedBox(height: 8),
-              Wrap(
-                spacing: 12,
-                runSpacing: 8,
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   VaccinationStatusChip(status: nextDueSeries.statusAt(referenceDate)),
-                  Text('${local.nextDue}: ${MaterialLocalizations.of(context).formatCompactDate(nextDueSeries.nextDueDateAt(referenceDate))}'),
+                  const SizedBox(width: 12),
+                  Expanded(child: Text('${local.nextDue}: ${MaterialLocalizations.of(context).formatCompactDate(nextDueSeries.nextDueDateAt(referenceDate))}')),
                 ],
               ),
             ],
