@@ -48,6 +48,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get edit => 'Bearbeiten';
 
   @override
+  String get delete => 'Löschen';
+
+  @override
   String get on => 'An';
 
   @override
@@ -202,4 +205,30 @@ class AppLocalizationsDe extends AppLocalizations {
   String shotNumber(int count) {
     return 'Dosis $count';
   }
+
+  @override
+  String get deleteVaccination => 'Dosis löschen';
+
+  @override
+  String deleteVaccinationConfirmation(int shotIndex, String vaccinationName) {
+    return 'Dosis $shotIndex von $vaccinationName löschen?';
+  }
+
+  @override
+  String get deleteVaccinationSuccess => 'Dosis gelöscht.';
+
+  @override
+  String get filterAll => 'Alle';
+
+  @override
+  String get filterOverdue => 'Überfällig';
+
+  @override
+  String get filterDueSoon => 'Bald fällig';
+
+  @override
+  String get filterUpToDate => 'Aktuell';
+
+  @override
+  String get noVaccinationsForFilter => 'Keine Impfserien entsprechen diesem Filter.';
 }

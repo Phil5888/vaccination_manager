@@ -173,6 +173,12 @@ abstract class AppLocalizations {
   /// **'Edit'**
   String get edit;
 
+  /// Label for destructive delete actions
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
   /// Label indicating that a feature is enabled or active
   ///
   /// In en, this message translates to:
@@ -472,6 +478,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Shot {count}'**
   String shotNumber(int count);
+
+  /// Tooltip and dialog title for deleting one vaccination shot
+  ///
+  /// In en, this message translates to:
+  /// **'Delete shot'**
+  String get deleteVaccination;
+
+  /// Confirmation message shown before deleting one vaccination shot
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Shot {shotIndex} from {vaccinationName}?'**
+  String deleteVaccinationConfirmation(int shotIndex, String vaccinationName);
+
+  /// Snackbar message shown after deleting a vaccination shot
+  ///
+  /// In en, this message translates to:
+  /// **'Shot deleted.'**
+  String get deleteVaccinationSuccess;
+
+  /// Filter label for showing all vaccination series
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filterAll;
+
+  /// Filter label for overdue vaccination series
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get filterOverdue;
+
+  /// Filter label for due-soon vaccination series
+  ///
+  /// In en, this message translates to:
+  /// **'Due soon'**
+  String get filterDueSoon;
+
+  /// Filter label for up-to-date vaccination series
+  ///
+  /// In en, this message translates to:
+  /// **'Up to date'**
+  String get filterUpToDate;
+
+  /// Empty-state message when the selected reminder filter has no matches
+  ///
+  /// In en, this message translates to:
+  /// **'No vaccination series match this filter.'**
+  String get noVaccinationsForFilter;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

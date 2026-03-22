@@ -4,18 +4,46 @@ import 'package:vaccination_manager/data/repositories/vaccination_repository_imp
 import 'package:vaccination_manager/domain/entities/app_user_entity.dart';
 import 'package:vaccination_manager/domain/entities/vaccination_entry_entity.dart';
 import 'package:vaccination_manager/domain/entities/vaccination_series_entity.dart';
+import 'package:vaccination_manager/domain/usecases/delete_vaccination_usecase.dart';
 import 'package:vaccination_manager/domain/usecases/get_vaccinations_for_user_usecase.dart';
 import 'package:vaccination_manager/domain/usecases/save_vaccination_usecase.dart';
 import 'package:vaccination_manager/presentation/viewmodels/user_management_viewmodel.dart';
 
+enum VaccinationReminderFilter { all, overdue, dueSoon, upToDate }
+
 class VaccinationOverviewState {
-  const VaccinationOverviewState({required this.activeUser, required this.series});
+  const VaccinationOverviewState({required this.activeUser, required this.series, this.selectedFilter = VaccinationReminderFilter.all});
 
   final AppUserEntity? activeUser;
   final List<VaccinationSeriesEntity> series;
+  final VaccinationReminderFilter selectedFilter;
 
   bool get hasActiveUser => activeUser != null;
   bool get hasVaccinations => series.isNotEmpty;
+
+  VaccinationOverviewState copyWith({AppUserEntity? activeUser, List<VaccinationSeriesEntity>? series, VaccinationReminderFilter? selectedFilter}) {
+    return VaccinationOverviewState(activeUser: activeUser ?? this.activeUser, series: series ?? this.series, selectedFilter: selectedFilter ?? this.selectedFilter);
+  }
+
+  List<VaccinationSeriesEntity> filteredSeriesAt(DateTime referenceDate) {
+    if (selectedFilter == VaccinationReminderFilter.all) {
+      return series;
+    }
+
+    return series.where((item) {
+      final status = item.statusAt(referenceDate);
+      switch (selectedFilter) {
+        case VaccinationReminderFilter.all:
+          return true;
+        case VaccinationReminderFilter.overdue:
+          return status == VaccinationDueStatus.overdue;
+        case VaccinationReminderFilter.dueSoon:
+          return status == VaccinationDueStatus.dueSoon;
+        case VaccinationReminderFilter.upToDate:
+          return status == VaccinationDueStatus.upToDate;
+      }
+    }).toList();
+  }
 
   int overdueCountAt(DateTime referenceDate) {
     return series.where((item) => item.statusAt(referenceDate) == VaccinationDueStatus.overdue).length;
@@ -65,16 +93,22 @@ final saveVaccinationUseCaseProvider = Provider<SaveVaccinationUseCase>((ref) {
   return SaveVaccinationUseCase(ref.read(vaccinationRepositoryProvider));
 });
 
+final deleteVaccinationUseCaseProvider = Provider<DeleteVaccinationUseCase>((ref) {
+  return DeleteVaccinationUseCase(ref.read(vaccinationRepositoryProvider));
+});
+
 final vaccinationsProvider = AsyncNotifierProvider<VaccinationViewModel, VaccinationOverviewState>(VaccinationViewModel.new);
 
 class VaccinationViewModel extends AsyncNotifier<VaccinationOverviewState> {
   late final GetVaccinationsForUserUseCase _getVaccinationsForUser;
   late final SaveVaccinationUseCase _saveVaccination;
+  late final DeleteVaccinationUseCase _deleteVaccination;
 
   @override
   Future<VaccinationOverviewState> build() async {
     _getVaccinationsForUser = ref.read(getVaccinationsForUserUseCaseProvider);
     _saveVaccination = ref.read(saveVaccinationUseCaseProvider);
+    _deleteVaccination = ref.read(deleteVaccinationUseCaseProvider);
     final userState = await ref.watch(userManagementProvider.future);
     return _loadState(userState.activeUser);
   }
@@ -83,6 +117,15 @@ class VaccinationViewModel extends AsyncNotifier<VaccinationOverviewState> {
     state = const AsyncLoading();
     final userState = await ref.read(userManagementProvider.future);
     state = await AsyncValue.guard(() => _loadState(userState.activeUser));
+  }
+
+  void setFilter(VaccinationReminderFilter filter) {
+    final currentState = state.asData?.value;
+    if (currentState == null || currentState.selectedFilter == filter) {
+      return;
+    }
+
+    state = AsyncData(currentState.copyWith(selectedFilter: filter));
   }
 
   Future<VaccinationEntryEntity> saveVaccination({int? id, String? name, required DateTime vaccinationDate, required DateTime nextVaccinationRequiredDate}) async {
@@ -108,6 +151,16 @@ class VaccinationViewModel extends AsyncNotifier<VaccinationOverviewState> {
     return saved;
   }
 
+  Future<void> deleteVaccination(int vaccinationId) async {
+    final currentState = state.asData?.value ?? await build();
+    if (!currentState.hasActiveUser) {
+      throw StateError('An active user is required to delete vaccinations.');
+    }
+
+    await _deleteVaccination(vaccinationId);
+    await refresh();
+  }
+
   Future<VaccinationOverviewState> _loadState(AppUserEntity? activeUser) async {
     if (activeUser?.id == null) {
       return const VaccinationOverviewState(activeUser: null, series: []);
@@ -130,7 +183,8 @@ class VaccinationViewModel extends AsyncNotifier<VaccinationOverviewState> {
         return a.nextRequiredDate.compareTo(b.nextRequiredDate);
       });
 
-    return VaccinationOverviewState(activeUser: activeUser, series: series);
+    final currentFilter = state.asData?.value.selectedFilter ?? VaccinationReminderFilter.all;
+    return VaccinationOverviewState(activeUser: activeUser, series: series, selectedFilter: currentFilter);
   }
 
   VaccinationEntryEntity? _findEntryById(List<VaccinationSeriesEntity> series, int? id) {

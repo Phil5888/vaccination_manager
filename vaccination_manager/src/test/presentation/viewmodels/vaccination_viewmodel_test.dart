@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vaccination_manager/domain/entities/app_user_entity.dart';
 import 'package:vaccination_manager/domain/entities/vaccination_entry_entity.dart';
+import 'package:vaccination_manager/domain/usecases/delete_vaccination_usecase.dart';
 import 'package:vaccination_manager/domain/usecases/get_vaccinations_for_user_usecase.dart';
 import 'package:vaccination_manager/domain/usecases/save_vaccination_usecase.dart';
 import 'package:vaccination_manager/presentation/viewmodels/user_management_viewmodel.dart';
@@ -38,6 +39,7 @@ void main() {
           userManagementProvider.overrideWith(() => _TestUserManagementViewModel(UserManagementState(users: [activeUser], activeUser: activeUser))),
           getVaccinationsForUserUseCaseProvider.overrideWithValue(GetVaccinationsForUserUseCase(repository)),
           saveVaccinationUseCaseProvider.overrideWithValue(SaveVaccinationUseCase(repository)),
+          deleteVaccinationUseCaseProvider.overrideWithValue(DeleteVaccinationUseCase(repository)),
         ],
       );
     });
@@ -63,6 +65,26 @@ void main() {
       final state = await container.read(vaccinationsProvider.future);
       expect(repository.lastSavedEntry?.userId, 1);
       expect(state.series.map((series) => series.name), contains('FSME'));
+    });
+
+    test('deleteVaccination removes one shot and refreshes grouped state', () async {
+      await container.read(vaccinationsProvider.future);
+
+      await container.read(vaccinationsProvider.notifier).deleteVaccination(2);
+
+      final state = await container.read(vaccinationsProvider.future);
+      expect(repository.lastDeletedVaccinationId, 2);
+      expect(state.series, hasLength(1));
+      expect(state.series.first.shotCount, 1);
+    });
+
+    test('setFilter updates selected filter in state', () async {
+      await container.read(vaccinationsProvider.future);
+
+      container.read(vaccinationsProvider.notifier).setFilter(VaccinationReminderFilter.overdue);
+
+      final state = container.read(vaccinationsProvider).asData!.value;
+      expect(state.selectedFilter, VaccinationReminderFilter.overdue);
     });
   });
 }

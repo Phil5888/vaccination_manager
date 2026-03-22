@@ -48,6 +48,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get edit => 'Edit';
 
   @override
+  String get delete => 'Delete';
+
+  @override
   String get on => 'on';
 
   @override
@@ -202,4 +205,30 @@ class AppLocalizationsEn extends AppLocalizations {
   String shotNumber(int count) {
     return 'Shot $count';
   }
+
+  @override
+  String get deleteVaccination => 'Delete shot';
+
+  @override
+  String deleteVaccinationConfirmation(int shotIndex, String vaccinationName) {
+    return 'Delete Shot $shotIndex from $vaccinationName?';
+  }
+
+  @override
+  String get deleteVaccinationSuccess => 'Shot deleted.';
+
+  @override
+  String get filterAll => 'All';
+
+  @override
+  String get filterOverdue => 'Overdue';
+
+  @override
+  String get filterDueSoon => 'Due soon';
+
+  @override
+  String get filterUpToDate => 'Up to date';
+
+  @override
+  String get noVaccinationsForFilter => 'No vaccination series match this filter.';
 }

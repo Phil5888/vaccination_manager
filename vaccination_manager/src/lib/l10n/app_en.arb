@@ -49,6 +49,10 @@
         "description": "Label for the cancel button"
     },
     "edit": "Edit",
+    "delete": "Delete",
+    "@delete": {
+        "description": "Label for destructive delete actions"
+    },
     "@edit": {
         "description": "Label for the edit button"
     },
@@ -266,5 +270,45 @@
                 "type": "int"
             }
         }
+    },
+    "deleteVaccination": "Delete shot",
+    "@deleteVaccination": {
+        "description": "Tooltip and dialog title for deleting one vaccination shot"
+    },
+    "deleteVaccinationConfirmation": "Delete Shot {shotIndex} from {vaccinationName}?",
+    "@deleteVaccinationConfirmation": {
+        "description": "Confirmation message shown before deleting one vaccination shot",
+        "placeholders": {
+            "shotIndex": {
+                "type": "int"
+            },
+            "vaccinationName": {
+                "type": "String"
+            }
+        }
+    },
+    "deleteVaccinationSuccess": "Shot deleted.",
+    "@deleteVaccinationSuccess": {
+        "description": "Snackbar message shown after deleting a vaccination shot"
+    },
+    "filterAll": "All",
+    "@filterAll": {
+        "description": "Filter label for showing all vaccination series"
+    },
+    "filterOverdue": "Overdue",
+    "@filterOverdue": {
+        "description": "Filter label for overdue vaccination series"
+    },
+    "filterDueSoon": "Due soon",
+    "@filterDueSoon": {
+        "description": "Filter label for due-soon vaccination series"
+    },
+    "filterUpToDate": "Up to date",
+    "@filterUpToDate": {
+        "description": "Filter label for up-to-date vaccination series"
+    },
+    "noVaccinationsForFilter": "No vaccination series match this filter.",
+    "@noVaccinationsForFilter": {
+        "description": "Empty-state message when the selected reminder filter has no matches"
     }
 }

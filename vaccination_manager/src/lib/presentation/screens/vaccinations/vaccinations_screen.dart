@@ -27,6 +27,8 @@ class VaccinationsScreen extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (error, _) => Center(child: Text('${local.error}: $error')),
         data: (state) {
+          final filteredSeries = state.filteredSeriesAt(today);
+
           if (!state.hasActiveUser) {
             return Center(
               child: Padding(
@@ -62,12 +64,32 @@ class VaccinationsScreen extends ConsumerWidget {
             );
           }
 
+          if (filteredSeries.isEmpty) {
+            return ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                _VaccinationSummaryCard(state: state, referenceDate: today),
+                const SizedBox(height: 16),
+                _VaccinationFilterBar(selectedFilter: state.selectedFilter),
+                const SizedBox(height: 16),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Text(local.noVaccinationsForFilter, textAlign: TextAlign.center),
+                  ),
+                ),
+              ],
+            );
+          }
+
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
               _VaccinationSummaryCard(state: state, referenceDate: today),
               const SizedBox(height: 16),
-              ...state.series.map(
+              _VaccinationFilterBar(selectedFilter: state.selectedFilter),
+              const SizedBox(height: 16),
+              ...filteredSeries.map(
                 (series) => Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: _VaccinationSeriesCard(series: series),
@@ -78,6 +100,28 @@ class VaccinationsScreen extends ConsumerWidget {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(onPressed: () => Navigator.of(context).pushNamed(Routes.vaccinationEdit), icon: const Icon(Icons.add), label: Text(local.addVaccination)),
+    );
+  }
+}
+
+class _VaccinationFilterBar extends ConsumerWidget {
+  const _VaccinationFilterBar({required this.selectedFilter});
+
+  final VaccinationReminderFilter selectedFilter;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final local = AppLocalizations.of(context)!;
+
+    return Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: [
+        ChoiceChip(label: Text(local.filterAll), selected: selectedFilter == VaccinationReminderFilter.all, onSelected: (_) => ref.read(vaccinationsProvider.notifier).setFilter(VaccinationReminderFilter.all)),
+        ChoiceChip(label: Text(local.filterOverdue), selected: selectedFilter == VaccinationReminderFilter.overdue, onSelected: (_) => ref.read(vaccinationsProvider.notifier).setFilter(VaccinationReminderFilter.overdue)),
+        ChoiceChip(label: Text(local.filterDueSoon), selected: selectedFilter == VaccinationReminderFilter.dueSoon, onSelected: (_) => ref.read(vaccinationsProvider.notifier).setFilter(VaccinationReminderFilter.dueSoon)),
+        ChoiceChip(label: Text(local.filterUpToDate), selected: selectedFilter == VaccinationReminderFilter.upToDate, onSelected: (_) => ref.read(vaccinationsProvider.notifier).setFilter(VaccinationReminderFilter.upToDate)),
+      ],
     );
   }
 }
@@ -225,11 +269,57 @@ class _VaccinationEntryTile extends StatelessWidget {
           Text('${local.nextVaccinationRequired}: ${materialLocalizations.formatCompactDate(entry.nextVaccinationRequiredDate)}'),
         ],
       ),
-      trailing: IconButton(
-        icon: const Icon(Icons.edit),
-        tooltip: local.editVaccination,
-        onPressed: () => Navigator.of(context).pushNamed(Routes.vaccinationEdit, arguments: VaccinationEditArguments(initialEntry: entry)),
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            icon: const Icon(Icons.edit),
+            tooltip: local.editVaccination,
+            onPressed: () => Navigator.of(context).pushNamed(Routes.vaccinationEdit, arguments: VaccinationEditArguments(initialEntry: entry)),
+          ),
+          Consumer(
+            builder: (context, ref, _) {
+              return IconButton(icon: const Icon(Icons.delete_outline), tooltip: local.deleteVaccination, onPressed: () => _confirmDelete(context, ref));
+            },
+          ),
+        ],
       ),
     );
+  }
+
+  Future<void> _confirmDelete(BuildContext context, WidgetRef ref) async {
+    final local = AppLocalizations.of(context)!;
+    final messenger = ScaffoldMessenger.of(context);
+
+    final shouldDelete = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        return AlertDialog(
+          title: Text(local.deleteVaccination),
+          content: Text(local.deleteVaccinationConfirmation(shotIndex, entry.name)),
+          actions: [
+            TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: Text(local.cancel)),
+            FilledButton(onPressed: () => Navigator.of(dialogContext).pop(true), child: Text(local.delete)),
+          ],
+        );
+      },
+    );
+
+    if (shouldDelete != true || entry.id == null) {
+      return;
+    }
+
+    try {
+      await ref.read(vaccinationsProvider.notifier).deleteVaccination(entry.id!);
+      if (!context.mounted) {
+        return;
+      }
+      messenger.showSnackBar(SnackBar(content: Text(local.deleteVaccinationSuccess)));
+    } catch (error) {
+      if (!context.mounted) {
+        return;
+      }
+      messenger.showSnackBar(SnackBar(content: Text('${local.error}: $error')));
+    }
   }
 }

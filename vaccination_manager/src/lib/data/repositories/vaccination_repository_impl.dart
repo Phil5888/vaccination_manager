@@ -30,4 +30,10 @@ class VaccinationRepositoryImpl implements VaccinationRepository {
 
     return model.toEntity();
   }
+
+  @override
+  Future<void> deleteVaccination(int vaccinationId) async {
+    final db = await _database.database;
+    await db.delete('vaccinations', where: 'id = ?', whereArgs: [vaccinationId]);
+  }
 }

@@ -13,9 +13,21 @@ class _TestVaccinationViewModel extends VaccinationViewModel {
   _TestVaccinationViewModel(this.initialState);
 
   final VaccinationOverviewState initialState;
+  VaccinationReminderFilter? selectedFilter;
+  int? deletedVaccinationId;
 
   @override
   Future<VaccinationOverviewState> build() async => initialState;
+
+  @override
+  void setFilter(VaccinationReminderFilter filter) {
+    selectedFilter = filter;
+  }
+
+  @override
+  Future<void> deleteVaccination(int vaccinationId) async {
+    deletedVaccinationId = vaccinationId;
+  }
 }
 
 void main() {
@@ -57,6 +69,65 @@ void main() {
 
     expect(find.text('Shot 2'), findsOneWidget);
     expect(find.text('Add shot'), findsOneWidget);
+  });
+
+  testWidgets('tapping reminder filter calls setFilter with selected status', (tester) async {
+    final model = _TestVaccinationViewModel(
+      VaccinationOverviewState(
+        activeUser: activeUser,
+        selectedFilter: VaccinationReminderFilter.all,
+        series: [
+          VaccinationSeriesEntity(
+            name: 'COVID-19',
+            entries: [VaccinationEntryEntity(id: 1, userId: 1, name: 'COVID-19', vaccinationDate: DateTime(2026, 3, 10), nextVaccinationRequiredDate: DateTime(2026, 3, 15), createdAt: DateTime(2026, 3, 10))],
+          ),
+        ],
+      ),
+    );
+
+    await tester.pumpWidget(_buildTestApp(viewModelFactory: () => model));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.widgetWithText(ChoiceChip, 'Overdue'));
+    await tester.pump();
+
+    expect(model.selectedFilter, VaccinationReminderFilter.overdue);
+  });
+
+  testWidgets('delete flow confirms and triggers shot deletion', (tester) async {
+    tester.view.physicalSize = const Size(1400, 2000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.resetPhysicalSize);
+    addTearDown(tester.view.resetDevicePixelRatio);
+
+    final model = _TestVaccinationViewModel(
+      VaccinationOverviewState(
+        activeUser: activeUser,
+        series: [
+          VaccinationSeriesEntity(
+            name: 'COVID-19',
+            entries: [VaccinationEntryEntity(id: 7, userId: 1, name: 'COVID-19', vaccinationDate: DateTime(2026, 3, 10), nextVaccinationRequiredDate: DateTime(2026, 9, 10), createdAt: DateTime(2026, 3, 10))],
+          ),
+        ],
+      ),
+    );
+
+    await tester.pumpWidget(_buildTestApp(viewModelFactory: () => model));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byType(ExpansionTile).first);
+    await tester.pumpAndSettle();
+
+    final deleteButton = find.byIcon(Icons.delete_outline).first;
+    await tester.scrollUntilVisible(deleteButton, 80);
+    await tester.tap(deleteButton);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Delete shot'), findsOneWidget);
+    await tester.tap(find.text('Delete').last);
+    await tester.pumpAndSettle();
+
+    expect(model.deletedVaccinationId, 7);
   });
 }
 

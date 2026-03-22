@@ -6,6 +6,7 @@ class FakeVaccinationRepository implements VaccinationRepository {
 
   final List<VaccinationEntryEntity> _entries;
   VaccinationEntryEntity? lastSavedEntry;
+  int? lastDeletedVaccinationId;
 
   @override
   Future<List<VaccinationEntryEntity>> getVaccinationsForUser(int userId) async {
@@ -31,5 +32,11 @@ class FakeVaccinationRepository implements VaccinationRepository {
 
     _entries[index] = normalized;
     return normalized;
+  }
+
+  @override
+  Future<void> deleteVaccination(int vaccinationId) async {
+    lastDeletedVaccinationId = vaccinationId;
+    _entries.removeWhere((item) => item.id == vaccinationId);
   }
 }

@@ -13,6 +13,7 @@
     "save": "Speichern",
     "cancel": "Abbrechen",
     "edit": "Bearbeiten",
+    "delete": "Löschen",
     "on": "An",
     "off": "Aus",
     "users": "Benutzer",
@@ -71,6 +72,25 @@
     "saveVaccinationSuccess": "Impfung erfolgreich gespeichert.",
     "chooseDate": "Datum wählen",
     "shotNumber": "Dosis {count}",
+    "deleteVaccination": "Dosis löschen",
+    "deleteVaccinationConfirmation": "Dosis {shotIndex} von {vaccinationName} löschen?",
+    "@deleteVaccinationConfirmation": {
+        "description": "Bestätigungstext vor dem Löschen einer Impfdosis",
+        "placeholders": {
+            "shotIndex": {
+                "type": "int"
+            },
+            "vaccinationName": {
+                "type": "String"
+            }
+        }
+    },
+    "deleteVaccinationSuccess": "Dosis gelöscht.",
+    "filterAll": "Alle",
+    "filterOverdue": "Überfällig",
+    "filterDueSoon": "Bald fällig",
+    "filterUpToDate": "Aktuell",
+    "noVaccinationsForFilter": "Keine Impfserien entsprechen diesem Filter.",
     "@recordForUser": {
         "description": "Überschrift mit aktivem Benutzer für die Impfliste",
         "placeholders": {

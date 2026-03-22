@@ -34,6 +34,15 @@ void main() {
 
       expect(series.statusAt(DateTime(2025, 3, 1)), VaccinationDueStatus.dueSoon);
     });
+
+    test('marks entries up to date when next date is more than 30 days away', () {
+      final series = VaccinationSeriesEntity(
+        name: 'Hepatitis',
+        entries: [_entry(id: 1, vaccinationDate: DateTime(2025, 1, 10), nextDate: DateTime(2025, 4, 2))],
+      );
+
+      expect(series.statusAt(DateTime(2025, 3, 1)), VaccinationDueStatus.upToDate);
+    });
   });
 }
 
