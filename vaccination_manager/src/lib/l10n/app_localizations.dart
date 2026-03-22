@@ -526,6 +526,114 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No vaccination series match this filter.'**
   String get noVaccinationsForFilter;
+
+  /// Label for selecting one-shot or multi-shot vaccination mode
+  ///
+  /// In en, this message translates to:
+  /// **'Vaccination course'**
+  String get vaccinationModeLabel;
+
+  /// Option label for one-shot vaccination mode
+  ///
+  /// In en, this message translates to:
+  /// **'One-shot'**
+  String get vaccinationModeOneShot;
+
+  /// Option label for multi-shot vaccination mode
+  ///
+  /// In en, this message translates to:
+  /// **'Multi-shot'**
+  String get vaccinationModeMultiShot;
+
+  /// Section label for entering vaccination shot dates
+  ///
+  /// In en, this message translates to:
+  /// **'Shot dates'**
+  String get shotDatesLabel;
+
+  /// Button label for adding an additional shot date
+  ///
+  /// In en, this message translates to:
+  /// **'Add another shot'**
+  String get addAnotherShot;
+
+  /// Tooltip label for removing a shot date
+  ///
+  /// In en, this message translates to:
+  /// **'Remove shot'**
+  String get removeShot;
+
+  /// Label shown for a shot date in the future
+  ///
+  /// In en, this message translates to:
+  /// **'Planned shot'**
+  String get plannedShot;
+
+  /// Label shown for a shot date in the past or today
+  ///
+  /// In en, this message translates to:
+  /// **'Recorded shot'**
+  String get recordedShot;
+
+  /// Label for the vaccination expiration date
+  ///
+  /// In en, this message translates to:
+  /// **'Vaccination expires on'**
+  String get vaccinationExpiresOn;
+
+  /// Validation message when expiration date is missing
+  ///
+  /// In en, this message translates to:
+  /// **'Please select the vaccination expiration date.'**
+  String get vaccinationExpiresValidation;
+
+  /// Validation when expiration date is before latest shot
+  ///
+  /// In en, this message translates to:
+  /// **'The expiration date must be on or after the latest shot date.'**
+  String get vaccinationExpiresOrderValidation;
+
+  /// Validation message when no shot date is present
+  ///
+  /// In en, this message translates to:
+  /// **'Please add at least one shot date.'**
+  String get shotDatesValidation;
+
+  /// Validation when duplicate shot dates are entered
+  ///
+  /// In en, this message translates to:
+  /// **'Each shot date must be unique.'**
+  String get duplicateShotDateValidation;
+
+  /// Dialog title shown when switching from multi-shot to one-shot
+  ///
+  /// In en, this message translates to:
+  /// **'Convert to one-shot?'**
+  String get switchToOneShotTitle;
+
+  /// Dialog body warning for lossy multi-shot to one-shot conversion
+  ///
+  /// In en, this message translates to:
+  /// **'This will remove {removedCount} shot date(s). Only the most recent shot will be kept.'**
+  String switchToOneShotBody(int removedCount);
+
+  /// Confirm button label for converting to one-shot mode
+  ///
+  /// In en, this message translates to:
+  /// **'Convert'**
+  String get switchToOneShotConfirm;
+
+  /// Cancel button label for keeping multi-shot mode
+  ///
+  /// In en, this message translates to:
+  /// **'Keep multi-shot'**
+  String get switchToOneShotCancel;
+
+  /// Hint text explaining future planned shot behavior
+  ///
+  /// In en, this message translates to:
+  /// **'Future shot dates are allowed and will be treated as upcoming reminders.'**
+  String get futureShotHint;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -231,4 +231,60 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noVaccinationsForFilter => 'No vaccination series match this filter.';
+
+  @override
+  String get vaccinationModeLabel => 'Vaccination course';
+
+  @override
+  String get vaccinationModeOneShot => 'One-shot';
+
+  @override
+  String get vaccinationModeMultiShot => 'Multi-shot';
+
+  @override
+  String get shotDatesLabel => 'Shot dates';
+
+  @override
+  String get addAnotherShot => 'Add another shot';
+
+  @override
+  String get removeShot => 'Remove shot';
+
+  @override
+  String get plannedShot => 'Planned shot';
+
+  @override
+  String get recordedShot => 'Recorded shot';
+
+  @override
+  String get vaccinationExpiresOn => 'Vaccination expires on';
+
+  @override
+  String get vaccinationExpiresValidation => 'Please select the vaccination expiration date.';
+
+  @override
+  String get vaccinationExpiresOrderValidation => 'The expiration date must be on or after the latest shot date.';
+
+  @override
+  String get shotDatesValidation => 'Please add at least one shot date.';
+
+  @override
+  String get duplicateShotDateValidation => 'Each shot date must be unique.';
+
+  @override
+  String get switchToOneShotTitle => 'Convert to one-shot?';
+
+  @override
+  String switchToOneShotBody(int removedCount) {
+    return 'This will remove $removedCount shot date(s). Only the most recent shot will be kept.';
+  }
+
+  @override
+  String get switchToOneShotConfirm => 'Convert';
+
+  @override
+  String get switchToOneShotCancel => 'Keep multi-shot';
+
+  @override
+  String get futureShotHint => 'Future shot dates are allowed and will be treated as upcoming reminders.';
 }

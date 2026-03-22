@@ -91,6 +91,32 @@
     "filterDueSoon": "Bald fällig",
     "filterUpToDate": "Aktuell",
     "noVaccinationsForFilter": "Keine Impfserien entsprechen diesem Filter.",
+    "vaccinationModeLabel": "Impfverlauf",
+    "vaccinationModeOneShot": "Einmalimpfung",
+    "vaccinationModeMultiShot": "Mehrfachimpfung",
+    "shotDatesLabel": "Impftermine",
+    "addAnotherShot": "Weiteren Termin hinzufügen",
+    "removeShot": "Termin entfernen",
+    "plannedShot": "Geplanter Termin",
+    "recordedShot": "Erfasster Termin",
+    "vaccinationExpiresOn": "Impfschutz gültig bis",
+    "vaccinationExpiresValidation": "Bitte wählen Sie das Ablaufdatum des Impfschutzes aus.",
+    "vaccinationExpiresOrderValidation": "Das Ablaufdatum muss am oder nach dem letzten Impftermin liegen.",
+    "shotDatesValidation": "Bitte fügen Sie mindestens einen Impftermin hinzu.",
+    "duplicateShotDateValidation": "Jeder Impftermin muss eindeutig sein.",
+    "switchToOneShotTitle": "In Einmalimpfung umwandeln?",
+    "switchToOneShotBody": "Dabei werden {removedCount} Termin(e) entfernt. Nur der aktuellste Termin bleibt erhalten.",
+    "@switchToOneShotBody": {
+        "description": "Warnhinweis beim Wechsel von Mehrfachimpfung zu Einmalimpfung",
+        "placeholders": {
+            "removedCount": {
+                "type": "int"
+            }
+        }
+    },
+    "switchToOneShotConfirm": "Umwandeln",
+    "switchToOneShotCancel": "Mehrfachimpfung behalten",
+    "futureShotHint": "Termine in der Zukunft sind erlaubt und werden als bevorstehende Erinnerungen gewertet.",
     "@recordForUser": {
         "description": "Überschrift mit aktivem Benutzer für die Impfliste",
         "placeholders": {

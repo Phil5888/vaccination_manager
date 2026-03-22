@@ -16,7 +16,7 @@
 - FR-003: The system shall support reminder workflows for upcoming or overdue vaccinations.
 - FR-004: The system shall allow local creation, editing, switching, and persistence of user profiles with a username and profile picture.
 - FR-005: The system shall allow a user to save and edit vaccination entries containing a vaccination name, vaccination date, and next vaccination required date.
-- FR-006: The system shall support multiple vaccination entries with the same vaccination name for one user profile to model multi-shot series such as COVID or FSME.
+- FR-006: The system shall support one-shot and multi-shot vaccination workflows with explicit mode selection, multiple shot dates per vaccination series, and a shared expiration date.
 - FR-007: The system shall allow deleting individual vaccination shots from a user's vaccination history.
 
 ## Non-Functional Requirements
@@ -39,6 +39,8 @@
 - AC-009: When switching user profiles, each profile shows only its own vaccination records.
 - AC-010: Vaccination records remain available after closing and reopening the app.
 - AC-011: A user can filter vaccination series by reminder status (all, overdue, due soon, up to date) and delete an individual shot with confirmation.
+- AC-012: A user can enter future planned shot dates in multi-shot mode, and these planned dates drive due-soon reminder status.
+- AC-013: When switching from multi-shot mode to one-shot mode and data would be removed, the app shows a warning confirmation before applying the change.
 
 ## Open Questions
 
@@ -51,3 +53,4 @@
 - 2026-03-21: Added user management, startup fallback, and SQLite persistence requirements.
 - 2026-03-21: Added per-user vaccination record requirements and persistence expectations.
 - 2026-03-22: Added vaccination shot deletion and reminder filter acceptance behavior.
+- 2026-03-22: Clarified one-shot and multi-shot vaccination workflow requirements, planned future shots, and lossy mode-switch warning.

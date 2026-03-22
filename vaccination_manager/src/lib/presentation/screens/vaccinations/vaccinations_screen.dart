@@ -171,7 +171,7 @@ class _VaccinationSummaryCard extends StatelessWidget {
                 runSpacing: 8,
                 children: [
                   VaccinationStatusChip(status: nextDueSeries.statusAt(referenceDate)),
-                  Text('${local.nextDue}: ${MaterialLocalizations.of(context).formatCompactDate(nextDueSeries.nextRequiredDate)}'),
+                  Text('${local.nextDue}: ${MaterialLocalizations.of(context).formatCompactDate(nextDueSeries.nextDueDateAt(referenceDate))}'),
                 ],
               ),
             ],
@@ -223,7 +223,7 @@ class _VaccinationSeriesCard extends StatelessWidget {
             children: [
               Text('${local.shotsRecorded}: ${series.shotCount}'),
               Text('${local.lastShot}: ${materialLocalizations.formatCompactDate(series.lastShotDate)}'),
-              Text('${local.nextDue}: ${materialLocalizations.formatCompactDate(series.nextRequiredDate)}'),
+              Text('${local.nextDue}: ${materialLocalizations.formatCompactDate(series.nextDueDateAt(referenceDate))}'),
             ],
           ),
         ),
@@ -276,7 +276,10 @@ class _VaccinationEntryTile extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.edit),
             tooltip: local.editVaccination,
-            onPressed: () => Navigator.of(context).pushNamed(Routes.vaccinationEdit, arguments: VaccinationEditArguments(initialEntry: entry)),
+            onPressed: () => Navigator.of(context).pushNamed(
+              Routes.vaccinationEdit,
+              arguments: VaccinationEditArguments(initialEntry: entry, initialVaccinationName: entry.name),
+            ),
           ),
           Consumer(
             builder: (context, ref, _) {

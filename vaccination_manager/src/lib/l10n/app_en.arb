@@ -310,5 +310,82 @@
     "noVaccinationsForFilter": "No vaccination series match this filter.",
     "@noVaccinationsForFilter": {
         "description": "Empty-state message when the selected reminder filter has no matches"
+    },
+    "vaccinationModeLabel": "Vaccination course",
+    "@vaccinationModeLabel": {
+        "description": "Label for selecting one-shot or multi-shot vaccination mode"
+    },
+    "vaccinationModeOneShot": "One-shot",
+    "@vaccinationModeOneShot": {
+        "description": "Option label for one-shot vaccination mode"
+    },
+    "vaccinationModeMultiShot": "Multi-shot",
+    "@vaccinationModeMultiShot": {
+        "description": "Option label for multi-shot vaccination mode"
+    },
+    "shotDatesLabel": "Shot dates",
+    "@shotDatesLabel": {
+        "description": "Section label for entering vaccination shot dates"
+    },
+    "addAnotherShot": "Add another shot",
+    "@addAnotherShot": {
+        "description": "Button label for adding an additional shot date"
+    },
+    "removeShot": "Remove shot",
+    "@removeShot": {
+        "description": "Tooltip label for removing a shot date"
+    },
+    "plannedShot": "Planned shot",
+    "@plannedShot": {
+        "description": "Label shown for a shot date in the future"
+    },
+    "recordedShot": "Recorded shot",
+    "@recordedShot": {
+        "description": "Label shown for a shot date in the past or today"
+    },
+    "vaccinationExpiresOn": "Vaccination expires on",
+    "@vaccinationExpiresOn": {
+        "description": "Label for the vaccination expiration date"
+    },
+    "vaccinationExpiresValidation": "Please select the vaccination expiration date.",
+    "@vaccinationExpiresValidation": {
+        "description": "Validation message when expiration date is missing"
+    },
+    "vaccinationExpiresOrderValidation": "The expiration date must be on or after the latest shot date.",
+    "@vaccinationExpiresOrderValidation": {
+        "description": "Validation when expiration date is before latest shot"
+    },
+    "shotDatesValidation": "Please add at least one shot date.",
+    "@shotDatesValidation": {
+        "description": "Validation message when no shot date is present"
+    },
+    "duplicateShotDateValidation": "Each shot date must be unique.",
+    "@duplicateShotDateValidation": {
+        "description": "Validation when duplicate shot dates are entered"
+    },
+    "switchToOneShotTitle": "Convert to one-shot?",
+    "@switchToOneShotTitle": {
+        "description": "Dialog title shown when switching from multi-shot to one-shot"
+    },
+    "switchToOneShotBody": "This will remove {removedCount} shot date(s). Only the most recent shot will be kept.",
+    "@switchToOneShotBody": {
+        "description": "Dialog body warning for lossy multi-shot to one-shot conversion",
+        "placeholders": {
+            "removedCount": {
+                "type": "int"
+            }
+        }
+    },
+    "switchToOneShotConfirm": "Convert",
+    "@switchToOneShotConfirm": {
+        "description": "Confirm button label for converting to one-shot mode"
+    },
+    "switchToOneShotCancel": "Keep multi-shot",
+    "@switchToOneShotCancel": {
+        "description": "Cancel button label for keeping multi-shot mode"
+    },
+    "futureShotHint": "Future shot dates are allowed and will be treated as upcoming reminders.",
+    "@futureShotHint": {
+        "description": "Hint text explaining future planned shot behavior"
     }
 }

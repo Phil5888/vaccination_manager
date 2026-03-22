@@ -231,4 +231,60 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get noVaccinationsForFilter => 'Keine Impfserien entsprechen diesem Filter.';
+
+  @override
+  String get vaccinationModeLabel => 'Impfverlauf';
+
+  @override
+  String get vaccinationModeOneShot => 'Einmalimpfung';
+
+  @override
+  String get vaccinationModeMultiShot => 'Mehrfachimpfung';
+
+  @override
+  String get shotDatesLabel => 'Impftermine';
+
+  @override
+  String get addAnotherShot => 'Weiteren Termin hinzufügen';
+
+  @override
+  String get removeShot => 'Termin entfernen';
+
+  @override
+  String get plannedShot => 'Geplanter Termin';
+
+  @override
+  String get recordedShot => 'Erfasster Termin';
+
+  @override
+  String get vaccinationExpiresOn => 'Impfschutz gültig bis';
+
+  @override
+  String get vaccinationExpiresValidation => 'Bitte wählen Sie das Ablaufdatum des Impfschutzes aus.';
+
+  @override
+  String get vaccinationExpiresOrderValidation => 'Das Ablaufdatum muss am oder nach dem letzten Impftermin liegen.';
+
+  @override
+  String get shotDatesValidation => 'Bitte fügen Sie mindestens einen Impftermin hinzu.';
+
+  @override
+  String get duplicateShotDateValidation => 'Jeder Impftermin muss eindeutig sein.';
+
+  @override
+  String get switchToOneShotTitle => 'In Einmalimpfung umwandeln?';
+
+  @override
+  String switchToOneShotBody(int removedCount) {
+    return 'Dabei werden $removedCount Termin(e) entfernt. Nur der aktuellste Termin bleibt erhalten.';
+  }
+
+  @override
+  String get switchToOneShotConfirm => 'Umwandeln';
+
+  @override
+  String get switchToOneShotCancel => 'Mehrfachimpfung behalten';
+
+  @override
+  String get futureShotHint => 'Termine in der Zukunft sind erlaubt und werden als bevorstehende Erinnerungen gewertet.';
 }

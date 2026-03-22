@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 
-typedef VaccinationEntrySubmit = Future<void> Function(String name, DateTime vaccinationDate, DateTime nextVaccinationRequiredDate);
+enum VaccinationCourseMode { oneShot, multiShot }
+
+typedef VaccinationEntrySubmit = Future<void> Function(String name, List<DateTime> shotDates, DateTime expirationDate);
 
 class VaccinationEntryForm extends StatefulWidget {
-  const VaccinationEntryForm({super.key, required this.submitLabel, required this.onSubmit, this.initialName, this.initialVaccinationDate, this.initialNextVaccinationRequiredDate, this.onCancel});
+  const VaccinationEntryForm({super.key, required this.submitLabel, required this.onSubmit, this.initialName, this.initialShotDates, this.initialExpirationDate, this.initialMode, this.onCancel});
 
   final String submitLabel;
   final VaccinationEntrySubmit onSubmit;
   final String? initialName;
-  final DateTime? initialVaccinationDate;
-  final DateTime? initialNextVaccinationRequiredDate;
+  final List<DateTime>? initialShotDates;
+  final DateTime? initialExpirationDate;
+  final VaccinationCourseMode? initialMode;
   final VoidCallback? onCancel;
 
   @override
@@ -20,21 +23,30 @@ class VaccinationEntryForm extends StatefulWidget {
 class _VaccinationEntryFormState extends State<VaccinationEntryForm> {
   final _formKey = GlobalKey<FormState>();
   late final TextEditingController _nameController;
-  late final TextEditingController _vaccinationDateController;
-  late final TextEditingController _nextVaccinationDateController;
+  final List<TextEditingController> _shotDateControllers = [];
+  late final TextEditingController _expirationDateController;
 
-  DateTime? _vaccinationDate;
-  DateTime? _nextVaccinationRequiredDate;
+  late VaccinationCourseMode _mode;
+  final List<DateTime?> _shotDates = [];
+  DateTime? _expirationDate;
   bool _isSaving = false;
 
   @override
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.initialName ?? '');
-    _vaccinationDateController = TextEditingController();
-    _nextVaccinationDateController = TextEditingController();
-    _vaccinationDate = widget.initialVaccinationDate;
-    _nextVaccinationRequiredDate = widget.initialNextVaccinationRequiredDate;
+    _expirationDateController = TextEditingController();
+
+    _mode = widget.initialMode ?? ((widget.initialShotDates?.length ?? 0) > 1 ? VaccinationCourseMode.multiShot : VaccinationCourseMode.oneShot);
+
+    final initialDates = widget.initialShotDates;
+    if (initialDates != null && initialDates.isNotEmpty) {
+      _shotDates.addAll(initialDates);
+    } else {
+      _shotDates.add(null);
+    }
+
+    _expirationDate = widget.initialExpirationDate;
   }
 
   @override
@@ -46,8 +58,10 @@ class _VaccinationEntryFormState extends State<VaccinationEntryForm> {
   @override
   void dispose() {
     _nameController.dispose();
-    _vaccinationDateController.dispose();
-    _nextVaccinationDateController.dispose();
+    _expirationDateController.dispose();
+    for (final controller in _shotDateControllers) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -72,40 +86,139 @@ class _VaccinationEntryFormState extends State<VaccinationEntryForm> {
             },
           ),
           const SizedBox(height: 16),
-          TextFormField(
-            controller: _vaccinationDateController,
-            readOnly: true,
-            decoration: InputDecoration(
-              labelText: local.vaccinationDate,
-              suffixIcon: IconButton(onPressed: _isSaving ? null : () => _pickVaccinationDate(context), icon: const Icon(Icons.calendar_today)),
-            ),
-            onTap: _isSaving ? null : () => _pickVaccinationDate(context),
+          Text(local.vaccinationModeLabel, style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              ChoiceChip(label: Text(local.vaccinationModeOneShot), selected: _mode == VaccinationCourseMode.oneShot, onSelected: _isSaving ? null : (_) => _changeMode(VaccinationCourseMode.oneShot)),
+              ChoiceChip(label: Text(local.vaccinationModeMultiShot), selected: _mode == VaccinationCourseMode.multiShot, onSelected: _isSaving ? null : (_) => _changeMode(VaccinationCourseMode.multiShot)),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text(local.shotDatesLabel, style: Theme.of(context).textTheme.titleMedium),
+          const SizedBox(height: 8),
+          FormField<List<DateTime?>>(
+            initialValue: _shotDates,
             validator: (_) {
-              if (_vaccinationDate == null) {
-                return local.vaccinationDateValidation;
+              if (_shotDates.isEmpty || _shotDates.any((date) => date == null)) {
+                return local.shotDatesValidation;
               }
+
+              final uniqueDateKeys = _shotDates.map((date) => _dateKey(date!)).toSet();
+              if (uniqueDateKeys.length != _shotDates.length) {
+                return local.duplicateShotDateValidation;
+              }
+
               return null;
+            },
+            builder: (field) {
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ...List.generate(_shotDates.length, (index) {
+                    final shotDate = _shotDates[index];
+                    final isPlanned = shotDate != null && _dateOnly(shotDate).isAfter(_dateOnly(DateTime.now()));
+                    return Padding(
+                      padding: EdgeInsets.only(bottom: index == _shotDates.length - 1 ? 0 : 12),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _shotDateControllers[index],
+                              readOnly: true,
+                              decoration: InputDecoration(
+                                labelText: local.shotNumber(index + 1),
+                                helperText: isPlanned ? local.plannedShot : local.recordedShot,
+                                suffixIcon: IconButton(
+                                  onPressed: _isSaving
+                                      ? null
+                                      : () async {
+                                          await _pickShotDate(context, index);
+                                          field.didChange(_shotDates);
+                                        },
+                                  icon: const Icon(Icons.calendar_today),
+                                ),
+                              ),
+                              onTap: _isSaving
+                                  ? null
+                                  : () async {
+                                      await _pickShotDate(context, index);
+                                      field.didChange(_shotDates);
+                                    },
+                            ),
+                          ),
+                          if (_mode == VaccinationCourseMode.multiShot && _shotDates.length > 1) ...[
+                            const SizedBox(width: 8),
+                            IconButton(
+                              tooltip: local.removeShot,
+                              onPressed: _isSaving
+                                  ? null
+                                  : () {
+                                      setState(() {
+                                        _removeShotAt(index);
+                                      });
+                                      field.didChange(_shotDates);
+                                    },
+                              icon: const Icon(Icons.remove_circle_outline),
+                            ),
+                          ],
+                        ],
+                      ),
+                    );
+                  }),
+                  if (_mode == VaccinationCourseMode.multiShot) ...[
+                    const SizedBox(height: 8),
+                    OutlinedButton.icon(
+                      onPressed: _isSaving
+                          ? null
+                          : () {
+                              setState(_addShot);
+                              field.didChange(_shotDates);
+                            },
+                      icon: const Icon(Icons.add),
+                      label: Text(local.addAnotherShot),
+                    ),
+                  ],
+                  if (field.errorText != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8),
+                      child: Text(field.errorText!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                    ),
+                ],
+              );
             },
           ),
           const SizedBox(height: 16),
           TextFormField(
-            controller: _nextVaccinationDateController,
+            controller: _expirationDateController,
             readOnly: true,
             decoration: InputDecoration(
-              labelText: local.nextVaccinationRequired,
-              suffixIcon: IconButton(onPressed: _isSaving ? null : () => _pickNextVaccinationDate(context), icon: const Icon(Icons.event_available)),
+              labelText: local.vaccinationExpiresOn,
+              suffixIcon: IconButton(onPressed: _isSaving ? null : () => _pickExpirationDate(context), icon: const Icon(Icons.event_available)),
             ),
-            onTap: _isSaving ? null : () => _pickNextVaccinationDate(context),
+            onTap: _isSaving ? null : () => _pickExpirationDate(context),
             validator: (_) {
-              if (_nextVaccinationRequiredDate == null) {
-                return local.nextVaccinationDateValidation;
+              if (_expirationDate == null) {
+                return local.vaccinationExpiresValidation;
               }
-              if (_vaccinationDate != null && !_nextVaccinationRequiredDate!.isAfter(_vaccinationDate!)) {
-                return local.nextVaccinationDateOrderValidation;
+
+              final definedShotDates = _shotDates.whereType<DateTime>().toList();
+              if (definedShotDates.isEmpty) {
+                return null;
               }
+
+              final latestShot = definedShotDates.reduce((a, b) => a.isAfter(b) ? a : b);
+              if (_dateOnly(_expirationDate!).isBefore(_dateOnly(latestShot))) {
+                return local.vaccinationExpiresOrderValidation;
+              }
+
               return null;
             },
           ),
+          const SizedBox(height: 8),
+          Text(local.futureShotHint, style: Theme.of(context).textTheme.bodySmall),
           const SizedBox(height: 24),
           Wrap(
             spacing: 12,
@@ -123,28 +236,68 @@ class _VaccinationEntryFormState extends State<VaccinationEntryForm> {
     );
   }
 
-  Future<void> _pickVaccinationDate(BuildContext context) async {
+  Future<void> _pickShotDate(BuildContext context, int index) async {
     final local = AppLocalizations.of(context)!;
-    final picked = await showDatePicker(context: context, initialDate: _vaccinationDate ?? DateTime.now(), firstDate: DateTime(2000), lastDate: DateTime(2100), helpText: local.vaccinationDate, confirmText: local.chooseDate);
+    final picked = await showDatePicker(context: context, initialDate: _shotDates[index] ?? DateTime.now(), firstDate: DateTime(2000), lastDate: DateTime(2100), helpText: local.vaccinationDate, confirmText: local.chooseDate);
     if (picked == null) {
       return;
     }
     setState(() {
-      _vaccinationDate = picked;
+      _shotDates[index] = picked;
       _syncDateControllers();
     });
   }
 
-  Future<void> _pickNextVaccinationDate(BuildContext context) async {
+  Future<void> _pickExpirationDate(BuildContext context) async {
     final local = AppLocalizations.of(context)!;
-    final initialDate = _nextVaccinationRequiredDate ?? _vaccinationDate?.add(const Duration(days: 30)) ?? DateTime.now();
-    final picked = await showDatePicker(context: context, initialDate: initialDate, firstDate: DateTime(2000), lastDate: DateTime(2100), helpText: local.nextVaccinationRequired, confirmText: local.chooseDate);
+    final initialDate = _expirationDate ?? DateTime.now();
+    final picked = await showDatePicker(context: context, initialDate: initialDate, firstDate: DateTime(2000), lastDate: DateTime(2100), helpText: local.vaccinationExpiresOn, confirmText: local.chooseDate);
     if (picked == null) {
       return;
     }
     setState(() {
-      _nextVaccinationRequiredDate = picked;
+      _expirationDate = picked;
       _syncDateControllers();
+    });
+  }
+
+  Future<void> _changeMode(VaccinationCourseMode mode) async {
+    if (_mode == mode) {
+      return;
+    }
+
+    if (mode == VaccinationCourseMode.oneShot && _shotDates.length > 1) {
+      final local = AppLocalizations.of(context)!;
+      final shouldSwitch = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) {
+          return AlertDialog(
+            title: Text(local.switchToOneShotTitle),
+            content: Text(local.switchToOneShotBody(_shotDates.length - 1)),
+            actions: [
+              TextButton(onPressed: () => Navigator.of(dialogContext).pop(false), child: Text(local.switchToOneShotCancel)),
+              FilledButton(onPressed: () => Navigator.of(dialogContext).pop(true), child: Text(local.switchToOneShotConfirm)),
+            ],
+          );
+        },
+      );
+
+      if (shouldSwitch != true) {
+        return;
+      }
+
+      final keptShot = _shotDates.whereType<DateTime>().toList()..sort((a, b) => b.compareTo(a));
+      _shotDates
+        ..clear()
+        ..add(keptShot.isEmpty ? null : keptShot.first);
+      _syncDateControllers();
+    }
+
+    setState(() {
+      _mode = mode;
+      if (_mode == VaccinationCourseMode.multiShot && _shotDates.isEmpty) {
+        _addShot();
+      }
     });
   }
 
@@ -155,7 +308,7 @@ class _VaccinationEntryFormState extends State<VaccinationEntryForm> {
 
     setState(() => _isSaving = true);
     try {
-      await widget.onSubmit(_nameController.text.trim(), _vaccinationDate!, _nextVaccinationRequiredDate!);
+      await widget.onSubmit(_nameController.text.trim(), _shotDates.whereType<DateTime>().toList(), _expirationDate!);
     } finally {
       if (mounted) {
         setState(() => _isSaving = false);
@@ -165,7 +318,40 @@ class _VaccinationEntryFormState extends State<VaccinationEntryForm> {
 
   void _syncDateControllers() {
     final localizations = MaterialLocalizations.of(context);
-    _vaccinationDateController.text = _vaccinationDate == null ? '' : localizations.formatCompactDate(_vaccinationDate!);
-    _nextVaccinationDateController.text = _nextVaccinationRequiredDate == null ? '' : localizations.formatCompactDate(_nextVaccinationRequiredDate!);
+    while (_shotDateControllers.length < _shotDates.length) {
+      _shotDateControllers.add(TextEditingController());
+    }
+    while (_shotDateControllers.length > _shotDates.length) {
+      _shotDateControllers.removeLast().dispose();
+    }
+
+    for (var i = 0; i < _shotDates.length; i++) {
+      final date = _shotDates[i];
+      _shotDateControllers[i].text = date == null ? '' : localizations.formatCompactDate(date);
+    }
+
+    _expirationDateController.text = _expirationDate == null ? '' : localizations.formatCompactDate(_expirationDate!);
+  }
+
+  void _addShot() {
+    _shotDates.add(null);
+    _syncDateControllers();
+  }
+
+  void _removeShotAt(int index) {
+    if (_shotDates.length == 1) {
+      return;
+    }
+    _shotDates.removeAt(index);
+    _syncDateControllers();
+  }
+
+  String _dateKey(DateTime value) {
+    final date = _dateOnly(value);
+    return '${date.year}-${date.month}-${date.day}';
+  }
+
+  DateTime _dateOnly(DateTime value) {
+    return DateTime(value.year, value.month, value.day);
   }
 }

@@ -16,8 +16,22 @@ class VaccinationSeriesEntity {
 
   DateTime get nextRequiredDate => latestEntry.nextVaccinationRequiredDate;
 
+  DateTime nextDueDateAt(DateTime referenceDate) {
+    final upcomingShot = nextPlannedShotAt(referenceDate);
+    return upcomingShot ?? nextRequiredDate;
+  }
+
+  DateTime? nextPlannedShotAt(DateTime referenceDate) {
+    final today = _dateOnly(referenceDate);
+    final planned = entries.map((entry) => _dateOnly(entry.vaccinationDate)).where((date) => !date.isBefore(today)).toList()..sort((a, b) => a.compareTo(b));
+    if (planned.isEmpty) {
+      return null;
+    }
+    return planned.first;
+  }
+
   VaccinationDueStatus statusAt(DateTime referenceDate) {
-    final dueDate = _dateOnly(nextRequiredDate);
+    final dueDate = _dateOnly(nextDueDateAt(referenceDate));
     final today = _dateOnly(referenceDate);
     if (dueDate.isBefore(today)) {
       return VaccinationDueStatus.overdue;

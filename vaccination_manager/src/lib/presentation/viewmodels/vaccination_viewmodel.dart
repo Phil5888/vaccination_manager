@@ -63,7 +63,7 @@ class VaccinationOverviewState {
       if (statusWeight != 0) {
         return statusWeight;
       }
-      return a.nextRequiredDate.compareTo(b.nextRequiredDate);
+      return a.nextDueDateAt(referenceDate).compareTo(b.nextDueDateAt(referenceDate));
     });
     return sorted.first;
   }
@@ -129,6 +129,41 @@ class VaccinationViewModel extends AsyncNotifier<VaccinationOverviewState> {
     return saved;
   }
 
+  Future<void> saveVaccinationCourse({required String name, required List<DateTime> shotDates, required DateTime expirationDate, String? existingSeriesName}) async {
+    final currentState = state.asData?.value ?? await build();
+    final activeUser = currentState.activeUser;
+    if (activeUser?.id == null) {
+      throw StateError('An active user is required to save vaccinations.');
+    }
+
+    if (shotDates.isEmpty) {
+      throw StateError('At least one shot date is required.');
+    }
+
+    final normalizedName = name.trim();
+    final sortedShotDates = List<DateTime>.from(shotDates)..sort((a, b) => a.compareTo(b));
+    final seriesNameKey = (existingSeriesName ?? normalizedName).trim().toLowerCase();
+
+    final existingSeries = currentState.series.where((series) => series.name.trim().toLowerCase() == seriesNameKey).toList();
+    final existingEntries = existingSeries.expand((series) => series.entries).toList()..sort((a, b) => a.vaccinationDate.compareTo(b.vaccinationDate));
+
+    for (var i = 0; i < sortedShotDates.length; i++) {
+      final existing = i < existingEntries.length ? existingEntries[i] : null;
+      await _saveVaccination(
+        VaccinationEntryEntity(id: existing?.id, userId: activeUser!.id!, name: normalizedName, vaccinationDate: sortedShotDates[i], nextVaccinationRequiredDate: expirationDate, createdAt: existing?.createdAt ?? DateTime.now()),
+      );
+    }
+
+    for (var i = sortedShotDates.length; i < existingEntries.length; i++) {
+      final id = existingEntries[i].id;
+      if (id != null) {
+        await _deleteVaccination(id);
+      }
+    }
+
+    await refresh();
+  }
+
   Future<void> deleteVaccination(int vaccinationId) async {
     final currentState = state.asData?.value ?? await build();
     if (!currentState.hasActiveUser) {
@@ -158,7 +193,7 @@ class VaccinationViewModel extends AsyncNotifier<VaccinationOverviewState> {
         if (statusWeight != 0) {
           return statusWeight;
         }
-        return a.nextRequiredDate.compareTo(b.nextRequiredDate);
+        return a.nextDueDateAt(now).compareTo(b.nextDueDateAt(now));
       });
 
     final currentFilter = state.asData?.value.selectedFilter ?? VaccinationReminderFilter.all;

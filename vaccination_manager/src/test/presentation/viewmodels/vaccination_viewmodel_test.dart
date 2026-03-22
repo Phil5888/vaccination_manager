@@ -111,6 +111,29 @@ void main() {
       expect(state.selectedFilter, VaccinationReminderFilter.overdue);
     });
 
+    test('saveVaccinationCourse stores multiple shots and keeps common expiration date', () async {
+      await container.read(vaccinationsProvider.future);
+
+      await container.read(vaccinationsProvider.notifier).saveVaccinationCourse(name: 'FSME', shotDates: [DateTime(2026, 5, 1), DateTime(2026, 8, 1)], expirationDate: DateTime(2027, 1, 1));
+
+      final state = await container.read(vaccinationsProvider.future);
+      final fsmeSeries = state.series.firstWhere((series) => series.name == 'FSME');
+      expect(fsmeSeries.shotCount, 2);
+      expect(fsmeSeries.entries.every((entry) => entry.nextVaccinationRequiredDate == DateTime(2027, 1, 1)), isTrue);
+    });
+
+    test('saveVaccinationCourse can collapse multi-shot series to one shot', () async {
+      await container.read(vaccinationsProvider.future);
+
+      await container.read(vaccinationsProvider.notifier).saveVaccinationCourse(name: 'COVID-19', shotDates: [DateTime(2026, 3, 10)], expirationDate: DateTime(2026, 11, 1), existingSeriesName: 'COVID-19');
+
+      final state = await container.read(vaccinationsProvider.future);
+      final covidSeries = state.series.firstWhere((series) => series.name == 'COVID-19');
+      expect(covidSeries.shotCount, 1);
+      expect(repository.lastDeletedVaccinationId, isNotNull);
+      expect(covidSeries.entries.first.nextVaccinationRequiredDate, DateTime(2026, 11, 1));
+    });
+
     test('switches from user with vaccinations to user with vaccinations without reinitialization crash', () async {
       final users = [activeUser, AppUserEntity(id: 2, username: 'Bob', profilePicture: null, isActive: false, createdAt: DateTime(2026, 1, 2))];
       final switchableUserViewModel = _SwitchableUserManagementViewModel(users: users, activeUser: activeUser);

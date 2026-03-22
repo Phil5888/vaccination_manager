@@ -43,6 +43,19 @@ void main() {
 
       expect(series.statusAt(DateTime(2025, 3, 1)), VaccinationDueStatus.upToDate);
     });
+
+    test('marks due soon when a planned future shot is within 30 days', () {
+      final series = VaccinationSeriesEntity(
+        name: 'FSME',
+        entries: [
+          _entry(id: 1, vaccinationDate: DateTime(2025, 2, 20), nextDate: DateTime(2025, 9, 1)),
+          _entry(id: 2, vaccinationDate: DateTime(2025, 3, 20), nextDate: DateTime(2025, 9, 1)),
+        ],
+      );
+
+      expect(series.nextDueDateAt(DateTime(2025, 3, 1)), DateTime(2025, 3, 20));
+      expect(series.statusAt(DateTime(2025, 3, 1)), VaccinationDueStatus.dueSoon);
+    });
   });
 }
 
