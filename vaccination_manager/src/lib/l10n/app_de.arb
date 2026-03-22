@@ -10,6 +10,20 @@
     "error": "Fehler",
     "menue": "Menü",
     "dashboard": "Dashboard",
+    "dashboardHeroGreeting": "Willkommen zurück, {username}",
+    "@dashboardHeroGreeting": {
+        "description": "Begruessung im Dashboard fuer den aktiven Benutzer",
+        "placeholders": {
+            "username": {
+                "type": "String"
+            }
+        }
+    },
+    "dashboardHeroSubtitle": "Hier ist dein Impfüberblick für heute.",
+    "dashboardUpcomingTitle": "Bevorstehende Impfungen",
+    "dashboardAllGoodTitle": "Alles ist in Ordnung",
+    "dashboardAllGoodBody": "Keine Impfung ist bald fällig oder überfällig.",
+    "dashboardOpenVaccinations": "Impfungen öffnen",
     "save": "Speichern",
     "cancel": "Abbrechen",
     "edit": "Bearbeiten",

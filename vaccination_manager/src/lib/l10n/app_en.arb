@@ -40,6 +40,35 @@
     "@dashboard": {
         "description": "Title for the dashboard screen"
     },
+    "dashboardHeroGreeting": "Welcome back, {username}",
+    "@dashboardHeroGreeting": {
+        "description": "Welcome headline on dashboard for the active user",
+        "placeholders": {
+            "username": {
+                "type": "String"
+            }
+        }
+    },
+    "dashboardHeroSubtitle": "Here is your vaccination overview for today.",
+    "@dashboardHeroSubtitle": {
+        "description": "Supporting subtitle on the dashboard welcome card"
+    },
+    "dashboardUpcomingTitle": "Upcoming vaccinations",
+    "@dashboardUpcomingTitle": {
+        "description": "Title for upcoming vaccinations section on dashboard"
+    },
+    "dashboardAllGoodTitle": "Everything is alright",
+    "@dashboardAllGoodTitle": {
+        "description": "Positive state title when nothing is due soon or overdue"
+    },
+    "dashboardAllGoodBody": "No vaccinations are due soon or overdue.",
+    "@dashboardAllGoodBody": {
+        "description": "Positive state body when no vaccinations need attention"
+    },
+    "dashboardOpenVaccinations": "Open vaccinations",
+    "@dashboardOpenVaccinations": {
+        "description": "Dashboard action button to open vaccinations section"
+    },
     "save": "Save",
     "@save": {
         "description": "Label for the save button"

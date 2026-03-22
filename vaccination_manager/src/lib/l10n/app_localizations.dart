@@ -155,6 +155,42 @@ abstract class AppLocalizations {
   /// **'Dashboard'**
   String get dashboard;
 
+  /// Welcome headline on dashboard for the active user
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome back, {username}'**
+  String dashboardHeroGreeting(String username);
+
+  /// Supporting subtitle on the dashboard welcome card
+  ///
+  /// In en, this message translates to:
+  /// **'Here is your vaccination overview for today.'**
+  String get dashboardHeroSubtitle;
+
+  /// Title for upcoming vaccinations section on dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming vaccinations'**
+  String get dashboardUpcomingTitle;
+
+  /// Positive state title when nothing is due soon or overdue
+  ///
+  /// In en, this message translates to:
+  /// **'Everything is alright'**
+  String get dashboardAllGoodTitle;
+
+  /// Positive state body when no vaccinations need attention
+  ///
+  /// In en, this message translates to:
+  /// **'No vaccinations are due soon or overdue.'**
+  String get dashboardAllGoodBody;
+
+  /// Dashboard action button to open vaccinations section
+  ///
+  /// In en, this message translates to:
+  /// **'Open vaccinations'**
+  String get dashboardOpenVaccinations;
+
   /// Label for the save button
   ///
   /// In en, this message translates to:

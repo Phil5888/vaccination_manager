@@ -39,6 +39,26 @@ class AppLocalizationsEn extends AppLocalizations {
   String get dashboard => 'Dashboard';
 
   @override
+  String dashboardHeroGreeting(String username) {
+    return 'Welcome back, $username';
+  }
+
+  @override
+  String get dashboardHeroSubtitle => 'Here is your vaccination overview for today.';
+
+  @override
+  String get dashboardUpcomingTitle => 'Upcoming vaccinations';
+
+  @override
+  String get dashboardAllGoodTitle => 'Everything is alright';
+
+  @override
+  String get dashboardAllGoodBody => 'No vaccinations are due soon or overdue.';
+
+  @override
+  String get dashboardOpenVaccinations => 'Open vaccinations';
+
+  @override
   String get save => 'Save';
 
   @override
