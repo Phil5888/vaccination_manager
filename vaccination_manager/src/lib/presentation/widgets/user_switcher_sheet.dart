@@ -39,6 +39,7 @@ Future<void> showUserSwitcherSheet(BuildContext context, WidgetRef ref) {
                             await ref.read(userManagementProvider.notifier).switchUser(user.id!);
                             if (context.mounted) {
                               Navigator.of(context).pop();
+                              navigator.pushNamedAndRemoveUntil(Routes.dashboard, (route) => false);
                             }
                           },
                   ),

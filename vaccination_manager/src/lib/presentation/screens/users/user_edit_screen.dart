@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/domain/entities/app_user_entity.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:vaccination_manager/presentation/providers/user_management/user_management_providers.dart';
@@ -47,7 +48,16 @@ class UserEditScreen extends ConsumerWidget {
                           if (initialUser!.id != null)
                             isCurrentUser
                                 ? Chip(avatar: const Icon(Icons.check_circle, size: 18), label: Text(local.currentUser))
-                                : FilledButton.tonalIcon(onPressed: () => ref.read(userManagementProvider.notifier).switchUser(initialUser!.id!), icon: const Icon(Icons.swap_horiz), label: Text(local.switchUser)),
+                                : FilledButton.tonalIcon(
+                                    onPressed: () async {
+                                      await ref.read(userManagementProvider.notifier).switchUser(initialUser!.id!);
+                                      if (context.mounted) {
+                                        Navigator.of(context).pushNamedAndRemoveUntil(Routes.dashboard, (route) => false);
+                                      }
+                                    },
+                                    icon: const Icon(Icons.swap_horiz),
+                                    label: Text(local.switchUser),
+                                  ),
                         ],
                       ),
                     ),

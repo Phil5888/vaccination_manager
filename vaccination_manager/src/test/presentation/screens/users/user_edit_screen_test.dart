@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/domain/entities/app_user_entity.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:vaccination_manager/presentation/providers/user_management/user_management_providers.dart';
@@ -36,14 +37,13 @@ void main() {
       await tester.pumpWidget(_buildTestApp(viewModel: viewModel, initialUser: users.last));
       await tester.pumpAndSettle();
 
-      expect(find.widgetWithText(FilledButton, 'Switch user'), findsOneWidget);
+      expect(find.text('Switch user'), findsOneWidget);
 
-      await tester.tap(find.widgetWithText(FilledButton, 'Switch user'));
+      await tester.tap(find.text('Switch user'));
       await tester.pumpAndSettle();
 
       expect(viewModel.switchedUserIds, [2]);
-      expect(find.text('Switch user'), findsNothing);
-      expect(find.text('Current'), findsOneWidget);
+      expect(find.text('Dashboard Route Stub'), findsOneWidget);
     });
 
     testWidgets('does not show switch button for current user', (tester) async {
@@ -65,7 +65,19 @@ Widget _buildTestApp({required TestUserManagementViewModel viewModel, required A
     child: MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      home: UserEditScreen(initialUser: initialUser),
+      initialRoute: Routes.userEdit,
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case Routes.userEdit:
+            return MaterialPageRoute(builder: (_) => UserEditScreen(initialUser: initialUser));
+          case Routes.dashboard:
+            return MaterialPageRoute(
+              builder: (_) => const Scaffold(body: Center(child: Text('Dashboard Route Stub'))),
+            );
+          default:
+            return null;
+        }
+      },
     ),
   );
 }
