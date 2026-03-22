@@ -160,6 +160,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addVaccination => 'Add vaccination';
 
   @override
+  String get searchVaccinations => 'Search vaccinations';
+
+  @override
+  String get searchVaccinationsHint => 'Search vaccinations';
+
+  @override
+  String get searchVaccinationsStart => 'Type to search vaccination names.';
+
+  @override
+  String get searchVaccinationsNoMatches => 'No matching vaccinations found.';
+
+  @override
   String get addShot => 'Add shot';
 
   @override

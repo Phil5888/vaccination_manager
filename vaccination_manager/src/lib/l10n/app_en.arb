@@ -206,6 +206,22 @@
     "@addVaccination": {
         "description": "Primary action label to add a new vaccination"
     },
+    "searchVaccinations": "Search vaccinations",
+    "@searchVaccinations": {
+        "description": "Tooltip and label for opening vaccination search"
+    },
+    "searchVaccinationsHint": "Search vaccinations",
+    "@searchVaccinationsHint": {
+        "description": "Hint text in the vaccination search input"
+    },
+    "searchVaccinationsStart": "Type to search vaccination names.",
+    "@searchVaccinationsStart": {
+        "description": "Empty-state hint shown before entering search text"
+    },
+    "searchVaccinationsNoMatches": "No matching vaccinations found.",
+    "@searchVaccinationsNoMatches": {
+        "description": "Empty-state message for vaccination search without matches"
+    },
     "addShot": "Add shot",
     "@addShot": {
         "description": "Action label to add another shot to an existing vaccination series"

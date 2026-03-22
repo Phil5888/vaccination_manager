@@ -389,6 +389,30 @@ abstract class AppLocalizations {
   /// **'Add vaccination'**
   String get addVaccination;
 
+  /// Tooltip and label for opening vaccination search
+  ///
+  /// In en, this message translates to:
+  /// **'Search vaccinations'**
+  String get searchVaccinations;
+
+  /// Hint text in the vaccination search input
+  ///
+  /// In en, this message translates to:
+  /// **'Search vaccinations'**
+  String get searchVaccinationsHint;
+
+  /// Empty-state hint shown before entering search text
+  ///
+  /// In en, this message translates to:
+  /// **'Type to search vaccination names.'**
+  String get searchVaccinationsStart;
+
+  /// Empty-state message for vaccination search without matches
+  ///
+  /// In en, this message translates to:
+  /// **'No matching vaccinations found.'**
+  String get searchVaccinationsNoMatches;
+
   /// Action label to add another shot to an existing vaccination series
   ///
   /// In en, this message translates to:

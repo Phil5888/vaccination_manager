@@ -10,20 +10,70 @@ import 'package:vaccination_manager/presentation/viewmodels/vaccination_viewmode
 import 'package:vaccination_manager/presentation/widgets/user_avatar.dart';
 import 'package:vaccination_manager/presentation/widgets/vaccination_status_chip.dart';
 
-class VaccinationsScreen extends ConsumerWidget {
+class VaccinationsScreen extends ConsumerStatefulWidget {
   const VaccinationsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<VaccinationsScreen> createState() => _VaccinationsScreenState();
+}
+
+class _VaccinationsScreenState extends ConsumerState<VaccinationsScreen> {
+  final Map<String, GlobalKey> _seriesItemKeys = <String, GlobalKey>{};
+  String? _expandedSeriesKey;
+
+  String _seriesKeyFromName(String name) {
+    return name.trim().toLowerCase();
+  }
+
+  GlobalKey _seriesKeyFor(String normalizedSeriesName) {
+    return _seriesItemKeys.putIfAbsent(normalizedSeriesName, GlobalKey.new);
+  }
+
+  Future<void> _openSearch(List<VaccinationSeriesEntity> series) async {
+    if (series.isEmpty) {
+      return;
+    }
+
+    final selectedSeriesName = await Navigator.of(context).push<String>(MaterialPageRoute(builder: (_) => _VaccinationSearchScreen(series: series)));
+
+    if (!mounted || selectedSeriesName == null) {
+      return;
+    }
+
+    ref.read(vaccinationsProvider.notifier).setFilter(VaccinationReminderFilter.all);
+
+    final normalizedSeriesKey = _seriesKeyFromName(selectedSeriesName);
+    setState(() {
+      _expandedSeriesKey = normalizedSeriesKey;
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final targetContext = _seriesItemKeys[normalizedSeriesKey]?.currentContext;
+      if (targetContext == null || !mounted) {
+        return;
+      }
+
+      Scrollable.ensureVisible(targetContext, duration: const Duration(milliseconds: 280), alignment: 0.08, curve: Curves.easeOutCubic);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final local = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final vaccinationState = ref.watch(vaccinationsProvider);
     final today = DateTime.now();
+    final seriesForSearch = vaccinationState.asData?.value.series ?? const <VaccinationSeriesEntity>[];
 
     return Scaffold(
       appBar: AppBar(
         title: Text(local.vaccinations),
         actions: [
+          if (seriesForSearch.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: IconButton.filledTonal(icon: const Icon(Icons.search), tooltip: local.searchVaccinations, onPressed: () => _openSearch(seriesForSearch)),
+            ),
           Padding(
             padding: const EdgeInsets.only(right: 12),
             child: IconButton.filled(
@@ -101,12 +151,14 @@ class VaccinationsScreen extends ConsumerWidget {
               const SizedBox(height: 16),
               _VaccinationFilterBar(selectedFilter: state.selectedFilter),
               const SizedBox(height: 16),
-              ...filteredSeries.map(
-                (series) => Padding(
+              ...filteredSeries.map((series) {
+                final normalizedName = _seriesKeyFromName(series.name);
+                return Padding(
+                  key: _seriesKeyFor(normalizedName),
                   padding: const EdgeInsets.only(bottom: 12),
-                  child: _VaccinationSeriesCard(series: series),
-                ),
-              ),
+                  child: _VaccinationSeriesCard(series: series, initiallyExpanded: normalizedName == _expandedSeriesKey),
+                );
+              }),
             ],
           );
         },
@@ -211,9 +263,10 @@ class _SummaryValue extends StatelessWidget {
 }
 
 class _VaccinationSeriesCard extends StatelessWidget {
-  const _VaccinationSeriesCard({required this.series});
+  const _VaccinationSeriesCard({required this.series, this.initiallyExpanded = false});
 
   final VaccinationSeriesEntity series;
+  final bool initiallyExpanded;
 
   @override
   Widget build(BuildContext context) {
@@ -223,6 +276,8 @@ class _VaccinationSeriesCard extends StatelessWidget {
 
     return Card(
       child: ExpansionTile(
+        key: ValueKey('${series.name.toLowerCase()}-${initiallyExpanded ? 'expanded' : 'collapsed'}'),
+        initiallyExpanded: initiallyExpanded,
         tilePadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         title: Text(series.name, style: Theme.of(context).textTheme.titleMedium),
@@ -364,6 +419,117 @@ class _ShotStatusBadge extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(color: background, borderRadius: BorderRadius.circular(999)),
       child: Text(label, style: Theme.of(context).textTheme.labelMedium?.copyWith(color: foreground)),
+    );
+  }
+}
+
+class _VaccinationSearchScreen extends StatefulWidget {
+  const _VaccinationSearchScreen({required this.series});
+
+  final List<VaccinationSeriesEntity> series;
+
+  @override
+  State<_VaccinationSearchScreen> createState() => _VaccinationSearchScreenState();
+}
+
+class _VaccinationSearchScreenState extends State<_VaccinationSearchScreen> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  List<VaccinationSeriesEntity> _matchesFor(String query) {
+    final normalized = query.trim().toLowerCase();
+    if (normalized.isEmpty) {
+      return const <VaccinationSeriesEntity>[];
+    }
+
+    final matches = widget.series.where((series) => series.name.toLowerCase().contains(normalized)).toList();
+    matches.sort((a, b) {
+      final aStarts = a.name.toLowerCase().startsWith(normalized);
+      final bStarts = b.name.toLowerCase().startsWith(normalized);
+      if (aStarts != bStarts) {
+        return aStarts ? -1 : 1;
+      }
+      return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+    });
+    return matches;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final local = AppLocalizations.of(context)!;
+    final matches = _matchesFor(_controller.text);
+
+    return Scaffold(
+      appBar: AppBar(
+        titleSpacing: 12,
+        title: TextField(
+          controller: _controller,
+          autofocus: true,
+          onChanged: (_) => setState(() {}),
+          textInputAction: TextInputAction.search,
+          decoration: InputDecoration(
+            hintText: local.searchVaccinationsHint,
+            prefixIcon: const Icon(Icons.search),
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.close),
+              onPressed: () {
+                if (_controller.text.isNotEmpty) {
+                  setState(() {
+                    _controller.clear();
+                  });
+                  return;
+                }
+                Navigator.of(context).pop();
+              },
+            ),
+            border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(999))),
+            isDense: true,
+          ),
+        ),
+      ),
+      body: Builder(
+        builder: (context) {
+          if (_controller.text.trim().isEmpty) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Text(local.searchVaccinationsStart, textAlign: TextAlign.center, style: Theme.of(context).textTheme.bodyLarge),
+              ),
+            );
+          }
+
+          if (matches.isEmpty) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(24),
+                child: Text(local.searchVaccinationsNoMatches, textAlign: TextAlign.center),
+              ),
+            );
+          }
+
+          return ListView.separated(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
+            itemBuilder: (context, index) {
+              final item = matches[index];
+              return ListTile(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                tileColor: Theme.of(context).colorScheme.surfaceContainerHigh,
+                title: Text(item.name),
+                subtitle: Text('${local.shotsRecorded}: ${item.shotCount}'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => Navigator.of(context).pop(item.name),
+              );
+            },
+            separatorBuilder: (_, _) => const SizedBox(height: 8),
+            itemCount: matches.length,
+          );
+        },
+      ),
     );
   }
 }

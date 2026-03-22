@@ -113,6 +113,38 @@ void main() {
     expect(find.text('Add shot'), findsOneWidget);
   });
 
+  testWidgets('search selects a vaccination and expands the matching series', (tester) async {
+    final state = VaccinationOverviewState(
+      activeUser: activeUser,
+      series: [
+        VaccinationSeriesEntity(
+          name: 'COVID-19',
+          entries: [VaccinationEntryEntity(id: 1, userId: 1, name: 'COVID-19', vaccinationDate: DateTime(2026, 1, 10), nextVaccinationRequiredDate: DateTime(2026, 7, 10), createdAt: DateTime(2026, 1, 10))],
+        ),
+        VaccinationSeriesEntity(
+          name: 'FSME',
+          entries: [VaccinationEntryEntity(id: 2, userId: 1, name: 'FSME', vaccinationDate: DateTime(2026, 2, 10), nextVaccinationRequiredDate: DateTime(2026, 8, 10), createdAt: DateTime(2026, 2, 10))],
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(_buildTestApp(viewModelFactory: () => _TestVaccinationViewModel(state)));
+
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.search));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byType(TextField), 'fsm');
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('FSME').first);
+    await tester.pumpAndSettle();
+
+    expect(find.widgetWithText(ExpansionTile, 'FSME'), findsOneWidget);
+    expect(find.text('Shot 1'), findsOneWidget);
+  });
+
   testWidgets('shows planned and recorded badges for shot dates', (tester) async {
     final now = DateTime.now();
     final series = VaccinationSeriesEntity(

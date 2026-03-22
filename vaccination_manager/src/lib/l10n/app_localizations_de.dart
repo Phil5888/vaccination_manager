@@ -160,6 +160,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String get addVaccination => 'Impfung hinzufügen';
 
   @override
+  String get searchVaccinations => 'Impfungen suchen';
+
+  @override
+  String get searchVaccinationsHint => 'Impfungen suchen';
+
+  @override
+  String get searchVaccinationsStart => 'Tippe, um nach Impfnamen zu suchen.';
+
+  @override
+  String get searchVaccinationsNoMatches => 'Keine passenden Impfungen gefunden.';
+
+  @override
   String get addShot => 'Impfdosis hinzufügen';
 
   @override

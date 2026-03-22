@@ -65,6 +65,22 @@
     "noVaccinationsTitle": "Noch keine Impfeinträge",
     "noVaccinationsBody": "Fügen Sie die erste Impfung für diesen Benutzer hinzu, um Impfverlauf und nächste Termine zu verfolgen.",
     "addVaccination": "Impfung hinzufügen",
+    "searchVaccinations": "Impfungen suchen",
+    "@searchVaccinations": {
+        "description": "Tooltip und Bezeichnung zum Oeffnen der Impfungssuche"
+    },
+    "searchVaccinationsHint": "Impfungen suchen",
+    "@searchVaccinationsHint": {
+        "description": "Hinweistext im Suchfeld der Impfungssuche"
+    },
+    "searchVaccinationsStart": "Tippe, um nach Impfnamen zu suchen.",
+    "@searchVaccinationsStart": {
+        "description": "Hinweis vor der Eingabe eines Suchtexts"
+    },
+    "searchVaccinationsNoMatches": "Keine passenden Impfungen gefunden.",
+    "@searchVaccinationsNoMatches": {
+        "description": "Leerer Zustand ohne Suchtreffer in der Impfungssuche"
+    },
     "addShot": "Impfdosis hinzufügen",
     "editVaccination": "Impfung bearbeiten",
     "vaccinationName": "Impfung",
