@@ -85,7 +85,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('No vaccination records yet'), findsOneWidget);
-    expect(find.text('Add vaccination'), findsWidgets);
+    expect(find.text('Add vaccination'), findsOneWidget);
   });
 
   testWidgets('shows grouped series details for multiple shots', (tester) async {

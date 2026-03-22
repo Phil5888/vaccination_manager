@@ -16,13 +16,24 @@ class VaccinationsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final local = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
     final vaccinationState = ref.watch(vaccinationsProvider);
     final today = DateTime.now();
 
     return Scaffold(
       appBar: AppBar(
         title: Text(local.vaccinations),
-        actions: [IconButton(icon: const Icon(Icons.add), tooltip: local.addVaccination, onPressed: () => Navigator.of(context).pushNamed(Routes.vaccinationEdit))],
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 12),
+            child: IconButton.filled(
+              style: IconButton.styleFrom(backgroundColor: colorScheme.primary, foregroundColor: colorScheme.onPrimary),
+              icon: const Icon(Icons.add),
+              tooltip: local.addVaccination,
+              onPressed: () => Navigator.of(context).pushNamed(Routes.vaccinationEdit),
+            ),
+          ),
+        ],
       ),
       body: vaccinationState.when(
         loading: () => const Center(child: CircularProgressIndicator()),
@@ -100,7 +111,6 @@ class VaccinationsScreen extends ConsumerWidget {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton.extended(onPressed: () => Navigator.of(context).pushNamed(Routes.vaccinationEdit), icon: const Icon(Icons.add), label: Text(local.addVaccination)),
     );
   }
 }

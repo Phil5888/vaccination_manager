@@ -49,7 +49,7 @@ void main() {
     ],
   );
 
-  testWidgets('compact landscape uses drawer navigation without layout exceptions', (tester) async {
+  testWidgets('compact landscape uses floating bottom navigation without layout exceptions', (tester) async {
     await tester.binding.setSurfaceSize(const Size(780, 360));
     addTearDown(() => tester.binding.setSurfaceSize(null));
 
@@ -62,19 +62,18 @@ void main() {
 
     await tester.pumpAndSettle();
 
-    expect(find.byIcon(Icons.menu), findsNothing);
+    expect(find.byType(NavigationBar), findsOneWidget);
+    expect(find.byType(NavigationRail), findsNothing);
 
-    await tester.dragFrom(const Offset(1, 180), const Offset(280, 0));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Users'));
+    final usersDestination = find.descendant(of: find.byType(NavigationBar), matching: find.byIcon(Icons.people_outline));
+    await tester.tap(usersDestination);
     await tester.pumpAndSettle();
 
     expect(find.byType(UserManagementScreen), findsOneWidget);
     expect(tester.takeException(), isNull);
 
-    await tester.dragFrom(const Offset(1, 180), const Offset(280, 0));
-    await tester.pumpAndSettle();
-    await tester.tap(find.text('Vaccinations'));
+    final vaccinationsDestination = find.descendant(of: find.byType(NavigationBar), matching: find.byIcon(Icons.vaccines_outlined));
+    await tester.tap(vaccinationsDestination);
     await tester.pumpAndSettle();
 
     expect(find.byType(VaccinationsScreen), findsOneWidget);
@@ -95,7 +94,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(NavigationRail), findsOneWidget);
-    expect(find.byIcon(Icons.menu), findsNothing);
+    expect(find.byType(NavigationBar), findsNothing);
 
     await tester.tap(find.byIcon(Icons.people).first);
     await tester.pumpAndSettle();

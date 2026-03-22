@@ -53,6 +53,23 @@ Viewmodels extend `AsyncNotifier<State>`. Use cases are thin callable classes (`
 - `fromEntity(Entity)` — convert from domain entity
 - `toEntity()` — convert to domain entity
 
+### Naming Conventions
+
+| Layer | Suffix | Example |
+|---|---|---|
+| Domain entity | `*Entity` | `VaccinationEntryEntity` |
+| Data model | `*Model` | `VaccinationModel` |
+| Repository interface | `*Repository` | `VaccinationRepository` |
+| Repository implementation | `*RepositoryImpl` | `VaccinationRepositoryImpl` |
+| Use case | `*UseCase` | `SaveVaccinationUseCase` |
+| ViewModel | `*ViewModel` | `VaccinationViewModel` |
+| State class | `*State` | `VaccinationOverviewState` |
+
+### Persistence split
+
+- **User profiles and vaccination records** → SQLite via `AppDatabase` (sqflite)
+- **App settings** → `shared_preferences` via `SettingsRepository`
+
 ### Testing
 
 Tests use `ProviderContainer` with provider `overrides` — never the real database. Fake repositories live in `test/helpers/fakes/`. Widget tests use `ProviderScope` with the same override pattern.

@@ -50,7 +50,7 @@ class _MainScreenState extends State<MainScreen> {
         final isDesktop = constraints.maxWidth >= Breakpoints.desktop;
 
         return Scaffold(
-          drawer: isDesktop ? null : _buildDrawer(local),
+          bottomNavigationBar: isDesktop ? null : _buildFloatingBottomNavigation(local),
           body: Row(
             children: [
               if (isDesktop) _buildNavigationRail(local),
@@ -117,51 +117,31 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  Widget _buildDrawer(AppLocalizations local) {
-    return Drawer(
-      child: ListView(
-        children: [
-          DrawerHeader(
-            decoration: const BoxDecoration(color: Colors.blue),
-            child: Text(local.menue, style: const TextStyle(color: Colors.white)),
+  Widget _buildFloatingBottomNavigation(AppLocalizations local) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return SafeArea(
+      minimum: const EdgeInsets.fromLTRB(12, 0, 12, 12),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerHigh,
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.18), blurRadius: 18, offset: const Offset(0, 8))],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(24),
+          child: NavigationBar(
+            selectedIndex: _selectedIndex,
+            onDestinationSelected: _onItemTapped,
+            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+            destinations: [
+              NavigationDestination(icon: const Icon(Icons.dashboard_outlined), selectedIcon: const Icon(Icons.dashboard), label: local.dashboard),
+              NavigationDestination(icon: const Icon(Icons.vaccines_outlined), selectedIcon: const Icon(Icons.vaccines), label: local.vaccinations),
+              NavigationDestination(icon: const Icon(Icons.people_outline), selectedIcon: const Icon(Icons.people), label: local.users),
+              NavigationDestination(icon: const Icon(Icons.settings_outlined), selectedIcon: const Icon(Icons.settings), label: local.settings),
+            ],
           ),
-          ListTile(
-            leading: const Icon(Icons.dashboard),
-            title: Text(local.dashboard),
-            selected: _selectedIndex == 0,
-            onTap: () {
-              _onItemTapped(0);
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.vaccines),
-            title: Text(local.vaccinations),
-            selected: _selectedIndex == 1,
-            onTap: () {
-              _onItemTapped(1);
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.people),
-            title: Text(local.users),
-            selected: _selectedIndex == 2,
-            onTap: () {
-              _onItemTapped(2);
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.settings),
-            title: Text(local.settings),
-            selected: _selectedIndex == 3,
-            onTap: () {
-              _onItemTapped(3);
-              Navigator.pop(context);
-            },
-          ),
-        ],
+        ),
       ),
     );
   }
