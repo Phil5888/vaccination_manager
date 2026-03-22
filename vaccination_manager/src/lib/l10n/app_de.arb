@@ -42,6 +42,22 @@
     "removePicture": "Bild entfernen",
     "switchUser": "Benutzer wechseln",
     "manageUsers": "Benutzer verwalten",
+    "searchUsers": "Benutzer suchen",
+    "@searchUsers": {
+        "description": "Tooltip und Bezeichnung zum Oeffnen der Benutzersuche"
+    },
+    "searchUsersHint": "Benutzer suchen",
+    "@searchUsersHint": {
+        "description": "Hinweistext im Suchfeld der Benutzersuche"
+    },
+    "searchUsersStart": "Tippe, um nach Benutzernamen zu suchen.",
+    "@searchUsersStart": {
+        "description": "Hinweis vor der Eingabe eines Suchtexts fuer Benutzer"
+    },
+    "searchUsersNoMatches": "Keine passenden Benutzer gefunden.",
+    "@searchUsersNoMatches": {
+        "description": "Leerer Zustand ohne Suchtreffer in der Benutzersuche"
+    },
     "addUser": "Benutzer hinzufügen",
     "editProfile": "Profil bearbeiten",
     "activeUser": "Aktiver Benutzer",

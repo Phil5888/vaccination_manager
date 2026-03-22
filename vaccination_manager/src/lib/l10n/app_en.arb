@@ -141,6 +141,22 @@
     "@manageUsers": {
         "description": "Label for the user management screen"
     },
+    "searchUsers": "Search users",
+    "@searchUsers": {
+        "description": "Tooltip and label for opening user search"
+    },
+    "searchUsersHint": "Search users",
+    "@searchUsersHint": {
+        "description": "Hint text in the user search input"
+    },
+    "searchUsersStart": "Type to search user names.",
+    "@searchUsersStart": {
+        "description": "Empty-state hint shown before entering user search text"
+    },
+    "searchUsersNoMatches": "No matching users found.",
+    "@searchUsersNoMatches": {
+        "description": "Empty-state message when user search has no matches"
+    },
     "addUser": "Add user",
     "@addUser": {
         "description": "Button label to add a new user"

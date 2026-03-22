@@ -113,6 +113,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get manageUsers => 'Manage users';
 
   @override
+  String get searchUsers => 'Search users';
+
+  @override
+  String get searchUsersHint => 'Search users';
+
+  @override
+  String get searchUsersStart => 'Type to search user names.';
+
+  @override
+  String get searchUsersNoMatches => 'No matching users found.';
+
+  @override
   String get addUser => 'Add user';
 
   @override

@@ -113,6 +113,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String get manageUsers => 'Benutzer verwalten';
 
   @override
+  String get searchUsers => 'Benutzer suchen';
+
+  @override
+  String get searchUsersHint => 'Benutzer suchen';
+
+  @override
+  String get searchUsersStart => 'Tippe, um nach Benutzernamen zu suchen.';
+
+  @override
+  String get searchUsersNoMatches => 'Keine passenden Benutzer gefunden.';
+
+  @override
   String get addUser => 'Benutzer hinzufügen';
 
   @override

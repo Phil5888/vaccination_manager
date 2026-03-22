@@ -299,6 +299,30 @@ abstract class AppLocalizations {
   /// **'Manage users'**
   String get manageUsers;
 
+  /// Tooltip and label for opening user search
+  ///
+  /// In en, this message translates to:
+  /// **'Search users'**
+  String get searchUsers;
+
+  /// Hint text in the user search input
+  ///
+  /// In en, this message translates to:
+  /// **'Search users'**
+  String get searchUsersHint;
+
+  /// Empty-state hint shown before entering user search text
+  ///
+  /// In en, this message translates to:
+  /// **'Type to search user names.'**
+  String get searchUsersStart;
+
+  /// Empty-state message when user search has no matches
+  ///
+  /// In en, this message translates to:
+  /// **'No matching users found.'**
+  String get searchUsersNoMatches;
+
   /// Button label to add a new user
   ///
   /// In en, this message translates to:

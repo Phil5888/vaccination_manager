@@ -9,18 +9,12 @@ import 'package:vaccination_manager/presentation/screens/users/user_management_s
 import 'package:vaccination_manager/presentation/viewmodels/user_management_viewmodel.dart';
 
 class TestUserManagementViewModel extends UserManagementViewModel {
-  TestUserManagementViewModel(this.initialState, {this.onSwitchUser});
+  TestUserManagementViewModel(this.initialState);
 
   final UserManagementState initialState;
-  final void Function(int userId)? onSwitchUser;
 
   @override
   Future<UserManagementState> build() async => initialState;
-
-  @override
-  Future<void> switchUser(int userId) async {
-    onSwitchUser?.call(userId);
-  }
 }
 
 void main() {
@@ -34,8 +28,7 @@ void main() {
       expect(find.text('Add a user to personalize the app with a name and profile picture.'), findsOneWidget);
     });
 
-    testWidgets('renders users and allows switching inactive user', (tester) async {
-      int? switchedTo;
+    testWidgets('renders users without inline switch button', (tester) async {
       final users = [
         AppUserEntity(id: 1, username: 'Anna', profilePicture: null, isActive: true, createdAt: DateTime(2026, 1, 1)),
         AppUserEntity(id: 2, username: 'Ben', profilePicture: null, isActive: false, createdAt: DateTime(2026, 1, 2)),
@@ -43,10 +36,7 @@ void main() {
 
       await tester.pumpWidget(
         _buildTestApp(
-          viewModelFactory: () => TestUserManagementViewModel(
-            UserManagementState(users: users, activeUser: users.first),
-            onSwitchUser: (id) => switchedTo = id,
-          ),
+          viewModelFactory: () => TestUserManagementViewModel(UserManagementState(users: users, activeUser: users.first)),
         ),
       );
 
@@ -55,22 +45,50 @@ void main() {
       expect(find.text('Anna'), findsOneWidget);
       expect(find.text('Ben'), findsOneWidget);
       expect(find.text('Current'), findsOneWidget);
-
-      await tester.tap(find.widgetWithText(FilledButton, 'Switch user'));
-      await tester.pumpAndSettle();
-
-      expect(switchedTo, 2);
+      expect(find.text('Switch user'), findsNothing);
     });
 
-    testWidgets('fab opens user edit route', (tester) async {
+    testWidgets('top add button opens user edit route', (tester) async {
       await tester.pumpWidget(_buildTestApp(viewModelFactory: () => TestUserManagementViewModel(const UserManagementState(users: [], activeUser: null))));
 
       await tester.pumpAndSettle();
 
-      await tester.tap(find.widgetWithIcon(FloatingActionButton, Icons.add));
+      await tester.tap(find.byTooltip('Add user'));
       await tester.pumpAndSettle();
 
       expect(find.text('Edit Route Stub'), findsOneWidget);
+    });
+
+    testWidgets('search selects user and opens edit route directly', (tester) async {
+      final users = [
+        AppUserEntity(id: 1, username: 'Anna', profilePicture: null, isActive: true, createdAt: DateTime(2026, 1, 1)),
+        AppUserEntity(id: 2, username: 'Benedict', profilePicture: null, isActive: false, createdAt: DateTime(2026, 1, 2)),
+      ];
+
+      await tester.pumpWidget(
+        _buildTestApp(
+          viewModelFactory: () => TestUserManagementViewModel(UserManagementState(users: users, activeUser: users.first)),
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byIcon(Icons.search));
+      await tester.pumpAndSettle();
+
+      await tester.enterText(find.byType(TextField), 'ben');
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Benedict').first);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Edit Route Stub'), findsOneWidget);
+
+      await tester.pageBack();
+      await tester.pumpAndSettle();
+
+      expect(find.byType(UserManagementScreen), findsOneWidget);
+      expect(tester.takeException(), isNull);
     });
   });
 }
@@ -81,7 +99,12 @@ Widget _buildTestApp({required TestUserManagementViewModel Function() viewModelF
     child: MaterialApp(
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      routes: {Routes.userEdit: (_) => const Scaffold(body: Center(child: Text('Edit Route Stub')))},
+      routes: {
+        Routes.userEdit: (_) => Scaffold(
+          appBar: AppBar(),
+          body: const Center(child: Text('Edit Route Stub')),
+        ),
+      },
       home: const UserManagementScreen(),
     ),
   );
