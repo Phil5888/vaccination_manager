@@ -1,0 +1,178 @@
+# CI workflow for Vaccination Manager
+#
+# Triggered on every push/PR to master and on manual dispatch.
+# Acts as a quality gate: all test jobs must pass for the workflow to succeed.
+#
+# Widget tests run headlessly in Flutter — no emulator is needed.
+# Screen size is injected via --dart-define flags (SCREEN_WIDTH / SCREEN_HEIGHT).
+# Widget test files should wrap their MaterialApp in a MediaQuery sized to
+# Size(double.parse(const String.fromEnvironment('SCREEN_WIDTH', defaultValue: '390')),
+#      double.parse(const String.fromEnvironment('SCREEN_HEIGHT', defaultValue: '844')))
+# to exercise layout behaviour across form factors.
+
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  # ──────────────────────────────────────────────────────────────
+  # Job 1 — Unit tests, use-case tests, viewmodel tests
+  # Runs on a single Ubuntu runner (no GUI required).
+  # ──────────────────────────────────────────────────────────────
+  unit-tests:
+    name: Unit & ViewModel Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache Flutter SDK
+        uses: actions/cache@v4
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: flutter-stable-${{ runner.os }}-${{ hashFiles('src/pubspec.yaml') }}
+          restore-keys: |
+            flutter-stable-${{ runner.os }}-
+
+      - name: Set up Flutter (stable)
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: pub-${{ runner.os }}-${{ hashFiles('src/pubspec.lock') }}
+          restore-keys: |
+            pub-${{ runner.os }}-
+
+      - name: Install dependencies
+        working-directory: src
+        run: flutter pub get
+
+      - name: Run unit tests
+        working-directory: src
+        run: flutter test test/unit/ --reporter=expanded
+
+      - name: Run use-case tests
+        working-directory: src
+        run: flutter test test/use_cases/ --reporter=expanded
+
+      - name: Run viewmodel tests
+        working-directory: src
+        run: flutter test test/presentation/viewmodels/ --reporter=expanded
+
+  # ──────────────────────────────────────────────────────────────
+  # Job 2 — Widget tests across a screen-size matrix
+  #
+  # Screen dimensions are passed as --dart-define flags so widget
+  # tests can read them via String.fromEnvironment / int.fromEnvironment
+  # and wrap their MaterialApp in an appropriately sized MediaQuery.
+  #
+  # Matrix configurations:
+  #   phone-portrait   390 × 844   (iPhone 14 equivalent)
+  #   phone-landscape  844 × 390
+  #   tablet-portrait  768 × 1024  (iPad equivalent)
+  #   tablet-landscape 1024 × 768
+  # ──────────────────────────────────────────────────────────────
+  widget-tests:
+    name: Widget Tests (${{ matrix.form-factor }})
+    runs-on: ubuntu-latest
+    needs: unit-tests
+
+    strategy:
+      fail-fast: false   # surface failures in all form factors, not just the first
+      matrix:
+        include:
+          - form-factor: phone-portrait
+            screen-width: "390"
+            screen-height: "844"
+          - form-factor: phone-landscape
+            screen-width: "844"
+            screen-height: "390"
+          - form-factor: tablet-portrait
+            screen-width: "768"
+            screen-height: "1024"
+          - form-factor: tablet-landscape
+            screen-width: "1024"
+            screen-height: "768"
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache Flutter SDK
+        uses: actions/cache@v4
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: flutter-stable-${{ runner.os }}-${{ hashFiles('src/pubspec.yaml') }}
+          restore-keys: |
+            flutter-stable-${{ runner.os }}-
+
+      - name: Set up Flutter (stable)
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: pub-${{ runner.os }}-${{ hashFiles('src/pubspec.lock') }}
+          restore-keys: |
+            pub-${{ runner.os }}-
+
+      - name: Install dependencies
+        working-directory: src
+        run: flutter pub get
+
+      - name: Run widget tests (${{ matrix.form-factor }} ${{ matrix.screen-width }}×${{ matrix.screen-height }})
+        working-directory: src
+        run: |
+          flutter test test/presentation/widgets/ \
+            --reporter=expanded \
+            --dart-define=SCREEN_WIDTH=${{ matrix.screen-width }} \
+            --dart-define=SCREEN_HEIGHT=${{ matrix.screen-height }}
+
+  # ──────────────────────────────────────────────────────────────
+  # Job 3 — Aggregation job (quality gate)
+  #
+  # Always runs so it can report a definitive pass/fail status even
+  # when upstream jobs are cancelled or skipped.  Branch protection
+  # rules should require only this single status check.
+  # ──────────────────────────────────────────────────────────────
+  all-tests-passed:
+    name: All Tests Passed
+    runs-on: ubuntu-latest
+    needs:
+      - unit-tests
+      - widget-tests
+    if: always()
+
+    steps:
+      - name: Evaluate results
+        run: |
+          unit="${{ needs.unit-tests.result }}"
+          widget="${{ needs.widget-tests.result }}"
+
+          echo "unit-tests   : $unit"
+          echo "widget-tests : $widget"
+
+          if [[ "$unit" == "success" && "$widget" == "success" ]]; then
+            echo "✅ All tests passed."
+            exit 0
+          else
+            echo "❌ One or more test jobs failed or were skipped."
+            exit 1
+          fi

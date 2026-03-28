@@ -3,16 +3,15 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:vaccination_manager/domain/entities/vaccination_series_entity.dart';
-import 'package:vaccination_manager/domain/entities/vaccination_series_status.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:vaccination_manager/presentation/providers/user_providers.dart';
 import 'package:vaccination_manager/presentation/providers/vaccination_dependency_providers.dart';
-import 'package:vaccination_manager/presentation/providers/vaccination_providers.dart';
 import 'package:vaccination_manager/presentation/widgets/vaccination_series_card.dart';
 
 import '../../helpers/fakes/fake_active_user_notifier.dart';
 import '../../helpers/fakes/fake_vaccination_repository.dart';
 import '../../helpers/fixtures.dart';
+import '../../helpers/screen_sizes.dart';
 
 // ---------------------------------------------------------------------------
 // Test helpers
@@ -274,6 +273,49 @@ void main() {
         await tester.tap(find.byIcon(Icons.edit_outlined));
         expect(editCalled, isTrue);
       });
+    });
+
+    group('no overflow at any screen size', () {
+      Widget scopedCard(VaccinationSeriesEntity series) => ProviderScope(
+            overrides: [
+              activeUserProvider.overrideWith(
+                  () => FakeActiveUserNotifier(Fixtures.userAlice())),
+              vaccinationRepositoryProvider
+                  .overrideWith((_) => FakeVaccinationRepository()),
+            ],
+            child: _localizedApp(
+              child: VaccinationSeriesCard(
+                series: series,
+                onEdit: () {},
+                onDelete: () {},
+              ),
+            ),
+          );
+
+      for (final size in allScreenSizes) {
+        testWidgets('complete card at ${size.width}x${size.height}',
+            (tester) async {
+          await pumpAtSize(tester, () => scopedCard(_completeSeries()), size);
+          expectNoOverflow(tester);
+        });
+
+        testWidgets('inProgress card at ${size.width}x${size.height}',
+            (tester) async {
+          await pumpAtSize(
+              tester, () => scopedCard(_inProgressSeries()), size);
+          expectNoOverflow(tester);
+        });
+
+        testWidgets('expanded card at ${size.width}x${size.height}',
+            (tester) async {
+          await pumpAtSize(
+              tester, () => scopedCard(_inProgressSeries()), size);
+          // Tap "Show details" to expand
+          await tester.tap(find.text('Show details'));
+          await tester.pumpAndSettle();
+          expectNoOverflow(tester);
+        });
+      }
     });
   });
 }

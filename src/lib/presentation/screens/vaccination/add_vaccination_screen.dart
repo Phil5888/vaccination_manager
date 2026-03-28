@@ -645,11 +645,15 @@ class _ShotDateRow extends StatelessWidget {
         child: Row(
           children: [
             // Shot label
-            Text(
-              local.shot(shotNumber),
-              style: textTheme.labelMedium?.copyWith(
-                color: colorScheme.onSurface,
-                fontWeight: FontWeight.w700,
+            Flexible(
+              fit: FlexFit.loose,
+              child: Text(
+                local.shot(shotNumber),
+                style: textTheme.labelMedium?.copyWith(
+                  color: colorScheme.onSurface,
+                  fontWeight: FontWeight.w700,
+                ),
+                overflow: TextOverflow.ellipsis,
               ),
             ),
             const SizedBox(width: 12),
@@ -666,19 +670,23 @@ class _ShotDateRow extends StatelessWidget {
               ),
             ),
 
-            // Status chip
-            Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-              decoration: BoxDecoration(
-                color: _statusColor().withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(999),
-              ),
-              child: Text(
-                _statusLabel(),
-                style: textTheme.labelSmall?.copyWith(
-                  color: _statusColor(),
-                  fontWeight: FontWeight.w700,
+            // Status chip — Flexible so it yields space on small screens
+            Flexible(
+              fit: FlexFit.loose,
+              child: Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  color: _statusColor().withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(
+                  _statusLabel(),
+                  style: textTheme.labelSmall?.copyWith(
+                    color: _statusColor(),
+                    fontWeight: FontWeight.w700,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),

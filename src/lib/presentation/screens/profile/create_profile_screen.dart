@@ -96,11 +96,14 @@ class _CreateProfileScreenState extends ConsumerState<CreateProfileScreen> {
                     color: colorScheme.primary,
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    _isEditing ? local.editProfile : local.createProfile,
-                    style: textTheme.titleLarge?.copyWith(
-                      color: colorScheme.onSurface,
-                      fontWeight: FontWeight.w600,
+                  Flexible(
+                    child: Text(
+                      _isEditing ? local.editProfile : local.createProfile,
+                      style: textTheme.titleLarge?.copyWith(
+                        color: colorScheme.onSurface,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],

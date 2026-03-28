@@ -64,11 +64,14 @@ class _VaccinationSeriesCardState extends State<VaccinationSeriesCard> {
                   ),
                 ),
                 const SizedBox(width: 8),
-                _SeriesStatusBadge(
-                  status: series.seriesStatus,
-                  colorScheme: colorScheme,
-                  textTheme: textTheme,
-                  local: local,
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: _SeriesStatusBadge(
+                    status: series.seriesStatus,
+                    colorScheme: colorScheme,
+                    textTheme: textTheme,
+                    local: local,
+                  ),
                 ),
               ],
             ),
@@ -106,11 +109,14 @@ class _VaccinationSeriesCardState extends State<VaccinationSeriesCard> {
                     color: colorScheme.primary,
                   ),
                   const SizedBox(width: 4),
-                  Text(
-                    _expanded ? local.hideDetails : local.showDetails,
-                    style: textTheme.labelMedium?.copyWith(
-                      color: colorScheme.primary,
-                      fontWeight: FontWeight.w600,
+                  Expanded(
+                    child: Text(
+                      _expanded ? local.hideDetails : local.showDetails,
+                      style: textTheme.labelMedium?.copyWith(
+                        color: colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ],
@@ -242,6 +248,7 @@ class _SeriesStatusBadge extends StatelessWidget {
           color: fg,
           fontWeight: FontWeight.w700,
         ),
+        overflow: TextOverflow.ellipsis,
       ),
     );
   }

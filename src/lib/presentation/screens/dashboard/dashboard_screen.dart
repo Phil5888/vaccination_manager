@@ -106,24 +106,34 @@ class DashboardScreen extends ConsumerWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      local.priorityDue,
-                      style: textTheme.titleLarge?.copyWith(
-                        fontFamily: 'Manrope',
-                        fontWeight: FontWeight.w700,
-                        color: colorScheme.onSurface,
+                    Flexible(
+                      child: Text(
+                        local.priorityDue,
+                        style: textTheme.titleLarge?.copyWith(
+                          fontFamily: 'Manrope',
+                          fontWeight: FontWeight.w700,
+                          color: colorScheme.onSurface,
+                        ),
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    TextButton(
-                      onPressed: () {
-                        ref.read(selectedTabProvider.notifier).selectTab(2);
-                      },
-                      child: Text(
-                        local.seeSchedule.toUpperCase(),
-                        style: textTheme.labelSmall?.copyWith(
-                          color: colorScheme.primary,
-                          fontWeight: FontWeight.w700,
-                          letterSpacing: 1.1,
+                    Flexible(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: TextButton(
+                          onPressed: () {
+                            ref
+                                .read(selectedTabProvider.notifier)
+                                .selectTab(2);
+                          },
+                          child: Text(
+                            local.seeSchedule.toUpperCase(),
+                            style: textTheme.labelSmall?.copyWith(
+                              color: colorScheme.primary,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 1.1,
+                            ),
+                          ),
                         ),
                       ),
                     ),
@@ -202,28 +212,32 @@ class DashboardScreen extends ConsumerWidget {
 
                       // App name + subtitle
                       Expanded(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'VaccineCare',
-                              style: textTheme.titleMedium?.copyWith(
-                                fontFamily: 'Manrope',
-                                fontWeight: FontWeight.w900,
-                                color: colorScheme.primary,
+                        child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          alignment: Alignment.centerLeft,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'VaccineCare',
+                                style: textTheme.titleMedium?.copyWith(
+                                  fontFamily: 'Manrope',
+                                  fontWeight: FontWeight.w900,
+                                  color: colorScheme.primary,
+                                ),
                               ),
-                            ),
-                            Text(
-                              'PERSONAL PROFILE',
-                              style: textTheme.labelSmall?.copyWith(
-                                color: colorScheme.primary,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 1.5,
-                                fontSize: 9,
+                              Text(
+                                'PERSONAL PROFILE',
+                                style: textTheme.labelSmall?.copyWith(
+                                  color: colorScheme.primary,
+                                  fontWeight: FontWeight.w700,
+                                  letterSpacing: 1.5,
+                                  fontSize: 9,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
 
