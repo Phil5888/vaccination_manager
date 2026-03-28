@@ -1,5 +1,10 @@
 # Test Use Cases
 
+> **⚠️ Deprecated location.**
+> New and updated test case documentation lives in [`docs/test_cases/`](test_cases/README.md).
+> The user-switch cases below have been migrated to [`docs/test_cases/user_profiles.md`](test_cases/user_profiles.md)
+> with updated IDs (QA-VAX-USR-001..005). This file is kept for historical reference only.
+
 This document captures behavior-driven QA use cases in a natural step and expected-result format.
 
 ## QA-VAX-REG-USER-SWITCH-001
