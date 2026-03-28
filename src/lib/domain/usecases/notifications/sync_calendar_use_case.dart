@@ -47,7 +47,7 @@ class SyncCalendarUseCase {
           'VaccineCare reminder — open the app to record this vaccination.';
 
       String? calendarEventId;
-      if (prefs.calendarSyncEnabled) {
+      if (prefs.calendarSyncEnabled && calendarRepo.supportsNativeCalendar) {
         calendarEventId = await calendarRepo.createEvent(
           title: title,
           date: date,
