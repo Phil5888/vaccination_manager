@@ -329,4 +329,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hideDetails => 'Hide details';
+
+  @override
+  String get exportToCalendar => 'Export to calendar';
 }

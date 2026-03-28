@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
+import 'package:vaccination_manager/presentation/providers/notification_providers.dart';
+import 'package:vaccination_manager/presentation/providers/user_providers.dart';
 import 'package:vaccination_manager/presentation/providers/vaccination_providers.dart';
 import 'package:vaccination_manager/presentation/viewmodels/settings_viewmodel.dart';
 
@@ -170,6 +172,15 @@ class SettingsScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 24),
 
+              // ── Section: Notifications & Calendar ─────────────────────────
+              _SectionHeader(label: 'NOTIFICATIONS & CALENDAR'),
+              const SizedBox(height: 12),
+              _NotificationsSection(
+                colorScheme: colorScheme,
+                textTheme: textTheme,
+              ),
+              const SizedBox(height: 24),
+
               // ── Section: About ─────────────────────────────────────────────
               _SectionHeader(label: local.about.toUpperCase()),
               const SizedBox(height: 12),
@@ -333,6 +344,184 @@ class _StepButton extends StatelessWidget {
                 ? colorScheme.onSurface
                 : colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Notifications & Calendar section
+// ---------------------------------------------------------------------------
+class _NotificationsSection extends ConsumerWidget {
+  const _NotificationsSection({
+    required this.colorScheme,
+    required this.textTheme,
+  });
+
+  final ColorScheme colorScheme;
+  final TextTheme textTheme;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final prefsAsync = ref.watch(notificationPreferencesProvider);
+    final settingsRepo = ref.read(settingsRepositoryProvider);
+
+    return prefsAsync.when(
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, _) => Text('Error: $e'),
+      data: (prefs) => _SettingsCard(
+        colorScheme: colorScheme,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ── Enable Notifications toggle ──────────────────────────────────
+            Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: colorScheme.primaryContainer.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    Icons.notifications_outlined,
+                    color: colorScheme.primary,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    'Enable Notifications',
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: colorScheme.onSurface,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Switch(
+                  value: prefs.notificationsEnabled,
+                  onChanged: (value) async {
+                    await settingsRepo.setNotificationsEnabled(value);
+                    ref.invalidate(notificationPreferencesProvider);
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+
+            // ── Calendar Sync toggle ─────────────────────────────────────────
+            Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: colorScheme.primaryContainer.withValues(alpha: 0.3),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    Icons.calendar_month_outlined,
+                    color: colorScheme.primary,
+                    size: 20,
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    'Calendar Sync',
+                    style: textTheme.bodyLarge?.copyWith(
+                      color: colorScheme.onSurface,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Switch(
+                  value: prefs.calendarSyncEnabled,
+                  onChanged: (value) async {
+                    await settingsRepo.setCalendarSyncEnabled(value);
+                    ref.invalidate(notificationPreferencesProvider);
+                  },
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // ── Advance reminder stepper ─────────────────────────────────────
+            Text(
+              'Advance reminder',
+              style: textTheme.bodyLarge?.copyWith(
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _StepButton(
+                  icon: Icons.remove,
+                  colorScheme: colorScheme,
+                  onPressed: prefs.reminderAdvanceDays > 1
+                      ? () async {
+                          await settingsRepo.setReminderAdvanceDays(
+                            prefs.reminderAdvanceDays - 1,
+                          );
+                          ref.invalidate(notificationPreferencesProvider);
+                        }
+                      : null,
+                ),
+                const SizedBox(width: 24),
+                SizedBox(
+                  width: 80,
+                  child: Text(
+                    '${prefs.reminderAdvanceDays} day${prefs.reminderAdvanceDays == 1 ? '' : 's'}',
+                    textAlign: TextAlign.center,
+                    style: textTheme.titleMedium?.copyWith(
+                      color: colorScheme.onSurface,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 24),
+                _StepButton(
+                  icon: Icons.add,
+                  colorScheme: colorScheme,
+                  onPressed: prefs.reminderAdvanceDays < 30
+                      ? () async {
+                          await settingsRepo.setReminderAdvanceDays(
+                            prefs.reminderAdvanceDays + 1,
+                          );
+                          ref.invalidate(notificationPreferencesProvider);
+                        }
+                      : null,
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+
+            // ── Sync All to Calendar button ──────────────────────────────────
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                icon: const Icon(Icons.sync),
+                label: const Text('Sync All to Calendar'),
+                onPressed: () async {
+                  final user =
+                      await ref.read(activeUserProvider.future);
+                  if (user == null) return;
+                  final shots = await ref.read(vaccinationProvider.future);
+                  final currentPrefs = await settingsRepo
+                      .getNotificationPreferences();
+                  await ref
+                      .read(syncCalendarUseCaseProvider)
+                      .call(shots: shots, prefs: currentPrefs);
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );

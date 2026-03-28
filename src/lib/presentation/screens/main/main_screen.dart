@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
+import 'package:vaccination_manager/domain/entities/reminder_status.dart';
 import 'package:vaccination_manager/presentation/providers/navigation_providers.dart';
+import 'package:vaccination_manager/presentation/providers/vaccination_providers.dart';
 import 'package:vaccination_manager/presentation/screens/dashboard/dashboard_screen.dart';
 import 'package:vaccination_manager/presentation/screens/profile/profile_screen.dart';
 import 'package:vaccination_manager/presentation/screens/records/records_screen.dart';
@@ -26,6 +28,13 @@ class MainScreen extends ConsumerWidget {
     final local = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
     final isDark = colorScheme.brightness == Brightness.dark;
+
+    final remindersAsync = ref.watch(vaccinationRemindersProvider);
+    final overdueCount = remindersAsync.whenOrNull(
+          data: (list) =>
+              list.where((r) => r.status == ReminderStatus.overdue).length,
+        ) ??
+        0;
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
@@ -62,8 +71,16 @@ class MainScreen extends ConsumerWidget {
             label: local.navRecords,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.event_outlined),
-            selectedIcon: const Icon(Icons.event),
+            icon: Badge(
+              isLabelVisible: overdueCount > 0,
+              label: Text('$overdueCount'),
+              child: const Icon(Icons.event_outlined),
+            ),
+            selectedIcon: Badge(
+              isLabelVisible: overdueCount > 0,
+              label: Text('$overdueCount'),
+              child: const Icon(Icons.event),
+            ),
             label: local.navSchedule,
           ),
           NavigationDestination(

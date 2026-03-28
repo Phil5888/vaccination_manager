@@ -1,17 +1,22 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:vaccination_manager/domain/entities/notification_preference_entity.dart';
 import 'package:vaccination_manager/domain/entities/vaccination_series_entity.dart';
 import 'package:vaccination_manager/domain/entities/vaccination_series_status.dart';
 import 'package:vaccination_manager/domain/entities/vaccination_entry_entity.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
+import 'package:vaccination_manager/presentation/providers/notification_providers.dart';
 import 'package:vaccination_manager/presentation/providers/vaccination_providers.dart';
 
 // ---------------------------------------------------------------------------
 // VaccinationSeriesCard
 // ---------------------------------------------------------------------------
 
-class VaccinationSeriesCard extends StatefulWidget {
+class VaccinationSeriesCard extends ConsumerStatefulWidget {
   const VaccinationSeriesCard({
     super.key,
     required this.series,
@@ -24,11 +29,13 @@ class VaccinationSeriesCard extends StatefulWidget {
   final VoidCallback onDelete;
 
   @override
-  State<VaccinationSeriesCard> createState() => _VaccinationSeriesCardState();
+  ConsumerState<VaccinationSeriesCard> createState() =>
+      _VaccinationSeriesCardState();
 }
 
-class _VaccinationSeriesCardState extends State<VaccinationSeriesCard> {
+class _VaccinationSeriesCardState extends ConsumerState<VaccinationSeriesCard> {
   bool _expanded = false;
+  bool _exportingCal = false;
 
   @override
   Widget build(BuildContext context) {
@@ -153,6 +160,31 @@ class _VaccinationSeriesCardState extends State<VaccinationSeriesCard> {
                   const SizedBox(width: 8),
                 ],
 
+                // Export to Calendar button
+                IconButton(
+                  onPressed: _exportingCal ? null : _exportToCalendar,
+                  icon: _exportingCal
+                      ? SizedBox(
+                          width: 18,
+                          height: 18,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: colorScheme.primary,
+                          ),
+                        )
+                      : Icon(Icons.calendar_month_outlined,
+                          size: 20, color: colorScheme.primary),
+                  tooltip: local.exportToCalendar,
+                  style: IconButton.styleFrom(
+                    backgroundColor:
+                        colorScheme.primaryContainer.withValues(alpha: 0.3),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+
                 // Edit button
                 IconButton(
                   onPressed: widget.onEdit,
@@ -186,6 +218,33 @@ class _VaccinationSeriesCardState extends State<VaccinationSeriesCard> {
         return colorScheme.secondary;
       case VaccinationSeriesStatus.overdue:
         return colorScheme.error;
+    }
+  }
+
+  Future<void> _exportToCalendar() async {
+    setState(() => _exportingCal = true);
+    try {
+      final prefs = await ref
+          .read(notificationPreferencesProvider.future)
+          .catchError((_) => const NotificationPreferenceEntity());
+      final exportUseCase = ref.read(exportIcsUseCaseProvider);
+      final icsContent = exportUseCase(
+        shots: widget.series.shots,
+        alarmMinutesBefore: prefs.reminderAdvanceDays * 24 * 60,
+      );
+      final bytes = Uint8List.fromList(icsContent.codeUnits);
+      await Share.shareXFiles(
+        [
+          XFile.fromData(
+            bytes,
+            name: '${widget.series.name}.ics',
+            mimeType: 'text/calendar',
+          )
+        ],
+        subject: 'Vaccination: ${widget.series.name}',
+      );
+    } finally {
+      if (mounted) setState(() => _exportingCal = false);
     }
   }
 }

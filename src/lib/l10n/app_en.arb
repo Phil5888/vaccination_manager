@@ -462,5 +462,9 @@
     "hideDetails": "Hide details",
     "@hideDetails": {
         "description": "Toggle label to collapse shot timeline"
+    },
+    "exportToCalendar": "Export to calendar",
+    "@exportToCalendar": {
+        "description": "Tooltip for the export to calendar button on a vaccination series card"
     }
 }

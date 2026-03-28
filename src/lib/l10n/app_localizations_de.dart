@@ -330,4 +330,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get hideDetails => 'Details ausblenden';
+
+  @override
+  String get exportToCalendar => 'In Kalender exportieren';
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -16,7 +17,7 @@ class AppDatabase {
     final path = join(await getDatabasesPath(), 'vaccination_manager.db');
     return openDatabase(
       path,
-      version: 3,
+      version: 4,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -41,6 +42,7 @@ class AppDatabase {
         next_vaccination_date TEXT
       )
     ''');
+    await _createCalendarSyncRecordsTable(db);
   }
 
   Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -69,5 +71,31 @@ class AppDatabase {
         )
       ''');
     }
+    if (oldVersion < 4) {
+      await _createCalendarSyncRecordsTable(db);
+    }
+  }
+
+  Future<void> _createCalendarSyncRecordsTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE calendar_sync_records (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER NOT NULL,
+        vaccination_id INTEGER NOT NULL,
+        calendar_event_id TEXT,
+        notification_id INTEGER,
+        synced_at TEXT NOT NULL
+      )
+    ''');
+  }
+
+  @visibleForTesting
+  static Future<void> resetForTesting() async {
+    if (_db != null) {
+      await _db!.close();
+      _db = null;
+    }
+    final path = join(await getDatabasesPath(), 'vaccination_manager.db');
+    await deleteDatabase(path);
   }
 }

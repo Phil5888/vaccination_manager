@@ -691,6 +691,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hide details'**
   String get hideDetails;
+
+  /// Tooltip for the export to calendar button on a vaccination series card
+  ///
+  /// In en, this message translates to:
+  /// **'Export to calendar'**
+  String get exportToCalendar;
 }
 
 class _AppLocalizationsDelegate
