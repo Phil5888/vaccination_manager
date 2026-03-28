@@ -2,6 +2,7 @@
     "chat.tools.terminal.autoApprove": {
         "flutter": true,
         "dart": true,
-        "pod": true
+        "pod": true,
+        "xcrun": true
     }
 }
