@@ -5,9 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/domain/entities/reminder_status.dart';
-import 'package:vaccination_manager/domain/usecases/vaccination/get_vaccination_reminders_use_case.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:vaccination_manager/presentation/providers/vaccination_providers.dart';
+import 'package:vaccination_manager/presentation/widgets/vaccination_series_card.dart';
 
 class ScheduleScreen extends ConsumerWidget {
   const ScheduleScreen({super.key});
@@ -100,26 +100,52 @@ class ScheduleScreen extends ConsumerWidget {
                       ),
                     );
                   }
+
+                  // Sort: overdue first, dueSoon, upToDate
+                  final sorted = List.of(reminders)
+                    ..sort((a, b) {
+                      int order(ReminderStatus s) {
+                        switch (s) {
+                          case ReminderStatus.overdue:
+                            return 0;
+                          case ReminderStatus.dueSoon:
+                            return 1;
+                          case ReminderStatus.upToDate:
+                            return 2;
+                        }
+                      }
+
+                      final ao = order(a.status);
+                      final bo = order(b.status);
+                      if (ao != bo) return ao.compareTo(bo);
+                      final aDate = a.series.nextActionDate;
+                      final bDate = b.series.nextActionDate;
+                      if (aDate == null && bDate == null) return 0;
+                      if (aDate == null) return 1;
+                      if (bDate == null) return -1;
+                      return aDate.compareTo(bDate);
+                    });
+
                   return SliverPadding(
                     padding: EdgeInsets.fromLTRB(
                         20, 0, 20, bottomPadding + 100),
                     sliver: SliverList(
                       delegate: SliverChildBuilderDelegate(
-                        (ctx, index) => Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: _ReminderCard(
-                            reminder: reminders[index],
-                            colorScheme: colorScheme,
-                            textTheme: textTheme,
-                            onTap: () {
-                              Navigator.of(context).pushNamed(
+                        (ctx, index) {
+                          final reminder = sorted[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: VaccinationSeriesCard(
+                              series: reminder.series,
+                              onEdit: () => Navigator.of(context).pushNamed(
                                 Routes.vaccinationAdd,
-                                arguments: reminders[index].series.latestShot,
-                              );
-                            },
-                          ),
-                        ),
-                        childCount: reminders.length,
+                                arguments: reminder.series,
+                              ),
+                              onDelete: () {},
+                            ),
+                          );
+                        },
+                        childCount: sorted.length,
                       ),
                     ),
                   );
@@ -266,177 +292,6 @@ class _FilterBar extends StatelessWidget {
             ),
           );
         }).toList(),
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Reminder card
-// ---------------------------------------------------------------------------
-
-class _ReminderCard extends StatelessWidget {
-  const _ReminderCard({
-    required this.reminder,
-    required this.colorScheme,
-    required this.textTheme,
-    required this.onTap,
-  });
-
-  final VaccinationReminder reminder;
-  final ColorScheme colorScheme;
-  final TextTheme textTheme;
-  final VoidCallback onTap;
-
-  Color _dotColor() {
-    switch (reminder.status) {
-      case ReminderStatus.overdue:
-        return colorScheme.error;
-      case ReminderStatus.dueSoon:
-        return colorScheme.tertiary;
-      case ReminderStatus.upToDate:
-        return colorScheme.secondary;
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final local = AppLocalizations.of(context)!;
-    final series = reminder.series;
-    final nextDate = series.nextVaccinationDate;
-    final dateFmt = DateFormat('MMM dd, yyyy');
-
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: colorScheme.surfaceContainerLowest,
-          borderRadius: BorderRadius.circular(24),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Status dot
-            Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Container(
-                width: 10,
-                height: 10,
-                decoration: BoxDecoration(
-                  color: _dotColor(),
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-            const SizedBox(width: 12),
-
-            // Content
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    series.name,
-                    style: textTheme.titleMedium?.copyWith(
-                      fontFamily: 'Manrope',
-                      fontWeight: FontWeight.w700,
-                      color: colorScheme.onSurface,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    local.shotCount(series.shots.length),
-                    style: textTheme.bodySmall?.copyWith(
-                      color: colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  if (nextDate != null) ...[
-                    const SizedBox(height: 2),
-                    Text(
-                      '${local.nextDose}: ${dateFmt.format(nextDate)}',
-                      style: textTheme.bodySmall?.copyWith(
-                        color: colorScheme.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ),
-
-            // Status chip
-            _StatusChip(
-              status: reminder.status,
-              nextDate: nextDate,
-              colorScheme: colorScheme,
-              textTheme: textTheme,
-              local: local,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Status chip
-// ---------------------------------------------------------------------------
-
-class _StatusChip extends StatelessWidget {
-  const _StatusChip({
-    required this.status,
-    required this.nextDate,
-    required this.colorScheme,
-    required this.textTheme,
-    required this.local,
-  });
-
-  final ReminderStatus status;
-  final DateTime? nextDate;
-  final ColorScheme colorScheme;
-  final TextTheme textTheme;
-  final AppLocalizations local;
-
-  @override
-  Widget build(BuildContext context) {
-    final Color bg;
-    final Color fg;
-    final String label;
-
-    switch (status) {
-      case ReminderStatus.overdue:
-        bg = colorScheme.errorContainer;
-        fg = colorScheme.onErrorContainer;
-        label = local.statusOverdue;
-        break;
-      case ReminderStatus.dueSoon:
-        bg = colorScheme.tertiaryContainer;
-        fg = colorScheme.onTertiaryContainer;
-        label = nextDate != null
-            ? local.statusDueSoon(DateFormat('MMM dd').format(nextDate!))
-            : local.statusDueSoon('');
-        break;
-      case ReminderStatus.upToDate:
-        bg = colorScheme.secondaryContainer;
-        fg = colorScheme.onSecondaryContainer;
-        label = local.statusUpToDate;
-        break;
-    }
-
-    return Container(
-      padding:
-          const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Text(
-        label,
-        style: textTheme.labelSmall?.copyWith(
-          color: fg,
-          fontWeight: FontWeight.w700,
-        ),
       ),
     );
   }

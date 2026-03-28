@@ -14,7 +14,7 @@ class VaccinationRepositoryImpl implements VaccinationRepository {
       _table,
       where: 'user_id = ?',
       whereArgs: [userId],
-      orderBy: 'vaccination_date DESC',
+      orderBy: 'name ASC, shot_number ASC',
     );
     return maps.map((m) => VaccinationModel.fromMap(m).toEntity()).toList();
   }
@@ -45,6 +45,38 @@ class VaccinationRepositoryImpl implements VaccinationRepository {
       _table,
       where: 'id = ?',
       whereArgs: [id],
+    );
+  }
+
+  @override
+  Future<void> saveVaccinationSeries(List<VaccinationEntryEntity> shots) async {
+    if (shots.isEmpty) return;
+    final db = await AppDatabase.instance.database;
+    final userId = shots.first.userId;
+    final name = shots.first.name;
+
+    await db.transaction((txn) async {
+      await txn.delete(
+        _table,
+        where: 'user_id = ? AND LOWER(name) = LOWER(?)',
+        whereArgs: [userId, name],
+      );
+      for (final shot in shots) {
+        final model = VaccinationModel.fromEntity(shot);
+        // Strip the id so each shot gets a fresh AUTOINCREMENT id
+        final map = model.toMap()..remove('id');
+        await txn.insert(_table, map);
+      }
+    });
+  }
+
+  @override
+  Future<void> deleteVaccinationSeries(int userId, String name) async {
+    final db = await AppDatabase.instance.database;
+    await db.delete(
+      _table,
+      where: 'user_id = ? AND LOWER(name) = LOWER(?)',
+      whereArgs: [userId, name],
     );
   }
 }

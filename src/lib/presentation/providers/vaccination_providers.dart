@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vaccination_manager/domain/entities/reminder_status.dart';
 import 'package:vaccination_manager/domain/entities/vaccination_entry_entity.dart';
+import 'package:vaccination_manager/domain/entities/vaccination_series_entity.dart';
 import 'package:vaccination_manager/domain/usecases/vaccination/get_vaccination_reminders_use_case.dart';
 import 'package:vaccination_manager/presentation/providers/user_providers.dart';
 import 'package:vaccination_manager/presentation/providers/vaccination_dependency_providers.dart';
@@ -27,9 +28,23 @@ class VaccinationViewModel
     ref.invalidate(vaccinationRemindersProvider);
   }
 
+  Future<void> saveSeries(List<VaccinationEntryEntity> shots) async {
+    final useCase = ref.read(saveVaccinationSeriesUseCaseProvider);
+    await useCase.call(shots);
+    ref.invalidateSelf();
+    ref.invalidate(vaccinationRemindersProvider);
+  }
+
   Future<void> deleteShot(int id) async {
     final useCase = ref.read(deleteVaccinationShotUseCaseProvider);
     await useCase.call(id);
+    ref.invalidateSelf();
+    ref.invalidate(vaccinationRemindersProvider);
+  }
+
+  Future<void> deleteSeries(int userId, String name) async {
+    final useCase = ref.read(deleteVaccinationSeriesUseCaseProvider);
+    await useCase.call(userId, name);
     ref.invalidateSelf();
     ref.invalidate(vaccinationRemindersProvider);
   }
@@ -108,4 +123,15 @@ final filteredRemindersProvider =
       }
     }).toList();
   });
+});
+
+// ---------------------------------------------------------------------------
+// seriesListProvider – derived: entries → series (no extra DB call)
+// ---------------------------------------------------------------------------
+
+final seriesListProvider =
+    Provider<AsyncValue<List<VaccinationSeriesEntity>>>((ref) {
+  final entriesAsync = ref.watch(vaccinationProvider);
+  final useCase = ref.read(getVaccinationSeriesUseCaseProvider);
+  return entriesAsync.whenData((entries) => useCase.fromEntries(entries));
 });

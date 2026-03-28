@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/domain/entities/user_entity.dart';
 import 'package:vaccination_manager/domain/entities/vaccination_entry_entity.dart';
+import 'package:vaccination_manager/domain/entities/vaccination_series_entity.dart';
 import 'package:vaccination_manager/presentation/screens/profile/create_profile_screen.dart';
 import 'package:vaccination_manager/presentation/screens/settings/settings_screen.dart';
 import 'package:vaccination_manager/presentation/screens/startup/app_startup_gate.dart';
@@ -23,7 +24,13 @@ class AppRouter {
       case Routes.settings:
         return MaterialPageRoute(builder: (_) => const SettingsScreen());
       case Routes.vaccinationAdd:
-        final entry = settings.arguments as VaccinationEntryEntity?;
+        final arg = settings.arguments;
+        if (arg is VaccinationSeriesEntity) {
+          return MaterialPageRoute(
+            builder: (_) => AddVaccinationScreen(existingSeries: arg),
+          );
+        }
+        final entry = arg as VaccinationEntryEntity?;
         return MaterialPageRoute(
           builder: (_) => AddVaccinationScreen(existingEntry: entry),
         );

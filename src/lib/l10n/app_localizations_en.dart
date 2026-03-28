@@ -275,4 +275,58 @@ class AppLocalizationsEn extends AppLocalizations {
   String shot(int number) {
     return 'Shot $number';
   }
+
+  @override
+  String get numberOfShots => 'Number of shots';
+
+  @override
+  String get tapToSetDate => 'Tap to set date';
+
+  @override
+  String get shotStatusCompleted => 'Completed';
+
+  @override
+  String get shotStatusPlanned => 'Planned';
+
+  @override
+  String get shotStatusUnscheduled => 'Unscheduled';
+
+  @override
+  String get statusComplete => 'Complete';
+
+  @override
+  String get statusInProgress => 'In Progress';
+
+  @override
+  String get statusPlanned => 'Planned';
+
+  @override
+  String progressDone(int completed, int total) {
+    return 'Done $completed of $total';
+  }
+
+  @override
+  String get previouslyUsed => 'Previously added';
+
+  @override
+  String get recordNextShot => 'Record Next Shot';
+
+  @override
+  String recordNextShotTitle(int number) {
+    return 'Record Shot $number';
+  }
+
+  @override
+  String get deleteSeriesTitle => 'Delete Series';
+
+  @override
+  String deleteSeriesConfirm(String name) {
+    return 'Delete all records for \"$name\"? This cannot be undone.';
+  }
+
+  @override
+  String get showDetails => 'Show details';
+
+  @override
+  String get hideDetails => 'Hide details';
 }

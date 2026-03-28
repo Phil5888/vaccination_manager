@@ -8,9 +8,16 @@ class GetVaccinationSeriesUseCase {
 
   Future<List<VaccinationSeriesEntity>> call(int userId) async {
     final entries = await _repository.getVaccinationsForUser(userId);
-    // Group by lowercased name, preserve original casing from first-seen entry
+    return fromEntries(entries, overrideUserId: userId);
+  }
+
+  /// Converts an already-fetched list of entries into series without a DB hit.
+  List<VaccinationSeriesEntity> fromEntries(
+    List<VaccinationEntryEntity> entries, {
+    int? overrideUserId,
+  }) {
     final groups = <String, List<VaccinationEntryEntity>>{};
-    final nameMap = <String, String>{}; // lowercase → original casing
+    final nameMap = <String, String>{};
     for (final e in entries) {
       final key = e.name.toLowerCase();
       nameMap.putIfAbsent(key, () => e.name);
@@ -18,13 +25,13 @@ class GetVaccinationSeriesUseCase {
     }
     return groups.entries.map((entry) {
       final sorted = List.of(entry.value)
-        ..sort((a, b) => a.vaccinationDate.compareTo(b.vaccinationDate));
+        ..sort((a, b) => a.shotNumber.compareTo(b.shotNumber));
       return VaccinationSeriesEntity(
         name: nameMap[entry.key]!,
+        userId: overrideUserId ?? sorted.first.userId,
         shots: sorted,
       );
     }).toList()
-      ..sort((a, b) => b.latestShot.vaccinationDate
-          .compareTo(a.latestShot.vaccinationDate)); // most recent first
+      ..sort((a, b) => a.name.compareTo(b.name));
   }
 }

@@ -4,14 +4,18 @@ class VaccinationModel {
   final int? id;
   final int userId;
   final String name;
-  final DateTime vaccinationDate;
+  final int shotNumber;
+  final int totalShots;
+  final DateTime? vaccinationDate;
   final DateTime? nextVaccinationDate;
 
   const VaccinationModel({
     this.id,
     required this.userId,
     required this.name,
-    required this.vaccinationDate,
+    this.shotNumber = 1,
+    this.totalShots = 1,
+    this.vaccinationDate,
     this.nextVaccinationDate,
   });
 
@@ -20,7 +24,11 @@ class VaccinationModel {
       id: map['id'] as int?,
       userId: map['user_id'] as int,
       name: map['name'] as String,
-      vaccinationDate: DateTime.parse(map['vaccination_date'] as String),
+      shotNumber: (map['shot_number'] as int?) ?? 1,
+      totalShots: (map['total_shots'] as int?) ?? 1,
+      vaccinationDate: map['vaccination_date'] != null
+          ? DateTime.parse(map['vaccination_date'] as String)
+          : null,
       nextVaccinationDate: map['next_vaccination_date'] != null
           ? DateTime.parse(map['next_vaccination_date'] as String)
           : null,
@@ -31,11 +39,12 @@ class VaccinationModel {
     final map = <String, dynamic>{
       'user_id': userId,
       'name': name,
-      'vaccination_date': vaccinationDate.toIso8601String().split('T').first,
-      'next_vaccination_date': nextVaccinationDate
-          ?.toIso8601String()
-          .split('T')
-          .first,
+      'shot_number': shotNumber,
+      'total_shots': totalShots,
+      'vaccination_date':
+          vaccinationDate?.toIso8601String().split('T').first,
+      'next_vaccination_date':
+          nextVaccinationDate?.toIso8601String().split('T').first,
     };
     if (id != null) {
       map['id'] = id;
@@ -48,6 +57,8 @@ class VaccinationModel {
       id: entity.id,
       userId: entity.userId,
       name: entity.name,
+      shotNumber: entity.shotNumber,
+      totalShots: entity.totalShots,
       vaccinationDate: entity.vaccinationDate,
       nextVaccinationDate: entity.nextVaccinationDate,
     );
@@ -58,6 +69,8 @@ class VaccinationModel {
       id: id,
       userId: userId,
       name: name,
+      shotNumber: shotNumber,
+      totalShots: totalShots,
       vaccinationDate: vaccinationDate,
       nextVaccinationDate: nextVaccinationDate,
     );

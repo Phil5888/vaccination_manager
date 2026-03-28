@@ -4,28 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:vaccination_manager/domain/entities/vaccination_entry_entity.dart';
+import 'package:vaccination_manager/domain/entities/vaccination_series_entity.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:vaccination_manager/presentation/providers/user_providers.dart';
 import 'package:vaccination_manager/presentation/providers/vaccination_providers.dart';
-
-// ---------------------------------------------------------------------------
-// Data model for a single shot row in multi-shot mode
-// ---------------------------------------------------------------------------
-
-class _ShotRow {
-  int? id; // null = new (not yet persisted)
-  DateTime date;
-
-  _ShotRow({this.id, required this.date});
-}
 
 // ---------------------------------------------------------------------------
 // Screen
 // ---------------------------------------------------------------------------
 
 class AddVaccinationScreen extends ConsumerStatefulWidget {
-  const AddVaccinationScreen({super.key, this.existingEntry});
+  const AddVaccinationScreen({
+    super.key,
+    this.existingSeries,
+    this.existingEntry,
+  });
 
+  /// Preferred: editing a whole series.
+  final VaccinationSeriesEntity? existingSeries;
+
+  /// Backward compat: editing a single entry (treated as 1-shot series).
   final VaccinationEntryEntity? existingEntry;
 
   @override
@@ -36,36 +34,68 @@ class AddVaccinationScreen extends ConsumerStatefulWidget {
 class _AddVaccinationScreenState extends ConsumerState<AddVaccinationScreen> {
   final _nameController = TextEditingController();
 
-  // ── One-shot state ──────────────────────────────────────────────────────
-  late DateTime _vaccinationDate;
-  DateTime? _nextVaccinationDate;
-  bool _scheduleNextDose = false;
+  int _shotCount = 1; // 1–5
+  List<DateTime?> _shotDates = [null]; // length always == _shotCount
 
-  // ── Multi-shot state ────────────────────────────────────────────────────
-  bool _isMultiShot = false;
-  List<_ShotRow> _shotRows = [];
-  bool _seriesInitialized = false;
+  // Single-shot next-dose
+  bool _scheduleNextDose = false;
+  DateTime? _nextDoseDate;
+
+  // Validation
+  String? _nameError;
+  String? _datesError;
 
   bool _isSaving = false;
+  bool _isEditing = false;
+  VaccinationSeriesEntity? _editingSeries;
+
+  // IDs from existing shots (to pass back on save so DB rows are updated)
+  List<int?> _existingIds = [];
 
   @override
   void initState() {
     super.initState();
-    if (widget.existingEntry != null) {
-      _nameController.text = widget.existingEntry!.name;
-      _vaccinationDate = widget.existingEntry!.vaccinationDate;
-      _nextVaccinationDate = widget.existingEntry!.nextVaccinationDate;
-      _scheduleNextDose = _nextVaccinationDate != null;
+    _initFromArguments();
+  }
+
+  void _initFromArguments() {
+    if (widget.existingSeries != null) {
+      final series = widget.existingSeries!;
+      _isEditing = true;
+      _editingSeries = series;
+      _nameController.text = series.name;
+      _shotCount = series.shots.length.clamp(1, 5);
+      _shotDates = List.generate(
+        _shotCount,
+        (i) => i < series.shots.length ? series.shots[i].vaccinationDate : null,
+      );
+      _existingIds = List.generate(
+        _shotCount,
+        (i) => i < series.shots.length ? series.shots[i].id : null,
+      );
+      // Next dose from single-shot compat
+      if (series.shots.length == 1) {
+        final nv = series.shots.first.nextVaccinationDate;
+        if (nv != null) {
+          _scheduleNextDose = true;
+          _nextDoseDate = nv;
+        }
+      }
+    } else if (widget.existingEntry != null) {
+      final entry = widget.existingEntry!;
+      _isEditing = true;
+      _nameController.text = entry.name;
+      _shotCount = 1;
+      _shotDates = [entry.vaccinationDate];
+      _existingIds = [entry.id];
+      if (entry.nextVaccinationDate != null) {
+        _scheduleNextDose = true;
+        _nextDoseDate = entry.nextVaccinationDate;
+      }
     } else {
-      _vaccinationDate = DateTime.now();
+      _shotDates = [null];
+      _existingIds = [null];
     }
-    // Initialize shot rows with the single entry (will be expanded if series)
-    _shotRows = [
-      _ShotRow(
-        id: widget.existingEntry?.id,
-        date: widget.existingEntry?.vaccinationDate ?? DateTime.now(),
-      ),
-    ];
   }
 
   @override
@@ -74,72 +104,135 @@ class _AddVaccinationScreenState extends ConsumerState<AddVaccinationScreen> {
     super.dispose();
   }
 
-  // ── Series initialization (edit mode) ───────────────────────────────────
+  // ── Shot count stepper ────────────────────────────────────────────────────
 
-  void _initializeSeries(List<VaccinationEntryEntity> vaccinations) {
-    if (_seriesInitialized || widget.existingEntry == null) return;
-    _seriesInitialized = true;
+  void _decrementShots() {
+    if (_shotCount <= 1) return;
+    setState(() {
+      _shotCount--;
+      _shotDates = _shotDates.sublist(0, _shotCount);
+      _existingIds = _existingIds.sublist(0, _shotCount);
+      _datesError = null;
+    });
+  }
 
-    final name = widget.existingEntry!.name.toLowerCase();
-    final seriesShots = vaccinations
-        .where((e) => e.name.toLowerCase() == name)
-        .toList()
-      ..sort((a, b) => a.vaccinationDate.compareTo(b.vaccinationDate));
+  void _incrementShots() {
+    if (_shotCount >= 5) return;
+    setState(() {
+      _shotCount++;
+      _shotDates = [..._shotDates, null];
+      _existingIds = [..._existingIds, null];
+      _datesError = null;
+    });
+  }
 
-    if (seriesShots.length > 1) {
+  // ── Date pickers ──────────────────────────────────────────────────────────
+
+  Future<void> _pickShotDate(int index) async {
+    final initial = _shotDates[index] ?? DateTime.now();
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: initial,
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
+    );
+    if (picked != null) {
       setState(() {
-        _isMultiShot = true;
-        _shotRows = seriesShots
-            .map((e) => _ShotRow(id: e.id, date: e.vaccinationDate))
-            .toList();
+        _shotDates[index] = picked;
+        _datesError = null;
       });
     }
   }
 
-  // ── Mode toggle ─────────────────────────────────────────────────────────
+  Future<void> _pickNextDoseDate() async {
+    final initial = _nextDoseDate ??
+        (_shotDates.isNotEmpty && _shotDates.last != null
+            ? _shotDates.last!.add(const Duration(days: 30))
+            : DateTime.now().add(const Duration(days: 30)));
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: initial,
+      firstDate: DateTime(1900),
+      lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
+    );
+    if (picked != null) setState(() => _nextDoseDate = picked);
+  }
 
-  Future<void> _handleModeToggle(bool toMultiShot) async {
-    if (toMultiShot && !_isMultiShot) {
-      // One-shot → multi-shot: seed rows from current one-shot date
-      setState(() {
-        _isMultiShot = true;
-        _shotRows = [
-          _ShotRow(id: widget.existingEntry?.id, date: _vaccinationDate),
-        ];
-      });
-    } else if (!toMultiShot && _isMultiShot) {
-      // Multi-shot → one-shot
-      final persistedShots = _shotRows.where((r) => r.id != null).toList();
-      if (persistedShots.length > 1) {
-        // Need confirmation before deleting extra shots
-        final confirmed = await _showSwitchToOneShotDialog();
-        if (!confirmed) return;
+  // ── Validation ────────────────────────────────────────────────────────────
 
-        // Sort by date ASC, keep earliest, delete the rest
-        final sorted = List.of(persistedShots)
-          ..sort((a, b) => a.date.compareTo(b.date));
-        for (final row in sorted.skip(1)) {
-          await ref.read(vaccinationProvider.notifier).deleteShot(row.id!);
-        }
-        final earliest = sorted.first;
-        setState(() {
-          _isMultiShot = false;
-          _vaccinationDate = earliest.date;
-          _shotRows = [earliest];
-        });
-      } else {
-        setState(() => _isMultiShot = false);
+  bool _validate() {
+    bool ok = true;
+    final name = _nameController.text.trim();
+    if (name.isEmpty) {
+      _nameError = 'Vaccine name is required';
+      ok = false;
+    } else {
+      _nameError = null;
+    }
+
+    // Check date ordering: shot N must be on or after shot N-1
+    for (var i = 1; i < _shotCount; i++) {
+      final prev = _shotDates[i - 1];
+      final curr = _shotDates[i];
+      if (prev != null && curr != null && curr.isBefore(prev)) {
+        _datesError = 'Shot ${i + 1} date must be on or after Shot $i date';
+        ok = false;
+        break;
       }
     }
+    if (ok) _datesError = null;
+
+    setState(() {});
+    return ok;
   }
 
-  Future<bool> _showSwitchToOneShotDialog() async {
+  // ── Save ──────────────────────────────────────────────────────────────────
+
+  Future<void> _save() async {
+    if (!_validate()) return;
+
+    final activeUser = await ref.read(activeUserProvider.future);
+    if (activeUser == null) return;
+
+    setState(() => _isSaving = true);
+    try {
+      final name = _nameController.text.trim();
+      final shots = List.generate(_shotCount, (i) {
+        final isLast = i == _shotCount - 1;
+        return VaccinationEntryEntity(
+          id: i < _existingIds.length ? _existingIds[i] : null,
+          userId: activeUser.id!,
+          name: name,
+          shotNumber: i + 1,
+          totalShots: _shotCount,
+          vaccinationDate: _shotDates[i],
+          nextVaccinationDate:
+              isLast && _shotCount == 1 && _scheduleNextDose
+                  ? _nextDoseDate
+                  : null,
+        );
+      });
+
+      await ref.read(vaccinationProvider.notifier).saveSeries(shots);
+      if (mounted) Navigator.of(context).pop();
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
+    }
+  }
+
+  // ── Delete series ─────────────────────────────────────────────────────────
+
+  Future<void> _deleteSeries() async {
     final local = AppLocalizations.of(context)!;
-    final result = await showDialog<bool>(
+    final colorScheme = Theme.of(context).colorScheme;
+    final series = _editingSeries;
+    if (series == null) return;
+
+    final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text(local.switchToOneShotTitle),
-        content: Text(local.switchToOneShotBody),
+        title: Text(local.deleteSeriesTitle),
+        content: Text(local.deleteSeriesConfirm(series.name)),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(false),
@@ -147,88 +240,17 @@ class _AddVaccinationScreenState extends ConsumerState<AddVaccinationScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text(local.confirm),
+            style: TextButton.styleFrom(foregroundColor: colorScheme.error),
+            child: Text(local.delete),
           ),
         ],
       ),
     );
-    return result ?? false;
-  }
-
-  // ── Date pickers ─────────────────────────────────────────────────────────
-
-  Future<void> _pickVaccinationDate() async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: _vaccinationDate,
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
-    );
-    if (picked != null) setState(() => _vaccinationDate = picked);
-  }
-
-  Future<void> _pickShotDate(int index) async {
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: _shotRows[index].date,
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
-    );
-    if (picked != null) setState(() => _shotRows[index].date = picked);
-  }
-
-  Future<void> _pickNextDoseDate() async {
-    final initial = _nextVaccinationDate ??
-        (_isMultiShot && _shotRows.isNotEmpty
-            ? _shotRows.last.date.add(const Duration(days: 30))
-            : _vaccinationDate.add(const Duration(days: 30)));
-    final picked = await showDatePicker(
-      context: context,
-      initialDate: initial,
-      firstDate: DateTime(1900),
-      lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
-    );
-    if (picked != null) setState(() => _nextVaccinationDate = picked);
-  }
-
-  // ── Save ─────────────────────────────────────────────────────────────────
-
-  Future<void> _save() async {
-    final name = _nameController.text.trim();
-    if (name.isEmpty) return;
-
-    final activeUser = await ref.read(activeUserProvider.future);
-    if (activeUser == null) return;
-
-    setState(() => _isSaving = true);
-    try {
-      if (_isMultiShot) {
-        for (var i = 0; i < _shotRows.length; i++) {
-          final row = _shotRows[i];
-          final isLast = i == _shotRows.length - 1;
-          final entry = VaccinationEntryEntity(
-            id: row.id,
-            userId: activeUser.id!,
-            name: name,
-            vaccinationDate: row.date,
-            nextVaccinationDate:
-                isLast && _scheduleNextDose ? _nextVaccinationDate : null,
-          );
-          await ref.read(vaccinationProvider.notifier).saveVaccination(entry);
-        }
-      } else {
-        final entry = VaccinationEntryEntity(
-          id: widget.existingEntry?.id,
-          userId: activeUser.id!,
-          name: name,
-          vaccinationDate: _vaccinationDate,
-          nextVaccinationDate: _scheduleNextDose ? _nextVaccinationDate : null,
-        );
-        await ref.read(vaccinationProvider.notifier).saveVaccination(entry);
-      }
-      if (mounted) Navigator.of(context).pop(true);
-    } finally {
-      if (mounted) setState(() => _isSaving = false);
+    if (confirmed == true && mounted) {
+      await ref
+          .read(vaccinationProvider.notifier)
+          .deleteSeries(series.userId, series.name);
+      if (mounted) Navigator.of(context).pop();
     }
   }
 
@@ -240,23 +262,27 @@ class _AddVaccinationScreenState extends ConsumerState<AddVaccinationScreen> {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final topPadding = MediaQuery.of(context).padding.top;
-    final isEdit = widget.existingEntry != null;
-    final nameIsEmpty = _nameController.text.trim().isEmpty;
     final dateFmt = DateFormat('MMM dd, yyyy');
 
-    // Initialize series from loaded vaccinations (edit mode)
-    ref.listen(vaccinationProvider, (_, next) {
-      next.whenData((vaccinations) {
-        if (!_seriesInitialized) _initializeSeries(vaccinations);
-      });
-    });
+    // Previously used names from all vaccinations
+    final vaccinationsAsync = ref.watch(vaccinationProvider);
+    final previousNames = vaccinationsAsync.whenData((entries) {
+      final seen = <String>{};
+      return entries
+          .map((e) => e.name)
+          .where((n) {
+            final key = n.toLowerCase();
+            return seen.add(key);
+          })
+          .toList();
+    }).when(data: (v) => v, error: (_, _) => <String>[], loading: () => <String>[]);
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
       resizeToAvoidBottomInset: true,
       bottomNavigationBar: _BottomSaveBar(
         label: local.saveVaccination,
-        enabled: !nameIsEmpty && !_isSaving,
+        enabled: !_isSaving,
         isSaving: _isSaving,
         colorScheme: colorScheme,
         textTheme: textTheme,
@@ -264,15 +290,14 @@ class _AddVaccinationScreenState extends ConsumerState<AddVaccinationScreen> {
       ),
       body: Stack(
         children: [
-          // Scrollable form content
           SingleChildScrollView(
-            padding: EdgeInsets.fromLTRB(20, topPadding + 72, 20, 24),
+            padding: EdgeInsets.fromLTRB(20, topPadding + 80, 20, 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Screen header
+                // Title
                 Text(
-                  isEdit ? local.editVaccination : local.addVaccination,
+                  _isEditing ? local.editVaccination : local.addVaccination,
                   style: textTheme.headlineMedium?.copyWith(
                     fontFamily: 'Manrope',
                     fontWeight: FontWeight.w800,
@@ -281,44 +306,12 @@ class _AddVaccinationScreenState extends ConsumerState<AddVaccinationScreen> {
                 ),
                 const SizedBox(height: 6),
                 Text(
-                  'Ensure your medical profile stays up to date by logging new vaccinations.',
+                  'Keep your medical profile up to date by logging vaccinations.',
                   style: textTheme.bodySmall?.copyWith(
                     color: colorScheme.onSurfaceVariant,
                   ),
                 ),
-                const SizedBox(height: 20),
-
-                // ── Mode toggle ──────────────────────────────────────────
-                Container(
-                  decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerHighest,
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  padding: const EdgeInsets.all(4),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: _ModeToggleButton(
-                          label: local.oneShotMode,
-                          isSelected: !_isMultiShot,
-                          colorScheme: colorScheme,
-                          textTheme: textTheme,
-                          onTap: () => _handleModeToggle(false),
-                        ),
-                      ),
-                      Expanded(
-                        child: _ModeToggleButton(
-                          label: local.multiShotMode,
-                          isSelected: _isMultiShot,
-                          colorScheme: colorScheme,
-                          textTheme: textTheme,
-                          onTap: () => _handleModeToggle(true),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 24),
 
                 // ── Form card ─────────────────────────────────────────────
                 Container(
@@ -330,14 +323,15 @@ class _AddVaccinationScreenState extends ConsumerState<AddVaccinationScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Vaccine Name
+                      // Vaccine name
                       _FieldLabel(
                           label: local.vaccineName,
-                          colorScheme: colorScheme),
+                          colorScheme: colorScheme,
+                          textTheme: textTheme),
                       const SizedBox(height: 6),
                       TextField(
                         controller: _nameController,
-                        onChanged: (_) => setState(() {}),
+                        onChanged: (_) => setState(() => _nameError = null),
                         style: textTheme.bodyMedium
                             ?.copyWith(color: colorScheme.onSurface),
                         decoration: InputDecoration(
@@ -348,6 +342,7 @@ class _AddVaccinationScreenState extends ConsumerState<AddVaccinationScreen> {
                             color: colorScheme.onSurfaceVariant
                                 .withValues(alpha: 0.6),
                           ),
+                          errorText: _nameError,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide.none,
@@ -361,139 +356,120 @@ class _AddVaccinationScreenState extends ConsumerState<AddVaccinationScreen> {
                             borderSide: BorderSide(
                                 color: colorScheme.primary, width: 2),
                           ),
+                          errorBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                                color: colorScheme.error, width: 1),
+                          ),
                           contentPadding: const EdgeInsets.symmetric(
                               horizontal: 16, vertical: 14),
                         ),
                       ),
-                      const SizedBox(height: 20),
 
-                      // ── One-shot fields ──────────────────────────────────
-                      if (!_isMultiShot) ...[
-                        _FieldLabel(
-                            label: local.dateAdministered,
-                            colorScheme: colorScheme),
-                        const SizedBox(height: 6),
-                        _DatePickerField(
-                          value: dateFmt.format(_vaccinationDate),
-                          colorScheme: colorScheme,
-                          textTheme: textTheme,
-                          onTap: _pickVaccinationDate,
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                local.scheduleNextDose,
-                                style: textTheme.titleSmall?.copyWith(
-                                  color: colorScheme.onSurface,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ),
-                            Switch(
-                              value: _scheduleNextDose,
-                              onChanged: (val) {
-                                setState(() {
-                                  _scheduleNextDose = val;
-                                  if (!val) _nextVaccinationDate = null;
-                                  if (val && _nextVaccinationDate == null) {
-                                    _nextVaccinationDate = _vaccinationDate
-                                        .add(const Duration(days: 30));
-                                  }
-                                });
-                              },
-                              activeThumbColor: colorScheme.primary,
-                            ),
-                          ],
-                        ),
-                        if (_scheduleNextDose) ...[
-                          const SizedBox(height: 12),
-                          _FieldLabel(
-                              label: local.nextDoseDate,
-                              colorScheme: colorScheme,
-                              isSecondary: true),
-                          const SizedBox(height: 6),
-                          _DatePickerField(
-                            value: _nextVaccinationDate != null
-                                ? dateFmt.format(_nextVaccinationDate!)
-                                : '—',
-                            colorScheme: colorScheme,
-                            textTheme: textTheme,
-                            onTap: _pickNextDoseDate,
-                            isSecondary: true,
+                      // Previously used chips
+                      if (previousNames.isNotEmpty) ...[
+                        const SizedBox(height: 12),
+                        Text(
+                          local.previouslyUsed,
+                          style: textTheme.labelSmall?.copyWith(
+                            color: colorScheme.onSurfaceVariant,
                           ),
-                        ],
+                        ),
+                        const SizedBox(height: 6),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: previousNames.map((name) {
+                              return Padding(
+                                padding: const EdgeInsets.only(right: 8),
+                                child: ActionChip(
+                                  label: Text(
+                                    name,
+                                    style: textTheme.labelSmall?.copyWith(
+                                      color: colorScheme.onPrimaryContainer,
+                                    ),
+                                  ),
+                                  backgroundColor:
+                                      colorScheme.primaryContainer
+                                          .withValues(alpha: 0.5),
+                                  side: BorderSide.none,
+                                  onPressed: () {
+                                    _nameController.text = name;
+                                    setState(() => _nameError = null);
+                                  },
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
                       ],
 
-                      // ── Multi-shot fields ────────────────────────────────
-                      if (_isMultiShot) ...[
-                        _FieldLabel(
-                            label: local.dateAdministered,
-                            colorScheme: colorScheme),
-                        const SizedBox(height: 10),
-                        ...List.generate(_shotRows.length, (index) {
-                          final row = _shotRows[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: _DatePickerField(
-                                    value: dateFmt.format(row.date),
-                                    colorScheme: colorScheme,
-                                    textTheme: textTheme,
-                                    onTap: () => _pickShotDate(index),
-                                    prefixLabel: local.shot(index + 1),
-                                  ),
-                                ),
-                                if (_shotRows.length > 1) ...[
-                                  const SizedBox(width: 8),
-                                  _RemoveShotButton(
-                                    colorScheme: colorScheme,
-                                    onPressed: () async {
-                                      if (row.id != null) {
-                                        await ref
-                                            .read(
-                                                vaccinationProvider.notifier)
-                                            .deleteShot(row.id!);
-                                      }
-                                      setState(
-                                          () => _shotRows.removeAt(index));
-                                    },
-                                  ),
-                                ],
-                              ],
+                      const SizedBox(height: 20),
+
+                      // ── Shot count stepper ─────────────────────────────
+                      _FieldLabel(
+                          label: local.numberOfShots,
+                          colorScheme: colorScheme,
+                          textTheme: textTheme),
+                      const SizedBox(height: 10),
+                      Row(
+                        children: [
+                          _StepperButton(
+                            icon: Icons.remove,
+                            onTap: _decrementShots,
+                            enabled: _shotCount > 1,
+                            colorScheme: colorScheme,
+                          ),
+                          const SizedBox(width: 16),
+                          Text(
+                            '$_shotCount',
+                            style: textTheme.headlineSmall?.copyWith(
+                              fontFamily: 'Manrope',
+                              fontWeight: FontWeight.w700,
+                              color: colorScheme.onSurface,
                             ),
-                          );
-                        }),
+                          ),
+                          const SizedBox(width: 16),
+                          _StepperButton(
+                            icon: Icons.add,
+                            onTap: _incrementShots,
+                            enabled: _shotCount < 5,
+                            colorScheme: colorScheme,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
 
-                        // Add Another Shot
-                        TextButton.icon(
-                          onPressed: () {
-                            setState(() {
-                              final lastDate = _shotRows.isNotEmpty
-                                  ? _shotRows.last.date
-                                  : DateTime.now();
-                              _shotRows.add(_ShotRow(
-                                date: lastDate.add(const Duration(days: 30)),
-                              ));
-                            });
-                          },
-                          icon: Icon(Icons.add_circle_outline,
-                              color: colorScheme.primary, size: 20),
-                          label: Text(
-                            local.addAnotherShot,
-                            style: textTheme.labelLarge?.copyWith(
-                                color: colorScheme.primary),
-                          ),
-                          style: TextButton.styleFrom(
-                            padding: EdgeInsets.zero,
-                          ),
+                      // ── Shot date rows ─────────────────────────────────
+                      ...List.generate(_shotCount, (i) {
+                        return _ShotDateRow(
+                          shotNumber: i + 1,
+                          date: _shotDates[i],
+                          dateFmt: dateFmt,
+                          colorScheme: colorScheme,
+                          textTheme: textTheme,
+                          local: local,
+                          onPickDate: () => _pickShotDate(i),
+                          onClearDate: () => setState(() {
+                            _shotDates[i] = null;
+                            _datesError = null;
+                          }),
+                        );
+                      }),
+
+                      // Dates ordering error
+                      if (_datesError != null) ...[
+                        const SizedBox(height: 8),
+                        Text(
+                          _datesError!,
+                          style: textTheme.bodySmall
+                              ?.copyWith(color: colorScheme.error),
                         ),
-                        const SizedBox(height: 16),
+                      ],
 
-                        // Schedule next dose toggle (applies to last shot)
+                      // ── Next Dose (single-shot only) ───────────────────
+                      if (_shotCount == 1) ...[
+                        const SizedBox(height: 16),
                         Row(
                           children: [
                             Expanded(
@@ -507,44 +483,63 @@ class _AddVaccinationScreenState extends ConsumerState<AddVaccinationScreen> {
                             ),
                             Switch(
                               value: _scheduleNextDose,
+                              activeThumbColor: colorScheme.primary,
                               onChanged: (val) {
                                 setState(() {
                                   _scheduleNextDose = val;
-                                  if (!val) _nextVaccinationDate = null;
-                                  if (val && _nextVaccinationDate == null) {
-                                    final base = _shotRows.isNotEmpty
-                                        ? _shotRows.last.date
-                                        : DateTime.now();
-                                    _nextVaccinationDate =
-                                        base.add(const Duration(days: 30));
-                                  }
+                                  if (!val) _nextDoseDate = null;
                                 });
                               },
-                              activeThumbColor: colorScheme.primary,
                             ),
                           ],
                         ),
                         if (_scheduleNextDose) ...[
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 8),
                           _FieldLabel(
                               label: local.nextDoseDate,
                               colorScheme: colorScheme,
-                              isSecondary: true),
+                              textTheme: textTheme),
                           const SizedBox(height: 6),
                           _DatePickerField(
-                            value: _nextVaccinationDate != null
-                                ? dateFmt.format(_nextVaccinationDate!)
-                                : '—',
+                            value: _nextDoseDate != null
+                                ? dateFmt.format(_nextDoseDate!)
+                                : local.tapToSetDate,
                             colorScheme: colorScheme,
                             textTheme: textTheme,
                             onTap: _pickNextDoseDate,
-                            isSecondary: true,
                           ),
                         ],
                       ],
                     ],
                   ),
                 ),
+
+                // ── Delete button (edit mode only) ─────────────────────────
+                if (_isEditing && _editingSeries != null) ...[
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton.icon(
+                      onPressed: _deleteSeries,
+                      icon: Icon(Icons.delete_outline,
+                          color: colorScheme.error, size: 20),
+                      label: Text(
+                        local.deleteSeriesTitle,
+                        style: textTheme.labelLarge?.copyWith(
+                          color: colorScheme.error,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        side: BorderSide(
+                            color: colorScheme.error.withValues(alpha: 0.4)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14)),
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                      ),
+                    ),
+                  ),
+                ],
               ],
             ),
           ),
@@ -560,19 +555,19 @@ class _AddVaccinationScreenState extends ConsumerState<AddVaccinationScreen> {
                 child: Container(
                   height: topPadding + 64,
                   color: colorScheme.surfaceContainerLowest
-                      .withValues(alpha: 0.8),
+                      .withValues(alpha: 0.85),
                   padding:
-                      EdgeInsets.only(top: topPadding, left: 8, right: 16),
+                      EdgeInsets.only(top: topPadding, left: 4, right: 16),
                   child: Row(
                     children: [
                       IconButton(
-                        icon: Icon(Icons.arrow_back,
-                            color: colorScheme.onSurface),
                         onPressed: () => Navigator.of(context).pop(),
+                        icon: Icon(Icons.arrow_back_ios_new,
+                            color: colorScheme.onSurface, size: 20),
                       ),
                       Expanded(
                         child: Text(
-                          isEdit
+                          _isEditing
                               ? local.editVaccination
                               : local.addVaccination,
                           style: textTheme.titleMedium?.copyWith(
@@ -595,113 +590,198 @@ class _AddVaccinationScreenState extends ConsumerState<AddVaccinationScreen> {
 }
 
 // ---------------------------------------------------------------------------
-// Internal widgets
+// Shot date row
 // ---------------------------------------------------------------------------
 
-class _ModeToggleButton extends StatelessWidget {
-  const _ModeToggleButton({
-    required this.label,
-    required this.isSelected,
+class _ShotDateRow extends StatelessWidget {
+  const _ShotDateRow({
+    required this.shotNumber,
+    required this.date,
+    required this.dateFmt,
     required this.colorScheme,
     required this.textTheme,
-    required this.onTap,
+    required this.local,
+    required this.onPickDate,
+    required this.onClearDate,
   });
 
-  final String label;
-  final bool isSelected;
+  final int shotNumber;
+  final DateTime? date;
+  final DateFormat dateFmt;
   final ColorScheme colorScheme;
   final TextTheme textTheme;
+  final AppLocalizations local;
+  final VoidCallback onPickDate;
+  final VoidCallback onClearDate;
+
+  String _statusLabel() {
+    if (date == null) return local.shotStatusUnscheduled;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final d = DateTime(date!.year, date!.month, date!.day);
+    if (d.isAfter(today)) return local.shotStatusPlanned;
+    return local.shotStatusCompleted;
+  }
+
+  Color _statusColor() {
+    if (date == null) return colorScheme.onSurfaceVariant;
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final d = DateTime(date!.year, date!.month, date!.day);
+    if (d.isAfter(today)) return colorScheme.primary;
+    return colorScheme.tertiary;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Container(
+        decoration: BoxDecoration(
+          color: colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(14),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+        child: Row(
+          children: [
+            // Shot label
+            Text(
+              local.shot(shotNumber),
+              style: textTheme.labelMedium?.copyWith(
+                color: colorScheme.onSurface,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            const SizedBox(width: 12),
+
+            // Date text
+            Expanded(
+              child: Text(
+                date != null ? dateFmt.format(date!) : local.tapToSetDate,
+                style: textTheme.bodyMedium?.copyWith(
+                  color: date != null
+                      ? colorScheme.onSurface
+                      : colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
+                ),
+              ),
+            ),
+
+            // Status chip
+            Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+              decoration: BoxDecoration(
+                color: _statusColor().withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(999),
+              ),
+              child: Text(
+                _statusLabel(),
+                style: textTheme.labelSmall?.copyWith(
+                  color: _statusColor(),
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+            const SizedBox(width: 4),
+
+            // Calendar pick button
+            IconButton(
+              onPressed: onPickDate,
+              icon: Icon(Icons.calendar_today_outlined,
+                  size: 18, color: colorScheme.primary),
+              visualDensity: VisualDensity.compact,
+              tooltip: 'Set date',
+            ),
+
+            // Clear button
+            if (date != null)
+              IconButton(
+                onPressed: onClearDate,
+                icon: Icon(Icons.close,
+                    size: 16, color: colorScheme.onSurfaceVariant),
+                visualDensity: VisualDensity.compact,
+                tooltip: 'Clear date',
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Stepper button
+// ---------------------------------------------------------------------------
+
+class _StepperButton extends StatelessWidget {
+  const _StepperButton({
+    required this.icon,
+    required this.onTap,
+    required this.enabled,
+    required this.colorScheme,
+  });
+
+  final IconData icon;
   final VoidCallback onTap;
+  final bool enabled;
+  final ColorScheme colorScheme;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(vertical: 10),
+      onTap: enabled ? onTap : null,
+      child: Container(
+        width: 40,
+        height: 40,
         decoration: BoxDecoration(
-          color: isSelected
-              ? colorScheme.surfaceContainerLowest
-              : Colors.transparent,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: colorScheme.shadow.withValues(alpha: 0.08),
-                    blurRadius: 4,
-                    offset: const Offset(0, 1),
-                  ),
-                ]
-              : null,
+          color: enabled
+              ? colorScheme.primaryContainer
+              : colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(12),
         ),
-        child: Center(
-          child: Text(
-            label,
-            style: textTheme.labelMedium?.copyWith(
-              color: isSelected
-                  ? colorScheme.primary
-                  : colorScheme.onSurfaceVariant,
-              fontWeight:
-                  isSelected ? FontWeight.w700 : FontWeight.w500,
-            ),
-          ),
+        child: Icon(
+          icon,
+          size: 20,
+          color: enabled
+              ? colorScheme.onPrimaryContainer
+              : colorScheme.onSurfaceVariant.withValues(alpha: 0.4),
         ),
       ),
     );
   }
 }
 
-class _RemoveShotButton extends StatelessWidget {
-  const _RemoveShotButton({
-    required this.colorScheme,
-    required this.onPressed,
-  });
-
-  final ColorScheme colorScheme;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: colorScheme.errorContainer.withValues(alpha: 0.2),
-      borderRadius: BorderRadius.circular(10),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(10),
-        onTap: onPressed,
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Icon(Icons.remove_circle_outline,
-              color: colorScheme.error, size: 20),
-        ),
-      ),
-    );
-  }
-}
+// ---------------------------------------------------------------------------
+// Field label
+// ---------------------------------------------------------------------------
 
 class _FieldLabel extends StatelessWidget {
   const _FieldLabel({
     required this.label,
     required this.colorScheme,
-    this.isSecondary = false,
+    required this.textTheme,
   });
 
   final String label;
   final ColorScheme colorScheme;
-  final bool isSecondary;
+  final TextTheme textTheme;
 
   @override
   Widget build(BuildContext context) {
     return Text(
-      label.toUpperCase(),
-      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: isSecondary ? colorScheme.tertiary : colorScheme.primary,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 1.2,
-          ),
+      label,
+      style: textTheme.labelMedium?.copyWith(
+        color: colorScheme.onSurfaceVariant,
+        fontWeight: FontWeight.w600,
+        letterSpacing: 0.4,
+      ),
     );
   }
 }
+
+// ---------------------------------------------------------------------------
+// Date picker field
+// ---------------------------------------------------------------------------
 
 class _DatePickerField extends StatelessWidget {
   const _DatePickerField({
@@ -709,18 +789,12 @@ class _DatePickerField extends StatelessWidget {
     required this.colorScheme,
     required this.textTheme,
     required this.onTap,
-    this.isSecondary = false,
-    this.prefixLabel,
   });
 
   final String value;
   final ColorScheme colorScheme;
   final TextTheme textTheme;
   final VoidCallback onTap;
-  final bool isSecondary;
-
-  /// Optional label shown before the date value (e.g. "Shot 1").
-  final String? prefixLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -734,44 +808,26 @@ class _DatePickerField extends StatelessWidget {
         ),
         child: Row(
           children: [
-            if (prefixLabel != null) ...[
-              Text(
-                prefixLabel!,
-                style: textTheme.labelSmall?.copyWith(
-                  color: isSecondary
-                      ? colorScheme.tertiary
-                      : colorScheme.primary,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-              const SizedBox(width: 10),
-            ] else ...[
-              Icon(
-                Icons.calendar_today_outlined,
-                size: 18,
-                color: isSecondary
-                    ? colorScheme.tertiary
-                    : colorScheme.primary,
-              ),
-              const SizedBox(width: 10),
-            ],
-            Text(
-              value,
-              style: textTheme.bodyMedium?.copyWith(
-                color: colorScheme.onSurface,
-                fontWeight: FontWeight.w500,
+            Icon(Icons.calendar_today_outlined,
+                size: 18, color: colorScheme.primary),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Text(
+                value,
+                style: textTheme.bodyMedium
+                    ?.copyWith(color: colorScheme.onSurface),
               ),
             ),
-            const Spacer(),
-            Icon(Icons.calendar_today_outlined,
-                size: 16,
-                color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5)),
           ],
         ),
       ),
     );
   }
 }
+
+// ---------------------------------------------------------------------------
+// Bottom save bar
+// ---------------------------------------------------------------------------
 
 class _BottomSaveBar extends StatelessWidget {
   const _BottomSaveBar({
@@ -792,77 +848,40 @@ class _BottomSaveBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ClipRect(
-      child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-        child: Container(
-          decoration: BoxDecoration(
-            color:
-                colorScheme.surfaceContainerLowest.withValues(alpha: 0.9),
-          ),
-          child: SafeArea(
-            top: false,
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              child: SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: enabled
-                        ? LinearGradient(
-                            colors: [
-                              colorScheme.primary,
-                              colorScheme.primaryContainer,
-                            ],
-                          )
-                        : null,
-                    color: enabled ? null : colorScheme.surfaceContainerHigh,
-                    borderRadius: BorderRadius.circular(14),
-                    boxShadow: enabled
-                        ? [
-                            BoxShadow(
-                              color: colorScheme.primary
-                                  .withValues(alpha: 0.3),
-                              blurRadius: 12,
-                              offset: const Offset(0, 4),
-                            ),
-                          ]
-                        : null,
-                  ),
-                  child: ElevatedButton(
-                    onPressed: enabled ? onSave : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      disabledBackgroundColor: Colors.transparent,
-                      shadowColor: Colors.transparent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                    ),
-                    child: isSaving
-                        ? const SizedBox(
-                            width: 20,
-                            height: 20,
-                            child: CircularProgressIndicator(
-                                strokeWidth: 2, color: Colors.white),
-                          )
-                        : Text(
-                            label,
-                            style: textTheme.titleMedium?.copyWith(
-                              color: enabled
-                                  ? Colors.white
-                                  : colorScheme.onSurfaceVariant,
-                              fontFamily: 'Manrope',
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                  ),
-                ),
-              ),
+    final bottomPadding = MediaQuery.of(context).padding.bottom;
+    return Container(
+      padding: EdgeInsets.fromLTRB(20, 12, 20, bottomPadding + 12),
+      color: colorScheme.surface,
+      child: SizedBox(
+        width: double.infinity,
+        height: 52,
+        child: FilledButton(
+          onPressed: enabled ? onSave : null,
+          style: FilledButton.styleFrom(
+            backgroundColor: colorScheme.primary,
+            foregroundColor: colorScheme.onPrimary,
+            disabledBackgroundColor:
+                colorScheme.primary.withValues(alpha: 0.4),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
             ),
           ),
+          child: isSaving
+              ? SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: colorScheme.onPrimary,
+                  ),
+                )
+              : Text(
+                  label,
+                  style: textTheme.labelLarge?.copyWith(
+                    color: colorScheme.onPrimary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
         ),
       ),
     );

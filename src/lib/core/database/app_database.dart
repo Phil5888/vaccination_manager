@@ -16,7 +16,7 @@ class AppDatabase {
     final path = join(await getDatabasesPath(), 'vaccination_manager.db');
     return openDatabase(
       path,
-      version: 2,
+      version: 3,
       onCreate: _onCreate,
       onUpgrade: _onUpgrade,
     );
@@ -35,7 +35,9 @@ class AppDatabase {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         user_id INTEGER NOT NULL,
         name TEXT NOT NULL,
-        vaccination_date TEXT NOT NULL,
+        shot_number INTEGER NOT NULL DEFAULT 1,
+        total_shots INTEGER NOT NULL DEFAULT 1,
+        vaccination_date TEXT,
         next_vaccination_date TEXT
       )
     ''');
@@ -49,6 +51,20 @@ class AppDatabase {
           user_id INTEGER NOT NULL,
           name TEXT NOT NULL,
           vaccination_date TEXT NOT NULL,
+          next_vaccination_date TEXT
+        )
+      ''');
+    }
+    if (oldVersion < 3) {
+      await db.execute('DROP TABLE IF EXISTS vaccinations');
+      await db.execute('''
+        CREATE TABLE vaccinations (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          user_id INTEGER NOT NULL,
+          name TEXT NOT NULL,
+          shot_number INTEGER NOT NULL DEFAULT 1,
+          total_shots INTEGER NOT NULL DEFAULT 1,
+          vaccination_date TEXT,
           next_vaccination_date TEXT
         )
       ''');

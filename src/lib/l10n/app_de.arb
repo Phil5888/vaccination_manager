@@ -118,5 +118,45 @@
                 "type": "int"
             }
         }
-    }
+    },
+    "numberOfShots": "Anzahl der Impfungen",
+    "tapToSetDate": "Datum auswählen",
+    "shotStatusCompleted": "Verabreicht",
+    "shotStatusPlanned": "Geplant",
+    "shotStatusUnscheduled": "Nicht geplant",
+    "statusComplete": "Abgeschlossen",
+    "statusInProgress": "In Bearbeitung",
+    "statusPlanned": "Geplant",
+    "progressDone": "{completed} von {total} abgeschlossen",
+    "@progressDone": {
+        "placeholders": {
+            "completed": {
+                "type": "int"
+            },
+            "total": {
+                "type": "int"
+            }
+        }
+    },
+    "previouslyUsed": "Bereits eingetragen",
+    "recordNextShot": "Nächste Impfung erfassen",
+    "recordNextShotTitle": "Impfung {number} erfassen",
+    "@recordNextShotTitle": {
+        "placeholders": {
+            "number": {
+                "type": "int"
+            }
+        }
+    },
+    "deleteSeriesTitle": "Serie löschen",
+    "deleteSeriesConfirm": "Alle Einträge für \"{name}\" löschen? Dies kann nicht rückgängig gemacht werden.",
+    "@deleteSeriesConfirm": {
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "showDetails": "Details anzeigen",
+    "hideDetails": "Details ausblenden"
 }

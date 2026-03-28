@@ -595,6 +595,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Shot {number}'**
   String shot(int number);
+
+  /// Label for the shot count stepper
+  ///
+  /// In en, this message translates to:
+  /// **'Number of shots'**
+  String get numberOfShots;
+
+  /// Placeholder when no date is selected for a shot
+  ///
+  /// In en, this message translates to:
+  /// **'Tap to set date'**
+  String get tapToSetDate;
+
+  /// Shot status chip: completed (past date)
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get shotStatusCompleted;
+
+  /// Shot status chip: planned (future date)
+  ///
+  /// In en, this message translates to:
+  /// **'Planned'**
+  String get shotStatusPlanned;
+
+  /// Shot status chip: unscheduled (no date)
+  ///
+  /// In en, this message translates to:
+  /// **'Unscheduled'**
+  String get shotStatusUnscheduled;
+
+  /// Series status badge: all shots done
+  ///
+  /// In en, this message translates to:
+  /// **'Complete'**
+  String get statusComplete;
+
+  /// Series status badge: some shots done
+  ///
+  /// In en, this message translates to:
+  /// **'In Progress'**
+  String get statusInProgress;
+
+  /// Series status badge: no shots done yet
+  ///
+  /// In en, this message translates to:
+  /// **'Planned'**
+  String get statusPlanned;
+
+  /// Progress text on series card
+  ///
+  /// In en, this message translates to:
+  /// **'Done {completed} of {total}'**
+  String progressDone(int completed, int total);
+
+  /// Label above previously used vaccine name chips
+  ///
+  /// In en, this message translates to:
+  /// **'Previously added'**
+  String get previouslyUsed;
+
+  /// Button to record the next shot in a series
+  ///
+  /// In en, this message translates to:
+  /// **'Record Next Shot'**
+  String get recordNextShot;
+
+  /// Title of the record next shot bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Record Shot {number}'**
+  String recordNextShotTitle(int number);
+
+  /// Title of the delete series confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Series'**
+  String get deleteSeriesTitle;
+
+  /// Body of the delete series confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all records for \"{name}\"? This cannot be undone.'**
+  String deleteSeriesConfirm(String name);
+
+  /// Toggle label to expand shot timeline
+  ///
+  /// In en, this message translates to:
+  /// **'Show details'**
+  String get showDetails;
+
+  /// Toggle label to collapse shot timeline
+  ///
+  /// In en, this message translates to:
+  /// **'Hide details'**
+  String get hideDetails;
 }
 
 class _AppLocalizationsDelegate

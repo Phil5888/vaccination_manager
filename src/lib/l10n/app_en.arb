@@ -380,5 +380,87 @@
                 "type": "int"
             }
         }
+    },
+    "numberOfShots": "Number of shots",
+    "@numberOfShots": {
+        "description": "Label for the shot count stepper"
+    },
+    "tapToSetDate": "Tap to set date",
+    "@tapToSetDate": {
+        "description": "Placeholder when no date is selected for a shot"
+    },
+    "shotStatusCompleted": "Completed",
+    "@shotStatusCompleted": {
+        "description": "Shot status chip: completed (past date)"
+    },
+    "shotStatusPlanned": "Planned",
+    "@shotStatusPlanned": {
+        "description": "Shot status chip: planned (future date)"
+    },
+    "shotStatusUnscheduled": "Unscheduled",
+    "@shotStatusUnscheduled": {
+        "description": "Shot status chip: unscheduled (no date)"
+    },
+    "statusComplete": "Complete",
+    "@statusComplete": {
+        "description": "Series status badge: all shots done"
+    },
+    "statusInProgress": "In Progress",
+    "@statusInProgress": {
+        "description": "Series status badge: some shots done"
+    },
+    "statusPlanned": "Planned",
+    "@statusPlanned": {
+        "description": "Series status badge: no shots done yet"
+    },
+    "progressDone": "Done {completed} of {total}",
+    "@progressDone": {
+        "description": "Progress text on series card",
+        "placeholders": {
+            "completed": {
+                "type": "int"
+            },
+            "total": {
+                "type": "int"
+            }
+        }
+    },
+    "previouslyUsed": "Previously added",
+    "@previouslyUsed": {
+        "description": "Label above previously used vaccine name chips"
+    },
+    "recordNextShot": "Record Next Shot",
+    "@recordNextShot": {
+        "description": "Button to record the next shot in a series"
+    },
+    "recordNextShotTitle": "Record Shot {number}",
+    "@recordNextShotTitle": {
+        "description": "Title of the record next shot bottom sheet",
+        "placeholders": {
+            "number": {
+                "type": "int"
+            }
+        }
+    },
+    "deleteSeriesTitle": "Delete Series",
+    "@deleteSeriesTitle": {
+        "description": "Title of the delete series confirmation dialog"
+    },
+    "deleteSeriesConfirm": "Delete all records for \"{name}\"? This cannot be undone.",
+    "@deleteSeriesConfirm": {
+        "description": "Body of the delete series confirmation dialog",
+        "placeholders": {
+            "name": {
+                "type": "String"
+            }
+        }
+    },
+    "showDetails": "Show details",
+    "@showDetails": {
+        "description": "Toggle label to expand shot timeline"
+    },
+    "hideDetails": "Hide details",
+    "@hideDetails": {
+        "description": "Toggle label to collapse shot timeline"
     }
 }

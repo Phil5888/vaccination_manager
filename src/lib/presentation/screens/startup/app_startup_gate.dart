@@ -20,14 +20,20 @@ class AppStartupGate extends ConsumerWidget {
       ),
       data: (users) {
         if (users.isEmpty) {
-          // Navigate to welcome on next frame (can't navigate during build)
+          // Use addPostFrameCallback so we don't navigate during build.
+          // This gate is only mounted at app startup — once we navigate away,
+          // this widget is removed from the tree and will never re-fire.
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            Navigator.of(context).pushReplacementNamed(Routes.welcome);
+            if (context.mounted) {
+              Navigator.of(context).pushReplacementNamed(Routes.welcome);
+            }
           });
           return const Scaffold(
             body: Center(child: CircularProgressIndicator()),
           );
         }
+        // Users exist — go straight to the shell. Never navigated back to here
+        // after profile creation (CreateProfileScreen pushes MainScreen directly).
         return const MainScreen();
       },
     );

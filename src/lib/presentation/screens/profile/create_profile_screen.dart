@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/domain/entities/user_entity.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:vaccination_manager/presentation/providers/user_providers.dart';
+import 'package:vaccination_manager/presentation/screens/main/main_screen.dart';
 
 class CreateProfileScreen extends ConsumerStatefulWidget {
   /// Optional user to edit. Null means create mode.
@@ -60,8 +60,11 @@ class _CreateProfileScreenState extends ConsumerState<CreateProfileScreen> {
             .read(activeUserProvider.notifier)
             .setActiveUser(created.id!);
         if (mounted) {
-          Navigator.of(context).pushNamedAndRemoveUntil(
-            Routes.main,
+          // Navigate directly to MainScreen — never back through AppStartupGate,
+          // which could race against the provider invalidation and re-trigger
+          // the welcome flow.
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute<void>(builder: (_) => const MainScreen()),
             (route) => false,
           );
         }

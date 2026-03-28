@@ -276,4 +276,58 @@ class AppLocalizationsDe extends AppLocalizations {
   String shot(int number) {
     return 'Dosis $number';
   }
+
+  @override
+  String get numberOfShots => 'Anzahl der Impfungen';
+
+  @override
+  String get tapToSetDate => 'Datum auswählen';
+
+  @override
+  String get shotStatusCompleted => 'Verabreicht';
+
+  @override
+  String get shotStatusPlanned => 'Geplant';
+
+  @override
+  String get shotStatusUnscheduled => 'Nicht geplant';
+
+  @override
+  String get statusComplete => 'Abgeschlossen';
+
+  @override
+  String get statusInProgress => 'In Bearbeitung';
+
+  @override
+  String get statusPlanned => 'Geplant';
+
+  @override
+  String progressDone(int completed, int total) {
+    return '$completed von $total abgeschlossen';
+  }
+
+  @override
+  String get previouslyUsed => 'Bereits eingetragen';
+
+  @override
+  String get recordNextShot => 'Nächste Impfung erfassen';
+
+  @override
+  String recordNextShotTitle(int number) {
+    return 'Impfung $number erfassen';
+  }
+
+  @override
+  String get deleteSeriesTitle => 'Serie löschen';
+
+  @override
+  String deleteSeriesConfirm(String name) {
+    return 'Alle Einträge für \"$name\" löschen? Dies kann nicht rückgängig gemacht werden.';
+  }
+
+  @override
+  String get showDetails => 'Details anzeigen';
+
+  @override
+  String get hideDetails => 'Details ausblenden';
 }

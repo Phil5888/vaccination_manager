@@ -5,12 +5,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/domain/entities/reminder_status.dart';
-import 'package:vaccination_manager/domain/entities/vaccination_entry_entity.dart';
+import 'package:vaccination_manager/domain/entities/vaccination_series_entity.dart';
 import 'package:vaccination_manager/domain/usecases/vaccination/get_vaccination_reminders_use_case.dart';
 import 'package:vaccination_manager/presentation/providers/navigation_providers.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:vaccination_manager/presentation/providers/user_providers.dart';
 import 'package:vaccination_manager/presentation/providers/vaccination_providers.dart';
+import 'package:vaccination_manager/presentation/widgets/vaccination_series_card.dart';
 
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({super.key});
@@ -28,7 +29,7 @@ class DashboardScreen extends ConsumerWidget {
     final colorScheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final activeUserAsync = ref.watch(activeUserProvider);
-    final vaccinationsAsync = ref.watch(vaccinationProvider);
+    final seriesAsync = ref.watch(seriesListProvider);
     final remindersAsync = ref.watch(vaccinationRemindersProvider);
     final topPadding = MediaQuery.of(context).padding.top;
     final bottomPadding = MediaQuery.of(context).padding.bottom;
@@ -122,20 +123,15 @@ class DashboardScreen extends ConsumerWidget {
                   ],
                 ),
                 const SizedBox(height: 12),
-                vaccinationsAsync.when(
+                remindersAsync.when(
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),
                   error: (_, _) => const SizedBox.shrink(),
-                  data: (_) => remindersAsync.when(
-                    loading: () =>
-                        const Center(child: CircularProgressIndicator()),
-                    error: (_, _) => const SizedBox.shrink(),
-                    data: (reminders) => _PriorityDueSection(
-                      reminders: reminders,
-                      local: local,
-                      colorScheme: colorScheme,
-                      textTheme: textTheme,
-                    ),
+                  data: (reminders) => _PriorityDueSection(
+                    reminders: reminders,
+                    local: local,
+                    colorScheme: colorScheme,
+                    textTheme: textTheme,
                   ),
                 ),
                 const SizedBox(height: 28),
@@ -150,11 +146,11 @@ class DashboardScreen extends ConsumerWidget {
                   ),
                 ),
                 const SizedBox(height: 12),
-                vaccinationsAsync.when(
+                seriesAsync.when(
                   loading: () => const SizedBox.shrink(),
                   error: (_, _) => const SizedBox.shrink(),
-                  data: (vaccinations) => _RecentRecordsSection(
-                    vaccinations: vaccinations,
+                  data: (seriesList) => _RecentRecordsSection(
+                    seriesList: seriesList,
                     local: local,
                     colorScheme: colorScheme,
                     textTheme: textTheme,
@@ -747,42 +743,38 @@ class _EmptyPriorityCard extends StatelessWidget {
 
 class _RecentRecordsSection extends StatelessWidget {
   const _RecentRecordsSection({
-    required this.vaccinations,
+    required this.seriesList,
     required this.local,
     required this.colorScheme,
     required this.textTheme,
     required this.onViewAll,
   });
 
-  final List<VaccinationEntryEntity> vaccinations;
+  final List<VaccinationSeriesEntity> seriesList;
   final AppLocalizations local;
   final ColorScheme colorScheme;
   final TextTheme textTheme;
   final VoidCallback onViewAll;
 
-  /// Returns a map from entry id → dose number within its name group.
-  Map<int, int> _doseNumbers(List<VaccinationEntryEntity> all) {
-    final groups = <String, List<VaccinationEntryEntity>>{};
-    for (final v in all) {
-      groups.putIfAbsent(v.name.toLowerCase(), () => []).add(v);
-    }
-    final result = <int, int>{};
-    for (final group in groups.values) {
-      final sorted = List.of(group)
-        ..sort((a, b) => a.vaccinationDate.compareTo(b.vaccinationDate));
-      for (var i = 0; i < sorted.length; i++) {
-        if (sorted[i].id != null) result[sorted[i].id!] = i + 1;
-      }
-    }
-    return result;
-  }
-
   @override
   Widget build(BuildContext context) {
-    // Already ordered by vaccinationDate DESC from the DB; take first 5
-    final recent = vaccinations.take(5).toList();
-    final doseMap = _doseNumbers(vaccinations);
-    final dateFmt = DateFormat('MMM dd, yyyy');
+    // Sort by most recent shot date DESC, take up to 3
+    final sorted = List.of(seriesList)
+      ..sort((a, b) {
+        final aDate = a.shots
+            .map((s) => s.vaccinationDate)
+            .whereType<DateTime>()
+            .fold<DateTime?>(null, (best, d) => best == null || d.isAfter(best) ? d : best);
+        final bDate = b.shots
+            .map((s) => s.vaccinationDate)
+            .whereType<DateTime>()
+            .fold<DateTime?>(null, (best, d) => best == null || d.isAfter(best) ? d : best);
+        if (aDate == null && bDate == null) return 0;
+        if (aDate == null) return 1;
+        if (bDate == null) return -1;
+        return bDate.compareTo(aDate);
+      });
+    final recent = sorted.take(3).toList();
 
     if (recent.isEmpty) {
       return Padding(
@@ -797,17 +789,15 @@ class _RecentRecordsSection extends StatelessWidget {
 
     return Column(
       children: [
-        // Rows
-        ...recent.map((v) => _RecentRow(
-              entry: v,
-              doseNumber: doseMap[v.id] ?? 1,
-              dateFmt: dateFmt,
-              local: local,
-              colorScheme: colorScheme,
-              textTheme: textTheme,
+        ...recent.map((series) => VaccinationSeriesCard(
+              series: series,
+              onEdit: () => Navigator.of(context).pushNamed(
+                Routes.vaccinationAdd,
+                arguments: series,
+              ),
+              onDelete: () {}, // Handled in Records screen
             )),
-        const SizedBox(height: 12),
-        // View Full History button
+        const SizedBox(height: 4),
         SizedBox(
           width: double.infinity,
           child: TextButton(
@@ -830,78 +820,6 @@ class _RecentRecordsSection extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _RecentRow extends StatelessWidget {
-  const _RecentRow({
-    required this.entry,
-    required this.doseNumber,
-    required this.dateFmt,
-    required this.local,
-    required this.colorScheme,
-    required this.textTheme,
-  });
-
-  final VaccinationEntryEntity entry;
-  final int doseNumber;
-  final DateFormat dateFmt;
-  final AppLocalizations local;
-  final ColorScheme colorScheme;
-  final TextTheme textTheme;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-      decoration: BoxDecoration(
-        color: colorScheme.surfaceContainerLowest,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: colorScheme.secondary.withValues(alpha: 0.12),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(Icons.check_circle,
-                color: colorScheme.secondary, size: 22),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  entry.name,
-                  style: textTheme.bodySmall?.copyWith(
-                    color: colorScheme.onSurface,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                Text(
-                  local.dose(doseNumber),
-                  style: textTheme.labelSmall?.copyWith(
-                    color: colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Text(
-            dateFmt.format(entry.vaccinationDate),
-            style: textTheme.labelSmall?.copyWith(
-              color: colorScheme.onSurfaceVariant,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }
