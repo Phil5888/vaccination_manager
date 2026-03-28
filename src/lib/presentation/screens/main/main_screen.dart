@@ -43,8 +43,8 @@ class MainScreen extends ConsumerWidget {
         index: selectedIndex,
         children: _screens,
       ),
-      // FAB shown on Records (1) and Schedule (2) tabs
-      floatingActionButton: (selectedIndex == 1 || selectedIndex == 2)
+      // FAB shown on all content tabs except Profile (index 3)
+      floatingActionButton: selectedIndex != 3
           ? FloatingActionButton(
               onPressed: () =>
                   Navigator.of(context).pushNamed(Routes.vaccinationAdd),
