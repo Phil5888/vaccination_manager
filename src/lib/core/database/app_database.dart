@@ -7,10 +7,16 @@ class AppDatabase {
   AppDatabase._internal();
 
   static Database? _db;
+  // Single shared future prevents multiple concurrent openDatabase() calls
+  // when several providers hit get database before _db is assigned.
+  static Future<Database>? _dbFuture;
 
-  Future<Database> get database async {
-    _db ??= await _initDatabase();
-    return _db!;
+  Future<Database> get database {
+    _dbFuture ??= _initDatabase().then((db) {
+      _db = db;
+      return db;
+    });
+    return _dbFuture!;
   }
 
   Future<Database> _initDatabase() async {
@@ -95,6 +101,7 @@ class AppDatabase {
       await _db!.close();
       _db = null;
     }
+    _dbFuture = null;
     final path = join(await getDatabasesPath(), 'vaccination_manager.db');
     await deleteDatabase(path);
   }

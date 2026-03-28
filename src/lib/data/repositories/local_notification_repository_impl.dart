@@ -7,8 +7,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:vaccination_manager/domain/repositories/notification_repository.dart';
 
 class LocalNotificationRepositoryImpl implements NotificationRepository {
-  final FlutterLocalNotificationsPlugin _plugin =
-      FlutterLocalNotificationsPlugin();
+  // Lazily instantiated so the plugin is not created until first actual use.
+  FlutterLocalNotificationsPlugin? _pluginInstance;
+  FlutterLocalNotificationsPlugin get _plugin =>
+      _pluginInstance ??= FlutterLocalNotificationsPlugin();
 
   @override
   Future<bool> requestPermission() async {

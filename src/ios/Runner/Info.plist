@@ -66,5 +66,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCalendarsUsageDescription</key>
+	<string>VaccineCare uses your calendar to add vaccination reminders so you never miss a dose.</string>
+	<key>NSCalendarsWriteOnlyAccessUsageDescription</key>
+	<string>VaccineCare adds vaccination appointments to your calendar.</string>
+	<key>NSUserNotificationUsageDescription</key>
+	<string>VaccineCare sends reminders before upcoming vaccinations.</string>
 </dict>
 </plist>

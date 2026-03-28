@@ -11,7 +11,10 @@ import 'package:vaccination_manager/domain/repositories/calendar_repository.dart
 /// Composite event ID format stored in [SyncedEventRecord.calendarEventId]:
 ///   `"calendarId::platformEventId"`
 class NativeCalendarRepositoryImpl implements CalendarRepository {
-  final DeviceCalendarPlugin _calendarPlugin = DeviceCalendarPlugin();
+  // Lazily instantiated so the plugin is not created until first actual use.
+  DeviceCalendarPlugin? _calendarPluginInstance;
+  DeviceCalendarPlugin get _calendarPlugin =>
+      _calendarPluginInstance ??= DeviceCalendarPlugin();
 
   /// Separator used to join calendarId and eventId into a single stored string.
   static const _sep = '::';

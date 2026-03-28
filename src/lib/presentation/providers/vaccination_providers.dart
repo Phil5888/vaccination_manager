@@ -1,8 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vaccination_manager/data/repositories/settings_repository.dart';
 import 'package:vaccination_manager/domain/entities/reminder_status.dart';
 import 'package:vaccination_manager/domain/entities/vaccination_entry_entity.dart';
 import 'package:vaccination_manager/domain/entities/vaccination_series_entity.dart';
+import 'package:vaccination_manager/domain/usecases/notifications/sync_calendar_use_case.dart';
 import 'package:vaccination_manager/domain/usecases/vaccination/get_vaccination_reminders_use_case.dart';
+import 'package:vaccination_manager/domain/usecases/vaccination/get_vaccinations_for_user_use_case.dart';
 import 'package:vaccination_manager/presentation/providers/notification_providers.dart';
 import 'package:vaccination_manager/presentation/providers/user_providers.dart';
 import 'package:vaccination_manager/presentation/providers/vaccination_dependency_providers.dart';
@@ -30,40 +33,64 @@ class VaccinationViewModel
   }
 
   Future<void> saveSeries(List<VaccinationEntryEntity> shots) async {
+    // Capture every dependency synchronously before any await/invalidate so
+    // we never touch ref after the notifier is disposed by invalidateSelf().
     final saveUseCase = ref.read(saveVaccinationSeriesUseCaseProvider);
+    final getUseCase = ref.read(getVaccinationsForUserUseCaseProvider);
+    final syncUseCase = ref.read(syncCalendarUseCaseProvider);
+    final settingsRepo = ref.read(settingsRepositoryProvider);
+    final user = await ref.read(activeUserProvider.future);
+
     await saveUseCase.call(shots);
     ref.invalidateSelf();
     ref.invalidate(vaccinationRemindersProvider);
 
-    // Best-effort: re-read saved shots (now have DB-assigned IDs) and sync
-    // calendar/notifications. Failures are silently swallowed so a missing
-    // permission or unconfigured platform never blocks saving a vaccination.
-    try {
-      final user = await ref.read(activeUserProvider.future);
-      if (user != null) {
-        final getUseCase = ref.read(getVaccinationsForUserUseCaseProvider);
-        final allShots = await getUseCase.call(user.id!);
-        final seriesName = shots.isNotEmpty ? shots.first.name.toLowerCase() : '';
-        final savedShots = allShots
-            .where((s) => s.name.toLowerCase() == seriesName)
-            .toList();
-        final prefs = await ref
-            .read(settingsRepositoryProvider)
-            .getNotificationPreferences();
-        final syncUseCase = ref.read(syncCalendarUseCaseProvider);
-        await syncUseCase(shots: savedShots, prefs: prefs);
-      }
-    } catch (_) {
-      // Sync is best-effort; never fail a save due to a notification error.
+    // Fire-and-forget: sync calendar/notifications after save.
+    // Never awaited — the screen must not be blocked by this.
+    if (user != null && shots.isNotEmpty) {
+      final seriesName = shots.first.name.toLowerCase();
+      _syncInBackground(
+        getUseCase: getUseCase,
+        syncUseCase: syncUseCase,
+        settingsRepo: settingsRepo,
+        userId: user.id!,
+        seriesName: seriesName,
+      );
     }
   }
 
+  /// Runs the calendar/notification sync in a detached microtask so it never
+  /// blocks the calling screen. All ref reads were captured before this runs.
+  static void _syncInBackground({
+    required GetVaccinationsForUserUseCase getUseCase,
+    required SyncCalendarUseCase syncUseCase,
+    required SettingsRepository settingsRepo,
+    required int userId,
+    required String seriesName,
+  }) {
+    Future<void>(() async {
+      try {
+        final allShots = await getUseCase.call(userId);
+        final savedShots = allShots
+            .where((s) => s.name.toLowerCase() == seriesName)
+            .toList();
+        final prefs = await settingsRepo.getNotificationPreferences();
+        await syncUseCase(shots: savedShots, prefs: prefs);
+      } catch (_) {
+        // Sync is best-effort; never crash the app over a notification error.
+      }
+    });
+  }
+
   Future<void> deleteShot(int id) async {
-    // Best-effort cancel before deleting.
+    // Capture cancel use case synchronously before any await.
+    final cancelUseCase = ref.read(cancelNotificationsUseCaseProvider);
+
     try {
-      final cancelUseCase = ref.read(cancelNotificationsUseCaseProvider);
       await cancelUseCase.callForShots([id]);
-    } catch (_) {}
+    } catch (_) {
+      // Cancel is best-effort.
+    }
 
     final useCase = ref.read(deleteVaccinationShotUseCaseProvider);
     await useCase.call(id);
@@ -72,12 +99,13 @@ class VaccinationViewModel
   }
 
   Future<void> deleteSeries(int userId, String name) async {
-    // Look up shot IDs from current state before deleting.
+    // Capture refs and current shot IDs synchronously before any await.
+    final cancelUseCase = ref.read(cancelNotificationsUseCaseProvider);
     final nameLower = name.toLowerCase();
     final currentEntries = state.when(
       data: (v) => v,
       loading: () => <VaccinationEntryEntity>[],
-      error: (_, __) => <VaccinationEntryEntity>[],
+      error: (_, _) => <VaccinationEntryEntity>[],
     );
     final shotIds = currentEntries
         .where((s) =>
@@ -87,10 +115,8 @@ class VaccinationViewModel
         .map((s) => s.id!)
         .toList();
 
-    // Best-effort cancel before deleting.
     try {
       if (shotIds.isNotEmpty) {
-        final cancelUseCase = ref.read(cancelNotificationsUseCaseProvider);
         await cancelUseCase.callForShots(shotIds);
       }
     } catch (_) {}
