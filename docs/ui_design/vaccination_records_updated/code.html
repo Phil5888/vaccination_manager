@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-surface": "#2e3132",
+              "surface-container-lowest": "#ffffff",
+              "on-background": "#191c1d",
+              "tertiary-fixed": "#ffdea8",
+              "secondary-fixed-dim": "#6fd7d6",
+              "surface": "#f8f9fa",
+              "on-tertiary-container": "#ffd489",
+              "on-surface": "#191c1d",
+              "tertiary-fixed-dim": "#ffba20",
+              "surface-tint": "#005db6",
+              "secondary-fixed": "#8cf3f3",
+              "outline": "#727783",
+              "surface-container-low": "#f3f4f5",
+              "surface-container-highest": "#e1e3e4",
+              "on-error": "#ffffff",
+              "on-primary": "#ffffff",
+              "inverse-primary": "#a9c7ff",
+              "on-secondary-fixed": "#002020",
+              "surface-container-high": "#e7e8e9",
+              "on-tertiary-fixed": "#271900",
+              "surface-bright": "#f8f9fa",
+              "secondary": "#006a6a",
+              "secondary-container": "#8cf3f3",
+              "on-error-container": "#93000a",
+              "surface-dim": "#d9dadb",
+              "on-secondary": "#ffffff",
+              "inverse-on-surface": "#f0f1f2",
+              "primary-container": "#005eb8",
+              "error-container": "#ffdad6",
+              "background": "#f8f9fa",
+              "on-tertiary-fixed-variant": "#5e4200",
+              "on-primary-fixed-variant": "#00468c",
+              "on-surface-variant": "#424752",
+              "tertiary": "#5f4300",
+              "error": "#ba1a1a",
+              "on-secondary-container": "#007070",
+              "tertiary-container": "#7d5900",
+              "primary-fixed": "#d6e3ff",
+              "on-primary-fixed": "#001b3d",
+              "surface-variant": "#e1e3e4",
+              "outline-variant": "#c2c6d4",
+              "on-secondary-fixed-variant": "#004f4f",
+              "primary-fixed-dim": "#a9c7ff",
+              "primary": "#00478d",
+              "surface-container": "#edeeef",
+              "on-tertiary": "#ffffff",
+              "on-primary-container": "#c8daff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "3xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body selection:bg-primary-fixed">
+<!-- Top Navigation Anchor -->
+<header class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl shadow-sm flex items-center justify-between px-6 h-16">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center overflow-hidden">
+<img alt="User profile" class="w-full h-full object-cover" data-alt="professional headshot of a person with a friendly expression in a clean studio setting with soft lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA4p_0aBHZOnyiXDPOliASSYelFwMQebTzR6YvWbNYPMLrd4Q4M9HFpCHK91d8OkOatjU2y9qByoXE9qCkU4BNyWvWtiF-nobJhlwMLIwyu5qEshVs2KJ45ezTG9SNIYdopVytHAW30g0VNn-HnQq_tKYB1ucYGsBtMr73digqRPVIJU3dkjUsNTBXkrcPA2DKKij-pvhnPo9g6kMXa_bIxZwGf_nkwifl4joeQlPlAf3s9tZPpCz2Xva-cyIZwL2FUG3k6dWnZqb4g"/>
+</div>
+<h1 class="font-headline font-black text-blue-800 text-lg tracking-tight">VaccineCare</h1>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-full text-blue-700 hover:bg-slate-100 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined">swap_horiz</span>
+</button>
+</header>
+<main class="pt-20 pb-32 px-6 max-w-2xl mx-auto">
+<!-- Header & Search -->
+<section class="mb-8">
+<h2 class="font-headline font-bold text-3xl text-on-surface tracking-tight mb-2">My Records</h2>
+<p class="text-on-surface-variant body-md mb-6">Track your immunization history and upcoming boosters.</p>
+<!-- Search Bar -->
+<div class="relative flex items-center mb-6">
+<div class="absolute left-4 text-outline">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="w-full bg-surface-container-highest border-none rounded-2xl py-4 pl-12 pr-4 focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all placeholder:text-outline" placeholder="Search vaccine name..." type="text"/>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-2 overflow-x-auto hide-scrollbar pb-2">
+<button class="px-5 py-2.5 bg-primary-container text-on-primary-container rounded-full text-sm font-semibold whitespace-nowrap">All Records</button>
+<button class="px-5 py-2.5 bg-surface-container-high text-on-surface-variant rounded-full text-sm font-medium whitespace-nowrap hover:bg-surface-container-highest transition-colors">Completed</button>
+<button class="px-5 py-2.5 bg-surface-container-high text-on-surface-variant rounded-full text-sm font-medium whitespace-nowrap hover:bg-surface-container-highest transition-colors">In Progress</button>
+<button class="px-5 py-2.5 bg-surface-container-high text-on-surface-variant rounded-full text-sm font-medium whitespace-nowrap hover:bg-surface-container-highest transition-colors">Overdue</button>
+</div>
+</section>
+<!-- Series in Progress -->
+<section class="mb-10">
+<div class="flex items-center justify-between mb-4 px-1">
+<h3 class="font-headline font-bold text-lg text-on-surface">Series in Progress</h3>
+<span class="text-tertiary font-semibold text-xs bg-tertiary-fixed px-3 py-1 rounded-full uppercase tracking-wider">Action Needed</span>
+</div>
+<div class="space-y-4">
+<!-- Vaccine Card: Hepatitis B -->
+<div class="group bg-surface-container-lowest rounded-3xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] border border-transparent hover:border-outline-variant/30 transition-all cursor-pointer active:scale-[0.98]">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">vaccines</span>
+</div>
+<div>
+<h4 class="font-headline font-bold text-lg text-on-surface leading-tight">Hepatitis B</h4>
+<p class="text-on-surface-variant text-sm mt-0.5">Last dose: Oct 12, 2023</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-end text-sm mb-1">
+<span class="text-on-surface-variant font-medium">Dose 2 of 3</span>
+<span class="text-primary font-bold">66%</span>
+</div>
+<div class="h-2.5 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container rounded-full" style="width: 66%"></div>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<span class="material-symbols-outlined text-tertiary text-sm">event</span>
+<p class="text-xs font-semibold text-tertiary-container">Next dose due: Apr 12, 2024</p>
+</div>
+</div>
+</div>
+<!-- Vaccine Card: HPV -->
+<div class="group bg-surface-container-lowest rounded-3xl p-5 shadow-[0_4px_20px_rgba(0,0,0,0.02)] border border-transparent hover:border-outline-variant/30 transition-all cursor-pointer active:scale-[0.98]">
+<div class="flex justify-between items-start mb-4">
+<div class="flex gap-4">
+<div class="w-12 h-12 rounded-2xl bg-primary/5 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">biotech</span>
+</div>
+<div>
+<h4 class="font-headline font-bold text-lg text-on-surface leading-tight">HPV (Gardasil 9)</h4>
+<p class="text-on-surface-variant text-sm mt-0.5">Last dose: Jan 15, 2024</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-end text-sm mb-1">
+<span class="text-on-surface-variant font-medium">Dose 1 of 2</span>
+<span class="text-primary font-bold">50%</span>
+</div>
+<div class="h-2.5 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-container rounded-full" style="width: 50%"></div>
+</div>
+<div class="flex items-center gap-2 pt-1">
+<span class="material-symbols-outlined text-outline text-sm">schedule</span>
+<p class="text-xs font-medium text-on-surface-variant">Recommended: Jul 2024</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Fully Vaccinated -->
+<section>
+<div class="flex items-center justify-between mb-4 px-1">
+<h3 class="font-headline font-bold text-lg text-on-surface">Fully Vaccinated</h3>
+<span class="text-secondary font-semibold text-xs bg-secondary-container px-3 py-1 rounded-full uppercase tracking-wider">Protected</span>
+</div>
+<div class="space-y-3">
+<!-- Completed Item: Influenza -->
+<div class="flex items-center gap-4 bg-surface-container-low rounded-2xl p-4 transition-colors hover:bg-surface-container-high cursor-pointer">
+<div class="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-on-surface">Influenza (Annual)</h4>
+<p class="text-xs text-on-surface-variant">Administered Dec 05, 2023</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] font-bold text-secondary uppercase tracking-tighter">Valid until Dec 2024</p>
+</div>
+</div>
+<!-- Completed Item: Tdap -->
+<div class="flex items-center gap-4 bg-surface-container-low rounded-2xl p-4 transition-colors hover:bg-surface-container-high cursor-pointer">
+<div class="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-on-surface">Tdap (Tetanus)</h4>
+<p class="text-xs text-on-surface-variant">Administered Aug 18, 2021</p>
+</div>
+<div class="text-right">
+<p class="text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter">Booster 2031</p>
+</div>
+</div>
+<!-- Completed Item: MMR -->
+<div class="flex items-center gap-4 bg-surface-container-low rounded-2xl p-4 transition-colors hover:bg-surface-container-high cursor-pointer">
+<div class="w-10 h-10 rounded-xl bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex-1">
+<h4 class="font-bold text-on-surface">MMR (Measles)</h4>
+<p class="text-xs text-on-surface-variant">Lifetime Immunity Achieved</p>
+</div>
+<div class="text-right">
+<span class="material-symbols-outlined text-outline">verified</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Empty State Fallback / Summary -->
+<div class="mt-12 p-8 rounded-[2rem] bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-slate-800 dark:to-slate-900 border border-white/50 text-center">
+<h4 class="font-headline font-bold text-primary mb-2">Immunization Summary</h4>
+<p class="text-sm text-slate-600 dark:text-slate-400 mb-4">You have 5 active records and 2 upcoming boosters in the next 12 months.</p>
+<button class="w-full py-3.5 bg-primary text-white rounded-2xl font-semibold flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-lg">download</span>
+                Export Records (PDF)
+            </button>
+</div>
+</main>
+<!-- Bottom Navigation Shell -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-[1.5rem] bg-white/80 backdrop-blur-2xl shadow-[0_-10px_30px_rgba(0,0,0,0.03)] border-t border-slate-100"><div class="flex justify-around items-center w-full px-4 pb-6 pt-3">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-blue-600 dark:hover:text-blue-300 active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">home</span>
+<span class="font-['Inter'] font-medium text-[11px]">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-2xl px-5 py-2 active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">description</span>
+<span class="font-['Inter'] font-medium text-[11px]">Records</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-blue-600 dark:hover:text-blue-300 active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">event</span>
+<span class="font-['Inter'] font-medium text-[11px]">Schedule</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-blue-600 dark:hover:text-blue-300 active:scale-90 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Inter'] font-medium text-[11px]">Profile</span>
+</a>
+</div></nav>
+<!-- FAB Action (Contextual: Add New Record) -->
+<button class="fixed right-6 bottom-28 w-14 h-14 bg-primary text-white rounded-2xl shadow-lg shadow-primary/20 flex items-center justify-center active:scale-90 transition-transform z-40">
+<span class="material-symbols-outlined text-2xl">add</span>
+</button>
+</body></html>

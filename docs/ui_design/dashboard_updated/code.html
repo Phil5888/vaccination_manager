@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-surface": "#2e3132",
+              "surface-container-lowest": "#ffffff",
+              "on-background": "#191c1d",
+              "tertiary-fixed": "#ffdea8",
+              "secondary-fixed-dim": "#6fd7d6",
+              "surface": "#f8f9fa",
+              "on-tertiary-container": "#ffd489",
+              "on-surface": "#191c1d",
+              "tertiary-fixed-dim": "#ffba20",
+              "surface-tint": "#005db6",
+              "secondary-fixed": "#8cf3f3",
+              "outline": "#727783",
+              "surface-container-low": "#f3f4f5",
+              "surface-container-highest": "#e1e3e4",
+              "on-error": "#ffffff",
+              "on-primary": "#ffffff",
+              "inverse-primary": "#a9c7ff",
+              "on-secondary-fixed": "#002020",
+              "surface-container-high": "#e7e8e9",
+              "on-tertiary-fixed": "#271900",
+              "surface-bright": "#f8f9fa",
+              "secondary": "#006a6a",
+              "secondary-container": "#8cf3f3",
+              "on-error-container": "#93000a",
+              "surface-dim": "#d9dadb",
+              "on-secondary": "#ffffff",
+              "inverse-on-surface": "#f0f1f2",
+              "primary-container": "#005eb8",
+              "error-container": "#ffdad6",
+              "background": "#f8f9fa",
+              "on-tertiary-fixed-variant": "#5e4200",
+              "on-primary-fixed-variant": "#00468c",
+              "on-surface-variant": "#424752",
+              "tertiary": "#5f4300",
+              "error": "#ba1a1a",
+              "on-secondary-container": "#007070",
+              "tertiary-container": "#7d5900",
+              "primary-fixed": "#d6e3ff",
+              "on-primary-fixed": "#001b3d",
+              "surface-variant": "#e1e3e4",
+              "outline-variant": "#c2c6d4",
+              "on-secondary-fixed-variant": "#004f4f",
+              "primary-fixed-dim": "#a9c7ff",
+              "primary": "#00478d",
+              "surface-container": "#edeeef",
+              "on-tertiary": "#ffffff",
+              "on-primary-container": "#c8daff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "3xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- TopAppBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/70 backdrop-blur-xl shadow-sm flex items-center justify-between px-6 h-16 w-full">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full overflow-hidden ring-2 ring-primary/10">
+<img alt="User Profile" class="w-full h-full object-cover" data-alt="Close-up portrait of a smiling young man in a clean white environment with soft natural lighting and professional look" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC12mprTqujTKCpMHX3tkAGpgu-srYudvUIQi1dpCn4fAAJE2JMDhHt7uiD0UMIBa0wFVhTErh4o7OAF0toHnQ11uCodn3tfNZ748uLoiF8UlK0R0FKp-AzP20UPTIcApGs1gnNMYJh6spxAgC57dL4ceiIRJ7vIL71Td4ZAj4VtFUnv0V2pjkPtiP5CUZkGte-ufV8_DPxZwXTzoI_tKFf9EWZ9YBM-Pi6eFifU5oinpKz6lr5GzvyMC2ldKzODA9RZljg0RHQDDwW"/>
+</div>
+<div class="flex flex-col">
+<span class="font-headline font-black text-blue-800 text-lg leading-tight">VaccineCare</span>
+<span class="text-[10px] font-bold text-primary uppercase tracking-widest">Personal Profile</span>
+</div>
+</div>
+<button class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 text-blue-700 hover:bg-slate-100 transition-colors active:scale-95 duration-200">
+<span class="material-symbols-outlined" data-icon="swap_horiz">swap_horiz</span>
+</button>
+</nav>
+<main class="pt-20 pb-32 px-6 max-w-md mx-auto">
+<!-- Dashboard Header -->
+<header class="mb-8">
+<h1 class="font-headline font-extrabold text-3xl text-on-surface tracking-tight mb-2">My Records</h1>
+<p class="text-on-surface-variant text-sm font-medium">Last updated today, 10:42 AM</p>
+</header>
+<!-- Quick Stats Row -->
+<section class="flex gap-3 mb-10 overflow-x-auto hide-scrollbar">
+<div class="flex-none flex items-center gap-2 bg-secondary-container/30 px-4 py-2.5 rounded-2xl border border-secondary-container/20">
+<span class="w-2 h-2 rounded-full bg-secondary"></span>
+<span class="text-xs font-semibold text-on-secondary-container">12 Completed</span>
+</div>
+<div class="flex-none flex items-center gap-2 bg-tertiary-fixed/30 px-4 py-2.5 rounded-2xl border border-tertiary-fixed/20">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="text-xs font-semibold text-on-tertiary-fixed-variant">2 Upcoming</span>
+</div>
+<div class="flex-none flex items-center gap-2 bg-error-container/30 px-4 py-2.5 rounded-2xl border border-error-container/20">
+<span class="w-2 h-2 rounded-full bg-error"></span>
+<span class="text-xs font-semibold text-on-error-container">0 Overdue</span>
+</div>
+</section>
+<!-- Upcoming Vaccinations (Prioritized Bento) -->
+<section class="mb-10">
+<div class="flex items-center justify-between mb-5">
+<h2 class="font-headline font-bold text-xl tracking-tight">Priority Due</h2>
+<button class="text-primary text-xs font-bold uppercase tracking-wider">See Schedule</button>
+</div>
+<div class="grid grid-cols-1 gap-4">
+<!-- Flu Shot (Due Now) -->
+<div class="relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-br from-primary to-primary-container opacity-[0.03]"></div>
+<div class="bg-surface-container-lowest p-6 rounded-3xl border border-primary/5 shadow-sm relative z-10">
+<div class="flex justify-between items-start mb-6">
+<div class="p-3 bg-primary/10 rounded-2xl">
+<span class="material-symbols-outlined text-primary" data-icon="vaccines">vaccines</span>
+</div>
+<span class="px-3 py-1 bg-tertiary text-white text-[10px] font-bold rounded-full uppercase tracking-tighter shadow-sm">Due Now</span>
+</div>
+<h3 class="font-headline font-bold text-2xl text-on-surface mb-1">Flu Vaccination</h3>
+<p class="text-on-surface-variant text-sm mb-6">Annual seasonal protection recommendation.</p>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-slate-400 text-sm" data-icon="location_on">location_on</span>
+<span class="text-xs font-medium text-on-surface-variant">City Medical Center</span>
+</div>
+<button class="bg-primary text-white text-xs font-bold px-5 py-2.5 rounded-xl hover:shadow-lg transition-all active:scale-95">Book Now</button>
+</div>
+</div>
+</div>
+<!-- Tetanus (In 2 Months) -->
+<div class="bg-surface-container-low p-5 rounded-3xl border border-transparent transition-all hover:bg-surface-container-high group">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 flex items-center justify-center bg-white rounded-2xl shadow-sm text-primary">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+</div>
+<div class="flex-1">
+<h4 class="font-headline font-bold text-lg text-on-surface leading-snug">Tdap Booster</h4>
+<p class="text-xs font-medium text-on-surface-variant">Recommended in 2 months</p>
+</div>
+<div class="text-right">
+<span class="block text-xs font-bold text-primary">DEC 2024</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent History -->
+<section class="mb-10">
+<h2 class="font-headline font-bold text-xl tracking-tight mb-5">Recent Records</h2>
+<div class="space-y-3">
+<div class="flex items-center gap-4 p-4 bg-surface-container-lowest rounded-2xl transition-all hover:bg-white border border-transparent hover:border-slate-100">
+<div class="w-10 h-10 flex items-center justify-center bg-secondary/10 rounded-full text-secondary">
+<span class="material-symbols-outlined" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex-1">
+<h5 class="font-bold text-sm text-on-surface">COVID-19 Booster</h5>
+<p class="text-[11px] text-on-surface-variant">Dose 4 • Pfizer-BioNTech</p>
+</div>
+<div class="text-right">
+<p class="text-[11px] font-semibold text-slate-500">Aug 12, 2024</p>
+</div>
+</div>
+<div class="flex items-center gap-4 p-4 bg-surface-container-lowest rounded-2xl transition-all hover:bg-white border border-transparent hover:border-slate-100">
+<div class="w-10 h-10 flex items-center justify-center bg-secondary/10 rounded-full text-secondary">
+<span class="material-symbols-outlined" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex-1">
+<h5 class="font-bold text-sm text-on-surface">Hepatitis B</h5>
+<p class="text-[11px] text-on-surface-variant">Final Dose • Engerix-B</p>
+</div>
+<div class="text-right">
+<p class="text-[11px] font-semibold text-slate-500">Mar 05, 2024</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-4 py-4 rounded-2xl bg-surface-container-low text-primary text-xs font-bold uppercase tracking-widest hover:bg-surface-container-high transition-colors">
+                View Full History
+            </button>
+</section>
+</main>
+<!-- Floating Action Button -->
+<button class="fixed right-6 bottom-28 w-14 h-14 bg-gradient-to-br from-primary to-primary-container text-white rounded-2xl shadow-xl shadow-primary/20 flex items-center justify-center z-50 active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined text-3xl" data-icon="add">add</span>
+</button>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-[1.5rem] bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border-t border-slate-100 dark:border-slate-800 shadow-[0_-10px_30px_rgba(0,0,0,0.03)] flex justify-around items-center px-4 pb-6 pt-3">
+<!-- Active Tab: Dashboard -->
+<div class="flex flex-col items-center justify-center bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-2xl px-5 py-2 active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="font-['Inter'] font-medium text-[11px]">Dashboard</span>
+</div>
+<!-- Inactive Tab: Records -->
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-blue-600 dark:hover:text-blue-300 active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined">description</span>
+<span class="font-['Inter'] font-medium text-[11px]">Records</span>
+</div>
+<!-- Inactive Tab: Schedule -->
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-blue-600 dark:hover:text-blue-300 active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined">event</span>
+<span class="font-['Inter'] font-medium text-[11px]">Schedule</span>
+</div>
+<!-- Inactive Tab: Profile -->
+<div class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-blue-600 dark:hover:text-blue-300 active:scale-90 transition-transform duration-150">
+<span class="material-symbols-outlined">person</span>
+<span class="font-['Inter'] font-medium text-[11px]">Profile</span>
+</div>
+</nav>
+</body></html>

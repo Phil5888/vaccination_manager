@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-tint": "#005db6",
+              "on-secondary-container": "#007070",
+              "primary": "#00478d",
+              "tertiary": "#5f4300",
+              "surface-container-low": "#f3f4f5",
+              "on-background": "#191c1d",
+              "tertiary-container": "#7d5900",
+              "outline-variant": "#c2c6d4",
+              "background": "#f8f9fa",
+              "error-container": "#ffdad6",
+              "on-secondary-fixed": "#002020",
+              "on-primary-container": "#c8daff",
+              "on-tertiary-container": "#ffd489",
+              "secondary-fixed": "#8cf3f3",
+              "on-primary-fixed": "#001b3d",
+              "on-error-container": "#93000a",
+              "on-tertiary-fixed": "#271900",
+              "on-surface": "#191c1d",
+              "on-secondary": "#ffffff",
+              "surface": "#f8f9fa",
+              "secondary": "#006a6a",
+              "on-surface-variant": "#424752",
+              "surface-container-highest": "#e1e3e4",
+              "on-secondary-fixed-variant": "#004f4f",
+              "on-primary": "#ffffff",
+              "outline": "#727783",
+              "surface-container": "#edeeef",
+              "secondary-container": "#8cf3f3",
+              "inverse-primary": "#a9c7ff",
+              "tertiary-fixed": "#ffdea8",
+              "surface-bright": "#f8f9fa",
+              "primary-fixed": "#d6e3ff",
+              "inverse-on-surface": "#f0f1f2",
+              "on-primary-fixed-variant": "#00468c",
+              "tertiary-fixed-dim": "#ffba20",
+              "inverse-surface": "#2e3132",
+              "surface-dim": "#d9dadb",
+              "surface-container-high": "#e7e8e9",
+              "primary-container": "#005eb8",
+              "surface-variant": "#e1e3e4",
+              "primary-fixed-dim": "#a9c7ff",
+              "on-tertiary": "#ffffff",
+              "error": "#ba1a1a",
+              "on-error": "#ffffff",
+              "secondary-fixed-dim": "#6fd7d6",
+              "on-tertiary-fixed-variant": "#5e4200",
+              "surface-container-lowest": "#ffffff"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1.5rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .tonal-shift-bg {
+            background: linear-gradient(180deg, rgba(248, 249, 250, 0.9) 0%, rgba(248, 249, 250, 0.7) 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface font-body text-on-surface min-h-screen flex flex-col">
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-slate-50/70 dark:bg-slate-900/70 backdrop-blur-xl flex items-center justify-between px-6 h-16 w-full">
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-200/50 transition-colors active:scale-95 duration-200 text-blue-700 dark:text-blue-400">
+<span class="material-symbols-outlined" data-icon="arrow_back">arrow_back</span>
+</button>
+<h1 class="font-['Manrope'] font-semibold text-lg tracking-tight text-on-surface">Create Profile</h1>
+</div>
+<div class="w-10"></div> <!-- Spacer for balance -->
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 pt-24 px-6 max-w-md mx-auto w-full pb-40">
+<!-- Avatar Selection Section -->
+<section class="flex flex-col items-center mb-12">
+<div class="relative group cursor-pointer">
+<div class="w-32 h-32 rounded-full overflow-hidden bg-surface-container-high flex items-center justify-center ring-4 ring-white shadow-sm transition-transform active:scale-95 duration-200">
+<img class="w-full h-full object-cover" data-alt="Close up minimalist 3D character avatar placeholder with a soft blue studio lighting background and professional clinical aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0lgoiBIvR98rTQjnpfFrVlQrBuSYSK4yg2WpLk3y5YA7oMAGGv2WeXuIFD5t9mg21_ypXBKIYVSTZInySbL03yWqTmupVz_fh_uQtkRMdx0_1ru5OE5IHLsshVV3ukJ6M_6MxYtjElCXg7E1-HGAn18XJR20NfLdN61Uos9MIJCP2R36q8_S6zxk3JorhHfoRuQlGXJuUZ0k84fqodpyxfjn_FF_mBRHI1FqOLR5dQEi8K1bsJtuay0VwaxyETnH7z0YOYOome7JF"/>
+</div>
+<button class="absolute bottom-0 right-0 bg-primary-container text-white p-2.5 rounded-full shadow-lg border-4 border-surface active:scale-90 transition-all duration-200">
+<span class="material-symbols-outlined text-sm" data-icon="add" style="font-variation-settings: 'wght' 700;">add</span>
+</button>
+</div>
+<p class="mt-6 text-xs font-label font-medium uppercase tracking-widest text-outline mb-4">Or choose a preset</p>
+<div class="flex gap-3">
+<button class="w-12 h-12 rounded-full bg-surface-container-lowest border-2 border-transparent hover:border-primary-container transition-all active:scale-90 overflow-hidden">
+<img class="w-full h-full p-2" data-alt="Stylized organic nature icon on a soft mint green background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiiSF7XUSrqZ7SBzUORAnfTDxf3lZlZ9YA_ly97niqLBh_bxlUlsMmxzb3eBqLmG9OKKEyR7CDWSVTuhMwof7jAgM4kK4vkum9sP12cAXGG8l8iZKG5WlSDoIxcwUcQuOShnHIjsn49dSRI8Powb8ZpcScxfAulW6KrVZ84W5ySccji7L5-2tcdl3yRyiIOcFlHPydkBQxmcUfDHGrGTXIlPc8zplBvAiHmxHtSD-oIIx0Bxnhsnz0WJStxKiNXROdpRiUSEb1zw8B"/>
+</button>
+<button class="w-12 h-12 rounded-full bg-surface-container-lowest border-2 border-primary ring-2 ring-primary-fixed ring-offset-2 transition-all active:scale-90 overflow-hidden">
+<img class="w-full h-full p-2" data-alt="Stylized double helix DNA icon on a soft blue background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBA2bMSpt1U7IuM4UypftoXPbu1vDe1G54Ma5SrQdhVtgRAXmBajxlWsUtniFW6nBsWVbuHtFz51gTNwua6mnGzMgpJ1jLU0mopoBY_bva2SIdf-SeMK8-0lVaIZ4yFH4-I03mBGFoRFCLnsI5ZTPiqj6PfRP5NGRjPxUYRzYgPL8lJeV14_wtVyi540AcZqClK8oYoj5DJYO_lZVBCgwYlGcfUG1fdKK8L1Edc6N9imUSMyRQUzjuYoCSUIoWA-tnuuyN-rBK7pLyU"/>
+</button>
+<button class="w-12 h-12 rounded-full bg-surface-container-lowest border-2 border-transparent hover:border-primary-container transition-all active:scale-90 overflow-hidden">
+<img class="w-full h-full p-2" data-alt="Stylized shield protection icon on a soft teal background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAU51vH4mzv_TE_SdupZw0-zVLIOm96Uj5IgVIVDIXC9j9DnCM3sdw6EYipxiZeyT8Bb2rEhO37aUjfgLCkYh9Px5jN9fhCB7UxeYsm2OhRDRbxsIZXabLkax-z9xmePJjBK9sjQL4b-OEGO_bFPc_kQzST7pclwCBQEC6qu7gF7jbBCzZ__1_VfN84bcch6LQJXi7BCiWNfRSEm7yc6YRWtE0AhJgZSO4M_SVD-Dn_PPI_01-BwY8iMt11pNIeCRnk_txgQKOo18k_"/>
+</button>
+<button class="w-12 h-12 rounded-full bg-surface-container-lowest border-2 border-transparent hover:border-primary-container transition-all active:scale-90 overflow-hidden">
+<img class="w-full h-full p-2" data-alt="Stylized laboratory beaker icon on a soft amber background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgim8PeQzVy8EehvqYKc2h0Zk3VmqSizPCr-zwtOPFa2pVCikEG2NMD_bSP6qE-6bJG-3dfh-IeRqPydPIcLKTRy2PWlR_-o-7IwXMXoJUKYjASUh_CUrkIpTGD9pcXJRgqPWtmfHltrphRXS2H9Fblw9HDxmfFg8O98bVUE95adspnYJRr_Bcc4XEO5FufXupt7Ent1RbWDAowt3hl8EPDPDRSqqeIPZgnbW_Y97QJHGe1GIFSMfG1E_6V-IzGmmqu6uuP85qW-2Z"/>
+</button>
+</div>
+</section>
+<!-- Input Section -->
+<section class="space-y-8">
+<div class="space-y-2">
+<label class="block text-sm font-label font-semibold text-on-surface-variant ml-1" for="profile_name">Profile Name</label>
+<div class="relative group">
+<input class="w-full h-14 bg-surface-container-highest border-none rounded-2xl px-5 text-on-surface font-body focus:ring-2 focus:ring-primary/20 focus:bg-surface-container-lowest transition-all duration-300 placeholder:text-outline" id="profile_name" placeholder="Enter full name" type="text"/>
+<span class="absolute right-5 top-4 text-outline group-focus-within:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</span>
+</div>
+</div>
+<!-- Primary Toggle Section -->
+<div class="bg-surface-container-low p-5 rounded-2xl flex items-center justify-between">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-xl bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined" data-icon="verified">verified</span>
+</div>
+<div>
+<h3 class="font-headline font-semibold text-sm">Set as Primary Profile</h3>
+<p class="text-xs text-on-surface-variant mt-0.5">Used for global health records</p>
+</div>
+</div>
+<!-- Toggle Switch -->
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-11 h-6 bg-surface-container-highest peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<div class="p-4 bg-tertiary-fixed/30 rounded-xl flex gap-3 items-start">
+<span class="material-symbols-outlined text-tertiary text-lg mt-0.5" data-icon="info">info</span>
+<p class="text-[12px] leading-relaxed text-on-tertiary-fixed-variant">
+                    Adding a primary profile helps us organize your vaccination history and provide tailored recommendations.
+                </p>
+</div>
+</section>
+<!-- Action Button -->
+<div class="mt-12">
+<button class="w-full py-4 px-6 bg-gradient-to-r from-primary to-primary-container text-white rounded-2xl font-headline font-bold text-base shadow-lg shadow-primary/20 active:scale-95 transition-all duration-200 flex items-center justify-center gap-2">
+                Create Profile
+                <span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</main>
+<!-- BottomNavBar (Suppressed for focused task) -->
+<!-- Navigation is hidden for this transactional/onboarding screen as per Shell Visibility rules -->
+<nav class="fixed bottom-0 w-full z-50 rounded-t-[1.5rem] bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl border-t border-slate-100 dark:border-slate-800 shadow-[0_-10px_30px_rgba(0,0,0,0.03)]">
+<div class="flex justify-around items-center w-full px-4 pb-6 pt-3">
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-blue-600 dark:hover:text-blue-300 transition-transform active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined mb-1">home</span>
+<span class="font-['Inter'] font-medium text-[11px]">Dashboard</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-blue-600 dark:hover:text-blue-300 transition-transform active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined mb-1">description</span>
+<span class="font-['Inter'] font-medium text-[11px]">Records</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 dark:text-slate-500 px-5 py-2 hover:text-blue-600 dark:hover:text-blue-300 transition-transform active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined mb-1">event</span>
+<span class="font-['Inter'] font-medium text-[11px]">Schedule</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded-2xl px-5 py-2 transition-transform active:scale-90 duration-150" href="#">
+<span class="material-symbols-outlined mb-1">person</span>
+<span class="font-['Inter'] font-medium text-[11px]">Profile</span>
+</a>
+</div>
+</nav></body></html>
