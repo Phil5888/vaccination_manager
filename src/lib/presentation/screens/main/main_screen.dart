@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/l10n/app_localizations.dart';
 import 'package:vaccination_manager/presentation/providers/navigation_providers.dart';
 import 'package:vaccination_manager/presentation/screens/dashboard/dashboard_screen.dart';
@@ -28,12 +29,21 @@ class MainScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
-      // Use extendBody so the IndexedStack content flows behind the nav bar
       extendBody: true,
       body: IndexedStack(
         index: selectedIndex,
         children: _screens,
       ),
+      // FAB shown on Records (1) and Schedule (2) tabs
+      floatingActionButton: (selectedIndex == 1 || selectedIndex == 2)
+          ? FloatingActionButton(
+              onPressed: () =>
+                  Navigator.of(context).pushNamed(Routes.vaccinationAdd),
+              tooltip: local.addVaccination,
+              child: const Icon(Icons.add),
+            )
+          : null,
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       bottomNavigationBar: _GlassNavBar(
         selectedIndex: selectedIndex,
         isDark: isDark,
