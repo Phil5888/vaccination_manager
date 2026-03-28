@@ -22,6 +22,13 @@ class RecordsScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () =>
+            Navigator.of(context).pushNamed(Routes.vaccinationAdd),
+        tooltip: local.addVaccination,
+        child: const Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: Stack(
         children: [
           seriesAsync.when(
@@ -104,12 +111,7 @@ class RecordsScreen extends ConsumerWidget {
             ),
           ),
 
-          // FAB
-          Positioned(
-            right: 24,
-            bottom: bottomPadding + 80,
-            child: _RecordsFab(colorScheme: colorScheme),
-          ),
+          // FAB moved to Scaffold.floatingActionButton
         ],
       ),
     );
@@ -203,39 +205,4 @@ class _EmptyState extends StatelessWidget {
   }
 }
 
-// ---------------------------------------------------------------------------
-// FAB
-// ---------------------------------------------------------------------------
 
-class _RecordsFab extends StatelessWidget {
-  const _RecordsFab({required this.colorScheme});
-
-  final ColorScheme colorScheme;
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => Navigator.of(context).pushNamed(Routes.vaccinationAdd),
-      child: Container(
-        width: 56,
-        height: 56,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [colorScheme.primary, colorScheme.primaryContainer],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: colorScheme.primary.withValues(alpha: 0.3),
-              blurRadius: 12,
-              offset: const Offset(0, 4),
-            ),
-          ],
-        ),
-        child: const Icon(Icons.add, color: Colors.white, size: 28),
-      ),
-    );
-  }
-}

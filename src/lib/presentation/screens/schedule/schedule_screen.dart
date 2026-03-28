@@ -24,6 +24,13 @@ class ScheduleScreen extends ConsumerWidget {
 
     return Scaffold(
       backgroundColor: colorScheme.surface,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () =>
+            Navigator.of(context).pushNamed(Routes.vaccinationAdd),
+        tooltip: AppLocalizations.of(context)!.addVaccination,
+        child: const Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       body: Stack(
         children: [
           // ── Main content ────────────────────────────────────────────────
@@ -184,39 +191,7 @@ class ScheduleScreen extends ConsumerWidget {
             ),
           ),
 
-          // ── FAB ──────────────────────────────────────────────────────────
-          Positioned(
-            right: 24,
-            bottom: bottomPadding + 80,
-            child: GestureDetector(
-              onTap: () =>
-                  Navigator.of(context).pushNamed(Routes.vaccinationAdd),
-              child: Container(
-                width: 56,
-                height: 56,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      colorScheme.primary,
-                      colorScheme.primaryContainer,
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(16),
-                  boxShadow: [
-                    BoxShadow(
-                      color: colorScheme.primary.withValues(alpha: 0.3),
-                      blurRadius: 16,
-                      offset: const Offset(0, 4),
-                    ),
-                  ],
-                ),
-                child:
-                    const Icon(Icons.add, color: Colors.white, size: 28),
-              ),
-            ),
-          ),
+          // ── FAB moved to Scaffold.floatingActionButton ────────────────
         ],
       ),
     );
