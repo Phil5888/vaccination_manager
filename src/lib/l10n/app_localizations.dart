@@ -98,13 +98,13 @@ abstract class AppLocalizations {
     Locale('en'),
   ];
 
-  /// The app's main title displayed in the AppBar
+  /// The app's main title
   ///
   /// In en, this message translates to:
-  /// **'Flutter Playground'**
+  /// **'Vaccination Manager'**
   String get title;
 
-  /// Label for the settings page or drawer item
+  /// Label for the settings page or nav item
   ///
   /// In en, this message translates to:
   /// **'Settings'**
@@ -140,23 +140,11 @@ abstract class AppLocalizations {
   /// **'Dark Mode'**
   String get darkMode;
 
-  /// Label for the Random User screen or drawer item
-  ///
-  /// In en, this message translates to:
-  /// **'Random User'**
-  String get randomUser;
-
   /// Generic error message label
   ///
   /// In en, this message translates to:
   /// **'Error'**
   String get error;
-
-  /// Label used to describe user gender
-  ///
-  /// In en, this message translates to:
-  /// **'Gender'**
-  String get gender;
 
   /// Drawer header title
   ///
@@ -169,18 +157,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Dashboard'**
   String get dashboard;
-
-  /// Label for the first name input field
-  ///
-  /// In en, this message translates to:
-  /// **'First Name'**
-  String get firstName;
-
-  /// Label for the last name input field
-  ///
-  /// In en, this message translates to:
-  /// **'Last Name'**
-  String get lastName;
 
   /// Label for the save button
   ///
@@ -200,12 +176,6 @@ abstract class AppLocalizations {
   /// **'Edit'**
   String get edit;
 
-  /// Message displayed when the user's name is saved successfully
-  ///
-  /// In en, this message translates to:
-  /// **'Name saved successfully!'**
-  String get saveNameSuccess;
-
   /// Label indicating that a feature is enabled or active
   ///
   /// In en, this message translates to:
@@ -218,11 +188,413 @@ abstract class AppLocalizations {
   /// **'off'**
   String get off;
 
-  /// Toast message shown after the user's name is updated
+  /// Bottom navigation label for the Records tab
   ///
   /// In en, this message translates to:
-  /// **'Name saved successfully'**
-  String get nameSaved;
+  /// **'Records'**
+  String get navRecords;
+
+  /// Bottom navigation label for the Schedule tab
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get navSchedule;
+
+  /// Bottom navigation label for the Profile tab
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get navProfile;
+
+  /// Heading on the Dashboard screen
+  ///
+  /// In en, this message translates to:
+  /// **'My Records'**
+  String get myRecords;
+
+  /// Placeholder stat chip: completed vaccinations
+  ///
+  /// In en, this message translates to:
+  /// **'– Completed'**
+  String get statCompleted;
+
+  /// Placeholder stat chip: upcoming vaccinations
+  ///
+  /// In en, this message translates to:
+  /// **'– Upcoming'**
+  String get statUpcoming;
+
+  /// Placeholder stat chip: overdue vaccinations
+  ///
+  /// In en, this message translates to:
+  /// **'– Overdue'**
+  String get statOverdue;
+
+  /// Section heading for highest-priority upcoming vaccinations
+  ///
+  /// In en, this message translates to:
+  /// **'Priority Due'**
+  String get priorityDue;
+
+  /// Empty-state message in the Priority Due section
+  ///
+  /// In en, this message translates to:
+  /// **'No upcoming vaccinations'**
+  String get noUpcomingVaccinations;
+
+  /// Placeholder text for screens not yet implemented
+  ///
+  /// In en, this message translates to:
+  /// **'Coming Soon'**
+  String get comingSoon;
+
+  /// Title for the welcome / onboarding screen
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome'**
+  String get welcome;
+
+  /// Subtitle on the welcome screen
+  ///
+  /// In en, this message translates to:
+  /// **'Your personal vaccination companion'**
+  String get welcomeSubtitle;
+
+  /// CTA button on the welcome screen
+  ///
+  /// In en, this message translates to:
+  /// **'Get Started'**
+  String get getStarted;
+
+  /// Title and button label for the create profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Create Profile'**
+  String get createProfile;
+
+  /// Label for editing an existing profile
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Profile'**
+  String get editProfile;
+
+  /// Label for the full name input field
+  ///
+  /// In en, this message translates to:
+  /// **'Full Name'**
+  String get fullName;
+
+  /// Button to select a profile picture
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Photo'**
+  String get choosePhoto;
+
+  /// Button to save the profile form
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveProfile;
+
+  /// Button to open the profile switcher
+  ///
+  /// In en, this message translates to:
+  /// **'Switch Profile'**
+  String get switchProfile;
+
+  /// Option in the profile switcher to create a new profile
+  ///
+  /// In en, this message translates to:
+  /// **'Add New Profile'**
+  String get addNewProfile;
+
+  /// Title of the profile switcher bottom sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Profiles'**
+  String get profileSwitcher;
+
+  /// Action to delete a profile
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Profile'**
+  String get deleteProfile;
+
+  /// Empty state message when no profiles exist
+  ///
+  /// In en, this message translates to:
+  /// **'No profiles found'**
+  String get noProfilesFound;
+
+  /// Title and button label for adding a vaccination
+  ///
+  /// In en, this message translates to:
+  /// **'Add Vaccination'**
+  String get addVaccination;
+
+  /// Title for editing an existing vaccination
+  ///
+  /// In en, this message translates to:
+  /// **'Edit Vaccination'**
+  String get editVaccination;
+
+  /// Button label to save a vaccination entry
+  ///
+  /// In en, this message translates to:
+  /// **'Save Vaccination'**
+  String get saveVaccination;
+
+  /// Label for the vaccine name input
+  ///
+  /// In en, this message translates to:
+  /// **'Vaccine Name'**
+  String get vaccineName;
+
+  /// Label for the date the vaccine was administered
+  ///
+  /// In en, this message translates to:
+  /// **'Date Administered'**
+  String get dateAdministered;
+
+  /// Label for the optional next dose date field
+  ///
+  /// In en, this message translates to:
+  /// **'Next Dose Date'**
+  String get nextDoseDate;
+
+  /// Toggle label to enable scheduling the next dose
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule Next Dose'**
+  String get scheduleNextDose;
+
+  /// Title for the vaccination records screen
+  ///
+  /// In en, this message translates to:
+  /// **'Vaccination Records'**
+  String get vaccinationRecords;
+
+  /// Empty state message when no vaccination records exist
+  ///
+  /// In en, this message translates to:
+  /// **'No vaccination records yet'**
+  String get noVaccinationRecords;
+
+  /// Title for the delete shot confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete Shot'**
+  String get deleteShot;
+
+  /// Body text of the delete shot confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this vaccination shot?'**
+  String get deleteShotConfirm;
+
+  /// Label for the delete action button
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// Section heading for recent vaccination records on the dashboard
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Records'**
+  String get recentRecords;
+
+  /// Button label to navigate to the schedule tab
+  ///
+  /// In en, this message translates to:
+  /// **'See Schedule'**
+  String get seeSchedule;
+
+  /// Button label to navigate to the full vaccination history
+  ///
+  /// In en, this message translates to:
+  /// **'View Full History'**
+  String get viewFullHistory;
+
+  /// Status badge for overdue vaccinations
+  ///
+  /// In en, this message translates to:
+  /// **'Due Now'**
+  String get dueNow;
+
+  /// Stat chip showing number of completed vaccinations
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Completed'**
+  String completedCount(int count);
+
+  /// Stat chip showing number of upcoming vaccinations
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Upcoming'**
+  String upcomingCount(int count);
+
+  /// Stat chip showing number of overdue vaccinations
+  ///
+  /// In en, this message translates to:
+  /// **'{count} Overdue'**
+  String overdueCount(int count);
+
+  /// Label for a dose in a vaccination series
+  ///
+  /// In en, this message translates to:
+  /// **'Dose {number}'**
+  String dose(int number);
+
+  /// Label for next dose date
+  ///
+  /// In en, this message translates to:
+  /// **'Next dose'**
+  String get nextDose;
+
+  /// Title for the vaccination schedule screen
+  ///
+  /// In en, this message translates to:
+  /// **'Vaccination Schedule'**
+  String get vaccinationSchedule;
+
+  /// Filter chip: show all vaccinations
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get filterAll;
+
+  /// Filter chip: show overdue vaccinations
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get filterOverdue;
+
+  /// Filter chip: show vaccinations due soon
+  ///
+  /// In en, this message translates to:
+  /// **'Due Soon'**
+  String get filterDueSoon;
+
+  /// Filter chip: show up-to-date vaccinations
+  ///
+  /// In en, this message translates to:
+  /// **'Up to Date'**
+  String get filterUpToDate;
+
+  /// Status label: overdue
+  ///
+  /// In en, this message translates to:
+  /// **'Overdue'**
+  String get statusOverdue;
+
+  /// Status label: due soon with date
+  ///
+  /// In en, this message translates to:
+  /// **'Due {date}'**
+  String statusDueSoon(String date);
+
+  /// Status label: up to date
+  ///
+  /// In en, this message translates to:
+  /// **'Up to Date'**
+  String get statusUpToDate;
+
+  /// Number of shots in a series
+  ///
+  /// In en, this message translates to:
+  /// **'{count} shot(s)'**
+  String shotCount(int count);
+
+  /// Empty state message when no vaccinations match the active filter
+  ///
+  /// In en, this message translates to:
+  /// **'No vaccinations match this filter'**
+  String get noVaccinationsFilter;
+
+  /// Mode toggle label: one-shot mode
+  ///
+  /// In en, this message translates to:
+  /// **'One Shot'**
+  String get oneShotMode;
+
+  /// Mode toggle label: multi-shot mode
+  ///
+  /// In en, this message translates to:
+  /// **'Multi Shot'**
+  String get multiShotMode;
+
+  /// Dialog title when switching from multi-shot to one-shot mode
+  ///
+  /// In en, this message translates to:
+  /// **'Switch to One Shot?'**
+  String get switchToOneShotTitle;
+
+  /// Dialog body when switching from multi-shot to one-shot mode
+  ///
+  /// In en, this message translates to:
+  /// **'This will remove all additional shots from this series. This cannot be undone.'**
+  String get switchToOneShotBody;
+
+  /// Label for the confirm action button
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirm;
+
+  /// Button label to add another shot in multi-shot mode
+  ///
+  /// In en, this message translates to:
+  /// **'Add Another Shot'**
+  String get addAnotherShot;
+
+  /// Settings label for reminder lead time in days
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder lead time (days)'**
+  String get leadTimeDays;
+
+  /// Settings section header for appearance options
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// Settings section header for reminder options
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders'**
+  String get reminders;
+
+  /// Settings section header for about information
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get about;
+
+  /// App version label in the about section
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version}'**
+  String appVersion(String version);
+
+  /// Label for the reminder lead time stepper row
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder lead time'**
+  String get reminderLeadTimeLabel;
+
+  /// Number of days label
+  ///
+  /// In en, this message translates to:
+  /// **'{count} days'**
+  String days(int count);
+
+  /// Label for a shot number in multi-shot mode
+  ///
+  /// In en, this message translates to:
+  /// **'Shot {number}'**
+  String shot(int number);
 }
 
 class _AppLocalizationsDelegate

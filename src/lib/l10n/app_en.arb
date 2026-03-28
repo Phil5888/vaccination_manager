@@ -1,12 +1,12 @@
 {
     "@@locale": "en",
-    "title": "Flutter Playground",
+    "title": "Vaccination Manager",
     "@title": {
-        "description": "The app's main title displayed in the AppBar"
+        "description": "The app's main title"
     },
     "settings": "Settings",
     "@settings": {
-        "description": "Label for the settings page or drawer item"
+        "description": "Label for the settings page or nav item"
     },
     "language": "Language",
     "@language": {
@@ -28,17 +28,9 @@
     "@darkMode": {
         "description": "Toggle label for dark mode switch"
     },
-    "randomUser": "Random User",
-    "@randomUser": {
-        "description": "Label for the Random User screen or drawer item"
-    },
     "error": "Error",
     "@error": {
         "description": "Generic error message label"
-    },
-    "gender": "Gender",
-    "@gender": {
-        "description": "Label used to describe user gender"
     },
     "menue": "Menu",
     "@menue": {
@@ -47,14 +39,6 @@
     "dashboard": "Dashboard",
     "@dashboard": {
         "description": "Title for the dashboard screen"
-    },
-    "firstName": "First Name",
-    "@firstName": {
-        "description": "Label for the first name input field"
-    },
-    "lastName": "Last Name",
-    "@lastName": {
-        "description": "Label for the last name input field"
     },
     "save": "Save",
     "@save": {
@@ -68,10 +52,6 @@
     "@edit": {
         "description": "Label for the edit button"
     },
-    "saveNameSuccess": "Name saved successfully!",
-    "@saveNameSuccess": {
-        "description": "Message displayed when the user's name is saved successfully"
-    },
     "on": "on",
     "@on": {
         "description": "Label indicating that a feature is enabled or active"
@@ -80,8 +60,325 @@
     "@off": {
         "description": "Label indicating that a feature is disabled or inactive"
     },
-    "nameSaved": "Name saved successfully",
-    "@nameSaved": {
-        "description": "Toast message shown after the user's name is updated"
+    "navRecords": "Records",
+    "@navRecords": {
+        "description": "Bottom navigation label for the Records tab"
+    },
+    "navSchedule": "Schedule",
+    "@navSchedule": {
+        "description": "Bottom navigation label for the Schedule tab"
+    },
+    "navProfile": "Profile",
+    "@navProfile": {
+        "description": "Bottom navigation label for the Profile tab"
+    },
+    "myRecords": "My Records",
+    "@myRecords": {
+        "description": "Heading on the Dashboard screen"
+    },
+    "statCompleted": "– Completed",
+    "@statCompleted": {
+        "description": "Placeholder stat chip: completed vaccinations"
+    },
+    "statUpcoming": "– Upcoming",
+    "@statUpcoming": {
+        "description": "Placeholder stat chip: upcoming vaccinations"
+    },
+    "statOverdue": "– Overdue",
+    "@statOverdue": {
+        "description": "Placeholder stat chip: overdue vaccinations"
+    },
+    "priorityDue": "Priority Due",
+    "@priorityDue": {
+        "description": "Section heading for highest-priority upcoming vaccinations"
+    },
+    "noUpcomingVaccinations": "No upcoming vaccinations",
+    "@noUpcomingVaccinations": {
+        "description": "Empty-state message in the Priority Due section"
+    },
+    "comingSoon": "Coming Soon",
+    "@comingSoon": {
+        "description": "Placeholder text for screens not yet implemented"
+    },
+    "welcome": "Welcome",
+    "@welcome": {
+        "description": "Title for the welcome / onboarding screen"
+    },
+    "welcomeSubtitle": "Your personal vaccination companion",
+    "@welcomeSubtitle": {
+        "description": "Subtitle on the welcome screen"
+    },
+    "getStarted": "Get Started",
+    "@getStarted": {
+        "description": "CTA button on the welcome screen"
+    },
+    "createProfile": "Create Profile",
+    "@createProfile": {
+        "description": "Title and button label for the create profile screen"
+    },
+    "editProfile": "Edit Profile",
+    "@editProfile": {
+        "description": "Label for editing an existing profile"
+    },
+    "fullName": "Full Name",
+    "@fullName": {
+        "description": "Label for the full name input field"
+    },
+    "choosePhoto": "Choose Photo",
+    "@choosePhoto": {
+        "description": "Button to select a profile picture"
+    },
+    "saveProfile": "Save",
+    "@saveProfile": {
+        "description": "Button to save the profile form"
+    },
+    "switchProfile": "Switch Profile",
+    "@switchProfile": {
+        "description": "Button to open the profile switcher"
+    },
+    "addNewProfile": "Add New Profile",
+    "@addNewProfile": {
+        "description": "Option in the profile switcher to create a new profile"
+    },
+    "profileSwitcher": "Profiles",
+    "@profileSwitcher": {
+        "description": "Title of the profile switcher bottom sheet"
+    },
+    "deleteProfile": "Delete Profile",
+    "@deleteProfile": {
+        "description": "Action to delete a profile"
+    },
+    "noProfilesFound": "No profiles found",
+    "@noProfilesFound": {
+        "description": "Empty state message when no profiles exist"
+    },
+    "addVaccination": "Add Vaccination",
+    "@addVaccination": {
+        "description": "Title and button label for adding a vaccination"
+    },
+    "editVaccination": "Edit Vaccination",
+    "@editVaccination": {
+        "description": "Title for editing an existing vaccination"
+    },
+    "saveVaccination": "Save Vaccination",
+    "@saveVaccination": {
+        "description": "Button label to save a vaccination entry"
+    },
+    "vaccineName": "Vaccine Name",
+    "@vaccineName": {
+        "description": "Label for the vaccine name input"
+    },
+    "dateAdministered": "Date Administered",
+    "@dateAdministered": {
+        "description": "Label for the date the vaccine was administered"
+    },
+    "nextDoseDate": "Next Dose Date",
+    "@nextDoseDate": {
+        "description": "Label for the optional next dose date field"
+    },
+    "scheduleNextDose": "Schedule Next Dose",
+    "@scheduleNextDose": {
+        "description": "Toggle label to enable scheduling the next dose"
+    },
+    "vaccinationRecords": "Vaccination Records",
+    "@vaccinationRecords": {
+        "description": "Title for the vaccination records screen"
+    },
+    "noVaccinationRecords": "No vaccination records yet",
+    "@noVaccinationRecords": {
+        "description": "Empty state message when no vaccination records exist"
+    },
+    "deleteShot": "Delete Shot",
+    "@deleteShot": {
+        "description": "Title for the delete shot confirmation dialog"
+    },
+    "deleteShotConfirm": "Delete this vaccination shot?",
+    "@deleteShotConfirm": {
+        "description": "Body text of the delete shot confirmation dialog"
+    },
+    "delete": "Delete",
+    "@delete": {
+        "description": "Label for the delete action button"
+    },
+    "recentRecords": "Recent Records",
+    "@recentRecords": {
+        "description": "Section heading for recent vaccination records on the dashboard"
+    },
+    "priorityDue": "Priority Due",
+    "@priorityDue": {
+        "description": "Section heading for highest-priority upcoming vaccinations"
+    },
+    "seeSchedule": "See Schedule",
+    "@seeSchedule": {
+        "description": "Button label to navigate to the schedule tab"
+    },
+    "viewFullHistory": "View Full History",
+    "@viewFullHistory": {
+        "description": "Button label to navigate to the full vaccination history"
+    },
+    "dueNow": "Due Now",
+    "@dueNow": {
+        "description": "Status badge for overdue vaccinations"
+    },
+    "completedCount": "{count} Completed",
+    "@completedCount": {
+        "description": "Stat chip showing number of completed vaccinations",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "upcomingCount": "{count} Upcoming",
+    "@upcomingCount": {
+        "description": "Stat chip showing number of upcoming vaccinations",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "overdueCount": "{count} Overdue",
+    "@overdueCount": {
+        "description": "Stat chip showing number of overdue vaccinations",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "dose": "Dose {number}",
+    "@dose": {
+        "description": "Label for a dose in a vaccination series",
+        "placeholders": {
+            "number": {
+                "type": "int"
+            }
+        }
+    },
+    "nextDose": "Next dose",
+    "@nextDose": {
+        "description": "Label for next dose date"
+    },
+    "vaccinationSchedule": "Vaccination Schedule",
+    "@vaccinationSchedule": {
+        "description": "Title for the vaccination schedule screen"
+    },
+    "filterAll": "All",
+    "@filterAll": {
+        "description": "Filter chip: show all vaccinations"
+    },
+    "filterOverdue": "Overdue",
+    "@filterOverdue": {
+        "description": "Filter chip: show overdue vaccinations"
+    },
+    "filterDueSoon": "Due Soon",
+    "@filterDueSoon": {
+        "description": "Filter chip: show vaccinations due soon"
+    },
+    "filterUpToDate": "Up to Date",
+    "@filterUpToDate": {
+        "description": "Filter chip: show up-to-date vaccinations"
+    },
+    "statusOverdue": "Overdue",
+    "@statusOverdue": {
+        "description": "Status label: overdue"
+    },
+    "statusDueSoon": "Due {date}",
+    "@statusDueSoon": {
+        "description": "Status label: due soon with date",
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "statusUpToDate": "Up to Date",
+    "@statusUpToDate": {
+        "description": "Status label: up to date"
+    },
+    "shotCount": "{count} shot(s)",
+    "@shotCount": {
+        "description": "Number of shots in a series",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "noVaccinationsFilter": "No vaccinations match this filter",
+    "@noVaccinationsFilter": {
+        "description": "Empty state message when no vaccinations match the active filter"
+    },
+    "oneShotMode": "One Shot",
+    "@oneShotMode": {
+        "description": "Mode toggle label: one-shot mode"
+    },
+    "multiShotMode": "Multi Shot",
+    "@multiShotMode": {
+        "description": "Mode toggle label: multi-shot mode"
+    },
+    "switchToOneShotTitle": "Switch to One Shot?",
+    "@switchToOneShotTitle": {
+        "description": "Dialog title when switching from multi-shot to one-shot mode"
+    },
+    "switchToOneShotBody": "This will remove all additional shots from this series. This cannot be undone.",
+    "@switchToOneShotBody": {
+        "description": "Dialog body when switching from multi-shot to one-shot mode"
+    },
+    "confirm": "Confirm",
+    "@confirm": {
+        "description": "Label for the confirm action button"
+    },
+    "addAnotherShot": "Add Another Shot",
+    "@addAnotherShot": {
+        "description": "Button label to add another shot in multi-shot mode"
+    },
+    "leadTimeDays": "Reminder lead time (days)",
+    "@leadTimeDays": {
+        "description": "Settings label for reminder lead time in days"
+    },
+    "appearance": "Appearance",
+    "@appearance": {
+        "description": "Settings section header for appearance options"
+    },
+    "reminders": "Reminders",
+    "@reminders": {
+        "description": "Settings section header for reminder options"
+    },
+    "about": "About",
+    "@about": {
+        "description": "Settings section header for about information"
+    },
+    "appVersion": "Version {version}",
+    "@appVersion": {
+        "description": "App version label in the about section",
+        "placeholders": {
+            "version": {
+                "type": "String"
+            }
+        }
+    },
+    "reminderLeadTimeLabel": "Reminder lead time",
+    "@reminderLeadTimeLabel": {
+        "description": "Label for the reminder lead time stepper row"
+    },
+    "days": "{count} days",
+    "@days": {
+        "description": "Number of days label",
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "shot": "Shot {number}",
+    "@shot": {
+        "description": "Label for a shot number in multi-shot mode",
+        "placeholders": {
+            "number": {
+                "type": "int"
+            }
+        }
     }
 }

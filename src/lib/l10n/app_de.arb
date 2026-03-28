@@ -1,24 +1,122 @@
 {
     "@@locale": "de",
-    "title": "Flutter Spielplatz",
+    "title": "Impfmanager",
     "settings": "Einstellungen",
     "language": "Sprache",
     "english": "Englisch",
     "german": "Deutsch",
     "theme": "Thema",
     "darkMode": "Dunkelmodus",
-    "randomUser": "Zufälliger Benutzer",
     "error": "Fehler",
-    "gender": "Geschlecht",
     "menue": "Menü",
     "dashboard": "Dashboard",
-    "firstName": "Vorname",
-    "lastName": "Nachname",
     "save": "Speichern",
     "cancel": "Abbrechen",
     "edit": "Bearbeiten",
-    "saveNameSuccess": "Name erfolgreich gespeichert!",
     "on": "An",
     "off": "Aus",
-    "nameSaved": "Name gespeichert"
+    "navRecords": "Einträge",
+    "navSchedule": "Zeitplan",
+    "navProfile": "Profil",
+    "myRecords": "Meine Einträge",
+    "statCompleted": "– Abgeschlossen",
+    "statUpcoming": "– Bevorstehend",
+    "statOverdue": "– Überfällig",
+    "priorityDue": "Priorität fällig",
+    "noUpcomingVaccinations": "Keine bevorstehenden Impfungen",
+    "comingSoon": "Demnächst verfügbar",
+    "welcome": "Willkommen",
+    "welcomeSubtitle": "Dein persönlicher Impfbegleiter",
+    "getStarted": "Loslegen",
+    "createProfile": "Profil erstellen",
+    "editProfile": "Profil bearbeiten",
+    "fullName": "Vollständiger Name",
+    "choosePhoto": "Foto wählen",
+    "saveProfile": "Speichern",
+    "switchProfile": "Profil wechseln",
+    "addNewProfile": "Neues Profil hinzufügen",
+    "profileSwitcher": "Profile",
+    "deleteProfile": "Profil löschen",
+    "noProfilesFound": "Keine Profile gefunden",
+    "addVaccination": "Impfung hinzufügen",
+    "editVaccination": "Impfung bearbeiten",
+    "saveVaccination": "Impfung speichern",
+    "vaccineName": "Impfstoffname",
+    "dateAdministered": "Verabreichungsdatum",
+    "nextDoseDate": "Nächste Dosisdatum",
+    "scheduleNextDose": "Nächste Dosis planen",
+    "vaccinationRecords": "Impfeinträge",
+    "noVaccinationRecords": "Noch keine Impfeinträge",
+    "deleteShot": "Eintrag löschen",
+    "deleteShotConfirm": "Diesen Impfeintrag löschen?",
+    "delete": "Löschen",
+    "recentRecords": "Neueste Einträge",
+    "priorityDue": "Priorität fällig",
+    "seeSchedule": "Zeitplan anzeigen",
+    "viewFullHistory": "Gesamte Geschichte anzeigen",
+    "dueNow": "Jetzt fällig",
+    "completedCount": "{count} Abgeschlossen",
+    "upcomingCount": "{count} Bevorstehend",
+    "overdueCount": "{count} Überfällig",
+    "dose": "Dosis {number}",
+    "nextDose": "Nächste Dosis",
+    "vaccinationSchedule": "Impfplan",
+    "filterAll": "Alle",
+    "filterOverdue": "Überfällig",
+    "filterDueSoon": "Bald fällig",
+    "filterUpToDate": "Aktuell",
+    "statusOverdue": "Überfällig",
+    "statusDueSoon": "Fällig {date}",
+    "@statusDueSoon": {
+        "placeholders": {
+            "date": {
+                "type": "String"
+            }
+        }
+    },
+    "statusUpToDate": "Aktuell",
+    "shotCount": "{count} Impfdosis(en)",
+    "@shotCount": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "noVaccinationsFilter": "Keine Impfungen entsprechen diesem Filter",
+    "oneShotMode": "Einmalig",
+    "multiShotMode": "Mehrfachdosis",
+    "switchToOneShotTitle": "Zu einmaliger Dosis wechseln?",
+    "switchToOneShotBody": "Dadurch werden alle zusätzlichen Dosen dieser Serie entfernt. Dies kann nicht rückgängig gemacht werden.",
+    "confirm": "Bestätigen",
+    "addAnotherShot": "Weitere Dosis hinzufügen",
+    "leadTimeDays": "Erinnerungsvorlaufzeit (Tage)",
+    "appearance": "Aussehen",
+    "reminders": "Erinnerungen",
+    "about": "Über",
+    "appVersion": "Version {version}",
+    "@appVersion": {
+        "placeholders": {
+            "version": {
+                "type": "String"
+            }
+        }
+    },
+    "reminderLeadTimeLabel": "Erinnerungsvorlaufzeit",
+    "days": "{count} Tage",
+    "@days": {
+        "placeholders": {
+            "count": {
+                "type": "int"
+            }
+        }
+    },
+    "shot": "Dosis {number}",
+    "@shot": {
+        "placeholders": {
+            "number": {
+                "type": "int"
+            }
+        }
+    }
 }

@@ -9,7 +9,7 @@ class AppLocalizationsDe extends AppLocalizations {
   AppLocalizationsDe([String locale = 'de']) : super(locale);
 
   @override
-  String get title => 'Flutter Spielplatz';
+  String get title => 'Impfmanager';
 
   @override
   String get settings => 'Einstellungen';
@@ -30,25 +30,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get darkMode => 'Dunkelmodus';
 
   @override
-  String get randomUser => 'Zufälliger Benutzer';
-
-  @override
   String get error => 'Fehler';
-
-  @override
-  String get gender => 'Geschlecht';
 
   @override
   String get menue => 'Menü';
 
   @override
   String get dashboard => 'Dashboard';
-
-  @override
-  String get firstName => 'Vorname';
-
-  @override
-  String get lastName => 'Nachname';
 
   @override
   String get save => 'Speichern';
@@ -60,14 +48,232 @@ class AppLocalizationsDe extends AppLocalizations {
   String get edit => 'Bearbeiten';
 
   @override
-  String get saveNameSuccess => 'Name erfolgreich gespeichert!';
-
-  @override
   String get on => 'An';
 
   @override
   String get off => 'Aus';
 
   @override
-  String get nameSaved => 'Name gespeichert';
+  String get navRecords => 'Einträge';
+
+  @override
+  String get navSchedule => 'Zeitplan';
+
+  @override
+  String get navProfile => 'Profil';
+
+  @override
+  String get myRecords => 'Meine Einträge';
+
+  @override
+  String get statCompleted => '– Abgeschlossen';
+
+  @override
+  String get statUpcoming => '– Bevorstehend';
+
+  @override
+  String get statOverdue => '– Überfällig';
+
+  @override
+  String get priorityDue => 'Priorität fällig';
+
+  @override
+  String get noUpcomingVaccinations => 'Keine bevorstehenden Impfungen';
+
+  @override
+  String get comingSoon => 'Demnächst verfügbar';
+
+  @override
+  String get welcome => 'Willkommen';
+
+  @override
+  String get welcomeSubtitle => 'Dein persönlicher Impfbegleiter';
+
+  @override
+  String get getStarted => 'Loslegen';
+
+  @override
+  String get createProfile => 'Profil erstellen';
+
+  @override
+  String get editProfile => 'Profil bearbeiten';
+
+  @override
+  String get fullName => 'Vollständiger Name';
+
+  @override
+  String get choosePhoto => 'Foto wählen';
+
+  @override
+  String get saveProfile => 'Speichern';
+
+  @override
+  String get switchProfile => 'Profil wechseln';
+
+  @override
+  String get addNewProfile => 'Neues Profil hinzufügen';
+
+  @override
+  String get profileSwitcher => 'Profile';
+
+  @override
+  String get deleteProfile => 'Profil löschen';
+
+  @override
+  String get noProfilesFound => 'Keine Profile gefunden';
+
+  @override
+  String get addVaccination => 'Impfung hinzufügen';
+
+  @override
+  String get editVaccination => 'Impfung bearbeiten';
+
+  @override
+  String get saveVaccination => 'Impfung speichern';
+
+  @override
+  String get vaccineName => 'Impfstoffname';
+
+  @override
+  String get dateAdministered => 'Verabreichungsdatum';
+
+  @override
+  String get nextDoseDate => 'Nächste Dosisdatum';
+
+  @override
+  String get scheduleNextDose => 'Nächste Dosis planen';
+
+  @override
+  String get vaccinationRecords => 'Impfeinträge';
+
+  @override
+  String get noVaccinationRecords => 'Noch keine Impfeinträge';
+
+  @override
+  String get deleteShot => 'Eintrag löschen';
+
+  @override
+  String get deleteShotConfirm => 'Diesen Impfeintrag löschen?';
+
+  @override
+  String get delete => 'Löschen';
+
+  @override
+  String get recentRecords => 'Neueste Einträge';
+
+  @override
+  String get seeSchedule => 'Zeitplan anzeigen';
+
+  @override
+  String get viewFullHistory => 'Gesamte Geschichte anzeigen';
+
+  @override
+  String get dueNow => 'Jetzt fällig';
+
+  @override
+  String completedCount(int count) {
+    return '$count Abgeschlossen';
+  }
+
+  @override
+  String upcomingCount(int count) {
+    return '$count Bevorstehend';
+  }
+
+  @override
+  String overdueCount(int count) {
+    return '$count Überfällig';
+  }
+
+  @override
+  String dose(int number) {
+    return 'Dosis $number';
+  }
+
+  @override
+  String get nextDose => 'Nächste Dosis';
+
+  @override
+  String get vaccinationSchedule => 'Impfplan';
+
+  @override
+  String get filterAll => 'Alle';
+
+  @override
+  String get filterOverdue => 'Überfällig';
+
+  @override
+  String get filterDueSoon => 'Bald fällig';
+
+  @override
+  String get filterUpToDate => 'Aktuell';
+
+  @override
+  String get statusOverdue => 'Überfällig';
+
+  @override
+  String statusDueSoon(String date) {
+    return 'Fällig $date';
+  }
+
+  @override
+  String get statusUpToDate => 'Aktuell';
+
+  @override
+  String shotCount(int count) {
+    return '$count Impfdosis(en)';
+  }
+
+  @override
+  String get noVaccinationsFilter =>
+      'Keine Impfungen entsprechen diesem Filter';
+
+  @override
+  String get oneShotMode => 'Einmalig';
+
+  @override
+  String get multiShotMode => 'Mehrfachdosis';
+
+  @override
+  String get switchToOneShotTitle => 'Zu einmaliger Dosis wechseln?';
+
+  @override
+  String get switchToOneShotBody =>
+      'Dadurch werden alle zusätzlichen Dosen dieser Serie entfernt. Dies kann nicht rückgängig gemacht werden.';
+
+  @override
+  String get confirm => 'Bestätigen';
+
+  @override
+  String get addAnotherShot => 'Weitere Dosis hinzufügen';
+
+  @override
+  String get leadTimeDays => 'Erinnerungsvorlaufzeit (Tage)';
+
+  @override
+  String get appearance => 'Aussehen';
+
+  @override
+  String get reminders => 'Erinnerungen';
+
+  @override
+  String get about => 'Über';
+
+  @override
+  String appVersion(String version) {
+    return 'Version $version';
+  }
+
+  @override
+  String get reminderLeadTimeLabel => 'Erinnerungsvorlaufzeit';
+
+  @override
+  String days(int count) {
+    return '$count Tage';
+  }
+
+  @override
+  String shot(int number) {
+    return 'Dosis $number';
+  }
 }

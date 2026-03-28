@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class SettingsRepository {
   static const _keyLang = 'language';
   static const _keyTheme = 'darkMode';
+  static const _leadTimeDaysKey = 'leadTimeDays';
 
   Future<String?> getLanguage() async {
     final prefs = await SharedPreferences.getInstance();
@@ -22,5 +23,15 @@ class SettingsRepository {
   Future<void> setDarkMode(bool isDark) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_keyTheme, isDark);
+  }
+
+  Future<int> getLeadTimeDays() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getInt(_leadTimeDaysKey) ?? 30;
+  }
+
+  Future<void> setLeadTimeDays(int days) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(_leadTimeDaysKey, days);
   }
 }
