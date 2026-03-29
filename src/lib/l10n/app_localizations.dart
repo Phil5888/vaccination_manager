@@ -230,12 +230,6 @@ abstract class AppLocalizations {
   /// **'– Overdue'**
   String get statOverdue;
 
-  /// Section heading for highest-priority upcoming vaccinations
-  ///
-  /// In en, this message translates to:
-  /// **'Priority Due'**
-  String get priorityDue;
-
   /// Empty-state message in the Priority Due section
   ///
   /// In en, this message translates to:
@@ -403,6 +397,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Recent Records'**
   String get recentRecords;
+
+  /// Section heading for highest-priority upcoming vaccinations
+  ///
+  /// In en, this message translates to:
+  /// **'Priority Due'**
+  String get priorityDue;
 
   /// Button label to navigate to the schedule tab
   ///

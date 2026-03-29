@@ -75,9 +75,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get statOverdue => '– Overdue';
 
   @override
-  String get priorityDue => 'Priority Due';
-
-  @override
   String get noUpcomingVaccinations => 'No upcoming vaccinations';
 
   @override
@@ -160,6 +157,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get recentRecords => 'Recent Records';
+
+  @override
+  String get priorityDue => 'Priority Due';
 
   @override
   String get seeSchedule => 'See Schedule';

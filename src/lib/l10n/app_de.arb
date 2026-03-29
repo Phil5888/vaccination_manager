@@ -5,7 +5,7 @@
     "language": "Sprache",
     "english": "Englisch",
     "german": "Deutsch",
-    "theme": "Thema",
+    "theme": "Design",
     "darkMode": "Dunkelmodus",
     "error": "Fehler",
     "menue": "Menü",
@@ -22,7 +22,6 @@
     "statCompleted": "– Abgeschlossen",
     "statUpcoming": "– Bevorstehend",
     "statOverdue": "– Überfällig",
-    "priorityDue": "Priorität fällig",
     "noUpcomingVaccinations": "Keine bevorstehenden Impfungen",
     "comingSoon": "Demnächst verfügbar",
     "welcome": "Willkommen",
@@ -43,17 +42,17 @@
     "saveVaccination": "Impfung speichern",
     "vaccineName": "Impfstoffname",
     "dateAdministered": "Verabreichungsdatum",
-    "nextDoseDate": "Nächste Dosisdatum",
+    "nextDoseDate": "Nächstes Dosisdatum",
     "scheduleNextDose": "Nächste Dosis planen",
     "vaccinationRecords": "Impfeinträge",
     "noVaccinationRecords": "Noch keine Impfeinträge",
-    "deleteShot": "Eintrag löschen",
+    "deleteShot": "Impfung löschen",
     "deleteShotConfirm": "Diesen Impfeintrag löschen?",
     "delete": "Löschen",
     "recentRecords": "Neueste Einträge",
-    "priorityDue": "Priorität fällig",
+    "priorityDue": "Dringend fällig",
     "seeSchedule": "Zeitplan anzeigen",
-    "viewFullHistory": "Gesamte Geschichte anzeigen",
+    "viewFullHistory": "Gesamten Verlauf anzeigen",
     "dueNow": "Jetzt fällig",
     "completedCount": "{count} Abgeschlossen",
     "upcomingCount": "{count} Bevorstehend",
@@ -75,7 +74,7 @@
         }
     },
     "statusUpToDate": "Aktuell",
-    "shotCount": "{count} Impfdosis(en)",
+    "shotCount": "{count} Dosen",
     "@shotCount": {
         "placeholders": {
             "count": {
@@ -111,7 +110,7 @@
             }
         }
     },
-    "shot": "Dosis {number}",
+    "shot": "Impfung {number}",
     "@shot": {
         "placeholders": {
             "number": {
@@ -119,13 +118,13 @@
             }
         }
     },
-    "numberOfShots": "Anzahl der Impfungen",
+    "numberOfShots": "Anzahl der Dosen",
     "tapToSetDate": "Datum auswählen",
-    "shotStatusCompleted": "Verabreicht",
+    "shotStatusCompleted": "Abgeschlossen",
     "shotStatusPlanned": "Geplant",
     "shotStatusUnscheduled": "Nicht geplant",
     "statusComplete": "Abgeschlossen",
-    "statusInProgress": "In Bearbeitung",
+    "statusInProgress": "Begonnen",
     "statusPlanned": "Geplant",
     "progressDone": "{completed} von {total} abgeschlossen",
     "@progressDone": {
@@ -138,7 +137,7 @@
             }
         }
     },
-    "previouslyUsed": "Bereits eingetragen",
+    "previouslyUsed": "Zuletzt verwendet",
     "recordNextShot": "Nächste Impfung erfassen",
     "recordNextShotTitle": "Impfung {number} erfassen",
     "@recordNextShotTitle": {

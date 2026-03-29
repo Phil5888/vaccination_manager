@@ -24,7 +24,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get german => 'Deutsch';
 
   @override
-  String get theme => 'Thema';
+  String get theme => 'Design';
 
   @override
   String get darkMode => 'Dunkelmodus';
@@ -73,9 +73,6 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get statOverdue => '– Überfällig';
-
-  @override
-  String get priorityDue => 'Priorität fällig';
 
   @override
   String get noUpcomingVaccinations => 'Keine bevorstehenden Impfungen';
@@ -138,7 +135,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get dateAdministered => 'Verabreichungsdatum';
 
   @override
-  String get nextDoseDate => 'Nächste Dosisdatum';
+  String get nextDoseDate => 'Nächstes Dosisdatum';
 
   @override
   String get scheduleNextDose => 'Nächste Dosis planen';
@@ -150,7 +147,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get noVaccinationRecords => 'Noch keine Impfeinträge';
 
   @override
-  String get deleteShot => 'Eintrag löschen';
+  String get deleteShot => 'Impfung löschen';
 
   @override
   String get deleteShotConfirm => 'Diesen Impfeintrag löschen?';
@@ -162,10 +159,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get recentRecords => 'Neueste Einträge';
 
   @override
+  String get priorityDue => 'Dringend fällig';
+
+  @override
   String get seeSchedule => 'Zeitplan anzeigen';
 
   @override
-  String get viewFullHistory => 'Gesamte Geschichte anzeigen';
+  String get viewFullHistory => 'Gesamten Verlauf anzeigen';
 
   @override
   String get dueNow => 'Jetzt fällig';
@@ -221,7 +221,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String shotCount(int count) {
-    return '$count Impfdosis(en)';
+    return '$count Dosen';
   }
 
   @override
@@ -274,17 +274,17 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String shot(int number) {
-    return 'Dosis $number';
+    return 'Impfung $number';
   }
 
   @override
-  String get numberOfShots => 'Anzahl der Impfungen';
+  String get numberOfShots => 'Anzahl der Dosen';
 
   @override
   String get tapToSetDate => 'Datum auswählen';
 
   @override
-  String get shotStatusCompleted => 'Verabreicht';
+  String get shotStatusCompleted => 'Abgeschlossen';
 
   @override
   String get shotStatusPlanned => 'Geplant';
@@ -296,7 +296,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get statusComplete => 'Abgeschlossen';
 
   @override
-  String get statusInProgress => 'In Bearbeitung';
+  String get statusInProgress => 'Begonnen';
 
   @override
   String get statusPlanned => 'Geplant';
@@ -307,7 +307,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get previouslyUsed => 'Bereits eingetragen';
+  String get previouslyUsed => 'Zuletzt verwendet';
 
   @override
   String get recordNextShot => 'Nächste Impfung erfassen';

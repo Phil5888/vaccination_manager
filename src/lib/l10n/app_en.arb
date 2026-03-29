@@ -88,10 +88,6 @@
     "@statOverdue": {
         "description": "Placeholder stat chip: overdue vaccinations"
     },
-    "priorityDue": "Priority Due",
-    "@priorityDue": {
-        "description": "Section heading for highest-priority upcoming vaccinations"
-    },
     "noUpcomingVaccinations": "No upcoming vaccinations",
     "@noUpcomingVaccinations": {
         "description": "Empty-state message in the Priority Due section"
