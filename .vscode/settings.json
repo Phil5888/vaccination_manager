@@ -4,5 +4,68 @@
         "dart": true,
         "pod": true,
         "xcrun": true
+    },
+    // ─── Line endings & encoding ───────────────────────────────────────────────
+    "files.eol": "\n",
+    "files.encoding": "utf8",
+    "files.trimTrailingWhitespace": true,
+    "files.insertFinalNewline": true,
+
+    // ─── Formatting ────────────────────────────────────────────────────────────
+    "editor.tabSize": 2,
+    "editor.detectIndentation": false,
+    "editor.rulers": [80],
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit",
+        "source.fixAll": "explicit"
+    },
+
+    // ─── Dart / Flutter ────────────────────────────────────────────────────────
+    "[dart]": {
+        "editor.defaultFormatter": "Dart-Code.dart-code",
+        "editor.formatOnSave": true,
+        "editor.selectionHighlight": false,
+        "editor.suggest.snippetsPreventQuickSuggestions": false,
+        "editor.suggestSelection": "first",
+        "editor.tabCompletion": "onlySnippets",
+        "editor.wordBasedSuggestions": "off"
+    },
+    "dart.lineLength": 80,
+    "dart.previewFlutterUiGuides": true,
+    "dart.previewFlutterUiGuidesCustomTracking": true,
+    "dart.closingLabels": true,
+    "dart.debugExternalPackageLibraries": false,
+    "dart.debugSdkLibraries": false,
+
+    // ─── YAML / JSON / ARB ─────────────────────────────────────────────────────
+    "[yaml]": {
+        "editor.defaultFormatter": "redhat.vscode-yaml",
+        "editor.tabSize": 2
+    },
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features",
+        "editor.tabSize": 2
+    },
+    "[jsonc]": {
+        "editor.defaultFormatter": "vscode.json-language-features",
+        "editor.tabSize": 2
+    },
+
+    // ─── Hide generated files ──────────────────────────────────────────────────
+    "search.exclude": {
+        "**/*.freezed.dart": true,
+        "**/*.g.dart": true,
+        "**/build/**": true,
+        "**/.dart_tool/**": true
+    },
+    "files.watcherExclude": {
+        "**/*.freezed.dart": true,
+        "**/*.g.dart": true,
+        "**/build/**": true
+    },
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.patterns": {
+        "*.dart": "${capture}.freezed.dart, ${capture}.g.dart"
     }
 }

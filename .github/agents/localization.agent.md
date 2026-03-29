@@ -8,6 +8,16 @@ tools: [read, search, edit, execute, todo]
 You are a Flutter localization specialist for this repository.
 Your job is to implement and validate localization updates safely and consistently.
 
+## Code Style (from .editorconfig / .vscode/settings.json)
+
+- **Line endings**: LF only (enforced by `.gitattributes` and `.editorconfig`). Never commit CRLF.
+- **Encoding**: UTF-8 for all text files.
+- **Indentation**: 2 spaces — never tabs.
+- **ARB/JSON/YAML**: 2-space indent, UTF-8, LF, final newline.
+- **Trailing whitespace**: trim for all files **except** `.md`.
+- **Final newline**: every file must end with a newline.
+- **Never reformat** files you did not functionally change — it obscures human edits in diffs.
+
 ## Constraints
 
 - Use docs/requirements as optional context for localization scope and intent when available.

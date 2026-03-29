@@ -79,12 +79,19 @@ Future<void> resetAndSeedUser(WidgetTester tester,
 /// [tabIcon] should be an icon that uniquely identifies the **unselected** tab
 /// (e.g. [Icons.description_outlined] for Records).
 ///
+/// Scopes the search to the [NavigationBar] widget so that identical icons
+/// appearing in page content (e.g. Icons.person_outline used as a text-field
+/// suffix on CreateProfileScreen during a route transition) are not matched.
+///
 /// If the finder returns no results the tab is already active (the navigation
 /// bar is showing its selectedIcon variant), so the tap is skipped.
 Future<void> navigateToTab(WidgetTester tester, IconData tabIcon) async {
-  final finder = find.byIcon(tabIcon);
+  final finder = find.descendant(
+    of: find.byType(NavigationBar),
+    matching: find.byIcon(tabIcon),
+  );
   if (finder.evaluate().isEmpty) return; // already on this tab
-  await tester.tap(finder);
+  await tester.tap(finder.first);
   await settleOrTimeout(tester);
 }
 
