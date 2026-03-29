@@ -54,12 +54,14 @@ class FakeVaccinationRepository implements VaccinationRepository {
 
   @override
   Future<void> saveVaccinationSeries(
-      List<VaccinationEntryEntity> shots) async {
+    List<VaccinationEntryEntity> shots, {
+    String? oldName,
+  }) async {
     if (shots.isEmpty) return;
     final userId = shots.first.userId;
-    final nameKey = shots.first.name.toLowerCase();
+    final deleteKey = (oldName ?? shots.first.name).toLowerCase();
     _store.removeWhere(
-      (e) => e.userId == userId && e.name.toLowerCase() == nameKey,
+      (e) => e.userId == userId && e.name.toLowerCase() == deleteKey,
     );
     for (final shot in shots) {
       _store.add(shot.copyWith(id: _nextId++));

@@ -6,6 +6,6 @@ class SaveVaccinationSeriesUseCase {
 
   const SaveVaccinationSeriesUseCase(this.repository);
 
-  Future<void> call(List<VaccinationEntryEntity> shots) =>
-      repository.saveVaccinationSeries(shots);
+  Future<void> call(List<VaccinationEntryEntity> shots, {String? oldName}) =>
+      repository.saveVaccinationSeries(shots, oldName: oldName);
 }

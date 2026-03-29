@@ -49,17 +49,24 @@ class VaccinationRepositoryImpl implements VaccinationRepository {
   }
 
   @override
-  Future<void> saveVaccinationSeries(List<VaccinationEntryEntity> shots) async {
+  Future<void> saveVaccinationSeries(
+    List<VaccinationEntryEntity> shots, {
+    String? oldName,
+  }) async {
     if (shots.isEmpty) return;
     final db = await AppDatabase.instance.database;
     final userId = shots.first.userId;
     final name = shots.first.name;
+    // When renaming, delete the records stored under the OLD name so the
+    // renamed series fully replaces it.  Fall back to the new name for
+    // create-new and same-name-edit cases.
+    final deleteTarget = oldName ?? name;
 
     await db.transaction((txn) async {
       await txn.delete(
         _table,
         where: 'user_id = ? AND LOWER(name) = LOWER(?)',
-        whereArgs: [userId, name],
+        whereArgs: [userId, deleteTarget],
       );
       for (final shot in shots) {
         final model = VaccinationModel.fromEntity(shot);

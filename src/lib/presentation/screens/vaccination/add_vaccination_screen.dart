@@ -48,6 +48,9 @@ class _AddVaccinationScreenState extends ConsumerState<AddVaccinationScreen> {
   bool _isSaving = false;
   bool _isEditing = false;
   VaccinationSeriesEntity? _editingSeries;
+  // Original series name before any edits — used to delete the old DB rows
+  // when the user renames the series.
+  String? _originalName;
 
   // IDs from existing shots (to pass back on save so DB rows are updated)
   List<int?> _existingIds = [];
@@ -64,6 +67,7 @@ class _AddVaccinationScreenState extends ConsumerState<AddVaccinationScreen> {
       _isEditing = true;
       _editingSeries = series;
       _nameController.text = series.name;
+      _originalName = series.name;
       _shotCount = series.shots.length.clamp(1, 5);
       _shotDates = List.generate(
         _shotCount,
@@ -85,6 +89,7 @@ class _AddVaccinationScreenState extends ConsumerState<AddVaccinationScreen> {
       final entry = widget.existingEntry!;
       _isEditing = true;
       _nameController.text = entry.name;
+      _originalName = entry.name;
       _shotCount = 1;
       _shotDates = [entry.vaccinationDate];
       _existingIds = [entry.id];
@@ -213,7 +218,10 @@ class _AddVaccinationScreenState extends ConsumerState<AddVaccinationScreen> {
         );
       });
 
-      await ref.read(vaccinationProvider.notifier).saveSeries(shots);
+      await ref.read(vaccinationProvider.notifier).saveSeries(
+            shots,
+            oldName: _isEditing ? _originalName : null,
+          );
       if (mounted) Navigator.of(context).pop();
     } finally {
       if (mounted) setState(() => _isSaving = false);

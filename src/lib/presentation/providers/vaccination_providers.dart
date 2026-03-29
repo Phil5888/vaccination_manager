@@ -32,7 +32,10 @@ class VaccinationViewModel
     ref.invalidate(vaccinationRemindersProvider);
   }
 
-  Future<void> saveSeries(List<VaccinationEntryEntity> shots) async {
+  Future<void> saveSeries(
+    List<VaccinationEntryEntity> shots, {
+    String? oldName,
+  }) async {
     // Capture every dependency synchronously before any await/invalidate so
     // we never touch ref after the notifier is disposed by invalidateSelf().
     final saveUseCase = ref.read(saveVaccinationSeriesUseCaseProvider);
@@ -41,7 +44,7 @@ class VaccinationViewModel
     final settingsRepo = ref.read(settingsRepositoryProvider);
     final user = await ref.read(activeUserProvider.future);
 
-    await saveUseCase.call(shots);
+    await saveUseCase.call(shots, oldName: oldName);
     ref.invalidateSelf();
     ref.invalidate(vaccinationRemindersProvider);
 
