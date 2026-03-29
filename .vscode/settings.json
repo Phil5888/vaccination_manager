@@ -39,7 +39,6 @@
   "dart.debugSdkLibraries": false,
   // ─── YAML / JSON / ARB ─────────────────────────────────────────────────────
   "[yaml]": {
-    "editor.defaultFormatter": "redhat.vscode-yaml",
     "editor.tabSize": 2
   },
   "[json]": {
