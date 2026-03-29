@@ -146,7 +146,76 @@ jobs:
             --dart-define=SCREEN_HEIGHT=${{ matrix.screen-height }}
 
   # ──────────────────────────────────────────────────────────────
-  # Job 3 — Aggregation job (quality gate)
+  # Job 3 — Integration tests on Android emulator
+  #
+  # Runs the full app on an emulated Pixel 5 (API 33, x86_64) so that
+  # real SQLite, real navigation, and real plugin initialisation are
+  # exercised.  A fresh emulator snapshot is used for each run.
+  #
+  # Key scenarios covered:
+  #   • Startup gate (no user → WelcomeScreen, user exists → MainScreen)
+  #   • FAB → AddVaccinationScreen navigation (caught the hero-tag freeze)
+  #   • Save vaccination → appears in Records list
+  # ──────────────────────────────────────────────────────────────
+  integration-tests:
+    name: Integration Tests (Android API 33)
+    runs-on: ubuntu-latest
+    needs: widget-tests
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Cache Flutter SDK
+        uses: actions/cache@v4
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: flutter-stable-${{ runner.os }}-${{ hashFiles('src/pubspec.yaml') }}
+          restore-keys: |
+            flutter-stable-${{ runner.os }}-
+
+      - name: Set up Flutter (stable)
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Cache pub dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: pub-${{ runner.os }}-${{ hashFiles('src/pubspec.lock') }}
+          restore-keys: |
+            pub-${{ runner.os }}-
+
+      - name: Install dependencies
+        working-directory: src
+        run: flutter pub get
+
+      - name: Enable KVM (hardware acceleration for emulator)
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' \
+            | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Run integration tests on Android emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 33
+          arch: x86_64
+          profile: pixel_5
+          target: google_apis
+          avd-name: integration_test_avd
+          disable-animations: true
+          working-directory: src
+          script: |
+            flutter test integration_test/ \
+              --reporter=expanded \
+              --timeout=120s
+
+  # ──────────────────────────────────────────────────────────────
+  # Job 4 — Aggregation job (quality gate)
   #
   # Always runs so it can report a definitive pass/fail status even
   # when upstream jobs are cancelled or skipped.  Branch protection
@@ -158,6 +227,7 @@ jobs:
     needs:
       - unit-tests
       - widget-tests
+      - integration-tests
     if: always()
 
     steps:
@@ -165,11 +235,13 @@ jobs:
         run: |
           unit="${{ needs.unit-tests.result }}"
           widget="${{ needs.widget-tests.result }}"
+          integration="${{ needs.integration-tests.result }}"
 
-          echo "unit-tests   : $unit"
-          echo "widget-tests : $widget"
+          echo "unit-tests        : $unit"
+          echo "widget-tests      : $widget"
+          echo "integration-tests : $integration"
 
-          if [[ "$unit" == "success" && "$widget" == "success" ]]; then
+          if [[ "$unit" == "success" && "$widget" == "success" && "$integration" == "success" ]]; then
             echo "✅ All tests passed."
             exit 0
           else
