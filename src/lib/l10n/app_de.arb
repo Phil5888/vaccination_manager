@@ -74,7 +74,7 @@
         }
     },
     "statusUpToDate": "Aktuell",
-    "shotCount": "{count} Dosen",
+    "shotCount": "{count, plural, one{{count} Dosis} other{{count} Dosen}}",
     "@shotCount": {
         "placeholders": {
             "count": {
@@ -102,7 +102,7 @@
         }
     },
     "reminderLeadTimeLabel": "Erinnerungsvorlaufzeit",
-    "days": "{count} Tage",
+    "days": "{count, plural, one{{count} Tag} other{{count} Tage}}",
     "@days": {
         "placeholders": {
             "count": {

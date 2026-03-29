@@ -503,7 +503,7 @@ abstract class AppLocalizations {
   /// Number of shots in a series
   ///
   /// In en, this message translates to:
-  /// **'{count} shot(s)'**
+  /// **'{count, plural, one{{count} shot} other{{count} shots}}'**
   String shotCount(int count);
 
   /// Empty state message when no vaccinations match the active filter
@@ -587,7 +587,7 @@ abstract class AppLocalizations {
   /// Number of days label
   ///
   /// In en, this message translates to:
-  /// **'{count} days'**
+  /// **'{count, plural, one{{count} day} other{{count} days}}'**
   String days(int count);
 
   /// Label for a shot number in multi-shot mode

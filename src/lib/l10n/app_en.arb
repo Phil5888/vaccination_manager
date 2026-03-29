@@ -293,7 +293,7 @@
     "@statusUpToDate": {
         "description": "Status label: up to date"
     },
-    "shotCount": "{count} shot(s)",
+    "shotCount": "{count, plural, one{{count} shot} other{{count} shots}}",
     "@shotCount": {
         "description": "Number of shots in a series",
         "placeholders": {
@@ -359,7 +359,7 @@
     "@reminderLeadTimeLabel": {
         "description": "Label for the reminder lead time stepper row"
     },
-    "days": "{count} days",
+    "days": "{count, plural, one{{count} day} other{{count} days}}",
     "@days": {
         "description": "Number of days label",
         "placeholders": {

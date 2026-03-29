@@ -221,7 +221,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String shotCount(int count) {
-    return '$count shot(s)';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count shots',
+      one: '$count shot',
+    );
+    return '$_temp0';
   }
 
   @override
@@ -268,7 +274,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String days(int count) {
-    return '$count days';
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '$count day',
+    );
+    return '$_temp0';
   }
 
   @override
