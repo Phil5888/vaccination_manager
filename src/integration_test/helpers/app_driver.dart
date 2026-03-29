@@ -53,6 +53,10 @@ Future<void> resetAndPumpApp(WidgetTester tester) async {
 /// Call after [resetAndPumpApp] when a test needs a seeded user profile.
 Future<void> seedUser(WidgetTester tester, {String name = 'Test User'}) async {
   if (find.byType(WelcomeScreen).evaluate().isNotEmpty) {
+    // WelcomeScreen may be in the tree before its content is rendered (e.g.
+    // localizations still loading after a mid-test runApp restart). Poll
+    // for the button text so we never tap before the widget is fully built.
+    await _waitFor(tester, find.text('Get Started'));
     await tester.tap(find.text('Get Started'));
     await _waitFor(tester, find.byType(CreateProfileScreen));
 
