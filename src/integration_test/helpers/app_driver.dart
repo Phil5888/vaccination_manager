@@ -4,12 +4,14 @@
 // reset state between tests so each test starts with a clean slate.
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:vaccination_manager/app.dart';
 import 'package:vaccination_manager/core/database/app_database.dart';
-import 'package:vaccination_manager/main.dart' as app;
 import 'package:vaccination_manager/presentation/screens/main/main_screen.dart';
+import 'package:vaccination_manager/presentation/screens/profile/create_profile_screen.dart';
 import 'package:vaccination_manager/presentation/screens/welcome/welcome_screen.dart';
 
 export 'package:integration_test/integration_test.dart';
@@ -24,29 +26,24 @@ void initIntegrationTest() {
 }
 
 /// Wipe the database and restart the app.  Call in [setUp] for each test.
+///
+/// Uses [UniqueKey] on the root [ProviderScope] so Flutter is forced to
+/// unmount the old element (and its [ProviderContainer]) and mount a fresh
+/// one.  Without this, `runApp(const ProviderScope(...))` is effectively a
+/// no-op on the second call: `const` produces the same Dart object both
+/// times, Flutter's `canUpdate` returns `true` (same type + null key), and
+/// the existing element — and therefore the entire old widget tree — is
+/// preserved in place rather than replaced.
 Future<void> resetAndPumpApp(WidgetTester tester) async {
   await AppDatabase.resetForTesting();
-  app.main();
-  // AppStartupGate shows a CircularProgressIndicator while it queries SQLite
-  // and then navigates via addPostFrameCallback — a continuous animation that
-  // prevents a plain pumpAndSettle from ever settling.  Instead, pump in small
-  // steps until the startup routing completes (WelcomeScreen for an empty DB,
-  // MainScreen if users already exist), then do a final settle for animations.
-  const maxWait = Duration(seconds: 15);
-  const step = Duration(milliseconds: 200);
-  var elapsed = Duration.zero;
-  while (elapsed < maxWait) {
-    await tester.pump(step);
-    elapsed += step;
-    if (find.byType(WelcomeScreen).evaluate().isNotEmpty ||
-        find.byType(MainScreen).evaluate().isNotEmpty) {
-      // Routing done — let any entrance animations finish.
-      await tester.pumpAndSettle(const Duration(seconds: 2));
-      return;
-    }
-  }
-  // Timeout: fall through and let the next assertion report the failure.
-  await tester.pump();
+  // UniqueKey guarantees canUpdate() → false → old ProviderScope is unmounted
+  // and a brand-new ProviderContainer starts with clean state.
+  runApp(ProviderScope(key: UniqueKey(), child: const MyApp()));
+  // resetForTesting always wipes the database, so the new app will always
+  // land on WelcomeScreen.  Poll in short steps to avoid stalling on the
+  // CircularProgressIndicator that AppStartupGate shows while it queries
+  // SQLite (a continuous animation that prevents pumpAndSettle from settling).
+  await _waitFor(tester, find.byType(WelcomeScreen));
 }
 
 /// Create a user via the Welcome → Create Profile UI flow and land on
@@ -57,14 +54,14 @@ Future<void> resetAndPumpApp(WidgetTester tester) async {
 Future<void> seedUser(WidgetTester tester, {String name = 'Test User'}) async {
   if (find.byType(WelcomeScreen).evaluate().isNotEmpty) {
     await tester.tap(find.text('Get Started'));
-    await tester.pumpAndSettle();
+    await _waitFor(tester, find.byType(CreateProfileScreen));
 
     final nameField = find.byType(TextField);
     await tester.enterText(nameField, name);
-    await tester.pumpAndSettle();
+    await tester.pump();
 
     await tester.tap(find.byKey(const Key('submitProfileButton')));
-    await tester.pumpAndSettle(const Duration(seconds: 2));
+    await _waitFor(tester, find.byType(MainScreen));
   }
   expect(find.byType(MainScreen), findsOneWidget,
       reason: 'Expected to land on MainScreen after seeding user "$name"');
@@ -98,4 +95,24 @@ Future<void> settleOrTimeout(
   Duration timeout = const Duration(seconds: 5),
 }) async {
   await tester.pumpAndSettle(timeout);
+}
+
+/// Poll [tester] in 200 ms steps until [finder] matches at least one widget
+/// or [maxWait] elapses.  Unlike [WidgetTester.pumpAndSettle], this never
+/// stalls on continuous animations (e.g. CircularProgressIndicator).
+Future<void> _waitFor(
+  WidgetTester tester,
+  Finder finder, {
+  Duration maxWait = const Duration(seconds: 15),
+}) async {
+  const step = Duration(milliseconds: 200);
+  var elapsed = Duration.zero;
+  while (elapsed < maxWait) {
+    await tester.pump(step);
+    elapsed += step;
+    if (finder.evaluate().isNotEmpty) return;
+  }
+  // Exceeded maxWait — one final pump so the caller's assertion can report
+  // exactly what is (or isn't) in the tree.
+  await tester.pump();
 }
