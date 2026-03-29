@@ -1,7 +1,3 @@
-// TODO: initialize timezone data in main.dart before using createEvent:
-//   import 'package:timezone/data/latest_all.dart' as tz;
-//   tz.initializeTimeZones();
-
 import 'dart:io';
 
 import 'package:device_calendar/device_calendar.dart';

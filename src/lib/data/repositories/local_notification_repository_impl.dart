@@ -1,9 +1,6 @@
-// TODO: initialize timezone data in main.dart before using scheduleNotification:
-//   import 'package:timezone/data/latest_all.dart' as tz;
-//   tz.initializeTimeZones();
-
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:timezone/timezone.dart' as tz;
 import 'package:vaccination_manager/domain/repositories/notification_repository.dart';
 
 class LocalNotificationRepositoryImpl implements NotificationRepository {
@@ -11,6 +8,19 @@ class LocalNotificationRepositoryImpl implements NotificationRepository {
   FlutterLocalNotificationsPlugin? _pluginInstance;
   FlutterLocalNotificationsPlugin get _plugin =>
       _pluginInstance ??= FlutterLocalNotificationsPlugin();
+
+  bool _initialized = false;
+
+  Future<void> _initialize() async {
+    if (_initialized) return;
+    const initSettings = InitializationSettings(
+      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      iOS: DarwinInitializationSettings(),
+      macOS: DarwinInitializationSettings(),
+    );
+    await _plugin.initialize(initSettings);
+    _initialized = true;
+  }
 
   @override
   Future<bool> requestPermission() async {
@@ -24,8 +34,6 @@ class LocalNotificationRepositoryImpl implements NotificationRepository {
     return status.isGranted;
   }
 
-  /// TODO: Complete implementation — requires timezone initialisation in main.dart
-  /// and AndroidScheduleMode / DarwinNotificationDetails configuration.
   @override
   Future<int> scheduleNotification({
     required int id,
@@ -33,15 +41,34 @@ class LocalNotificationRepositoryImpl implements NotificationRepository {
     required String body,
     required DateTime scheduledDate,
   }) async {
-    // TODO: implement using plugin.zonedSchedule() once timezone data is
-    // initialised in main.dart with tz.initializeTimeZones().
+    await _initialize();
+    const androidDetails = AndroidNotificationDetails(
+      'vaccinecare_reminders',
+      'Vaccination Reminders',
+      importance: Importance.high,
+    );
+    const notificationDetails = NotificationDetails(
+      android: androidDetails,
+      iOS: DarwinNotificationDetails(),
+      macOS: DarwinNotificationDetails(),
+    );
+    await _plugin.zonedSchedule(
+      id,
+      title,
+      body,
+      tz.TZDateTime.from(scheduledDate, tz.local),
+      notificationDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
+    );
     return id;
   }
 
-  /// TODO: Implement cancellation via _plugin.cancel(id)
   @override
   Future<void> cancel(int id) async {
-    // TODO: await _plugin.cancel(id);
+    await _initialize();
+    await _plugin.cancel(id);
   }
 
   @override
