@@ -60,18 +60,34 @@ void main() {
         await settleOrTimeout(tester);
         expect(find.byType(MainScreen), findsOneWidget,
             reason: 'MainScreen should survive navigation to Records tab');
+        expect(
+          find.text('No vaccination records yet'),
+          findsOneWidget,
+          reason: 'Records tab with no data must show its empty-state label',
+        );
 
         // Schedule (2)
         await tester.tap(find.byIcon(Icons.event_outlined));
         await settleOrTimeout(tester);
         expect(find.byType(MainScreen), findsOneWidget,
             reason: 'MainScreen should survive navigation to Schedule tab');
+        expect(
+          find.text('No vaccinations match this filter'),
+          findsOneWidget,
+          reason:
+              'Schedule tab with no data must show its empty-state label',
+        );
 
         // Profile (3)
         await tester.tap(find.byIcon(Icons.person_outline));
         await settleOrTimeout(tester);
         expect(find.byType(MainScreen), findsOneWidget,
             reason: 'MainScreen should survive navigation to Profile tab');
+        expect(
+          find.text('Nav Tester'),
+          findsWidgets,
+          reason: 'Profile tab must display the seeded user name',
+        );
       },
     );
 

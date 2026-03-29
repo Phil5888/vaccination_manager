@@ -73,8 +73,19 @@ void main() {
         // Navigate to Schedule tab with an empty database.
         await navigateToTab(tester, Icons.event_outlined);
 
-        // With no vaccinations, the schedule screen shows its empty state.
-        // The list should be absent.
+        // Confirm we are inside MainScreen (navigation succeeded).
+        expect(find.byType(MainScreen), findsOneWidget,
+            reason: 'Schedule tab navigation must stay within MainScreen');
+
+        // The empty-state message must be visible.
+        expect(
+          find.text('No vaccinations match this filter'),
+          findsOneWidget,
+          reason: 'Schedule tab must show the empty-state message when there '
+              'are no vaccinations in the database',
+        );
+
+        // The list must contain no vaccination entries.
         expect(find.text('MMR Vaccine'), findsNothing);
       },
     );
@@ -104,8 +115,7 @@ void main() {
         await _saveVaccination(tester, 'Influenza');
 
         // Navigate back to Dashboard (tab 0).
-        await tester.tap(find.byIcon(Icons.home_outlined));
-        await settleOrTimeout(tester);
+        await navigateToTab(tester, Icons.home_outlined);
 
         // The vaccination name should be visible in the dashboard.
         expect(find.text('Influenza'), findsWidgets,
@@ -121,8 +131,7 @@ void main() {
         await _saveVaccination(tester, 'Typhoid');
 
         // Navigate to Dashboard.
-        await tester.tap(find.byIcon(Icons.home_outlined));
-        await settleOrTimeout(tester);
+        await navigateToTab(tester, Icons.home_outlined);
 
         // The stat chip row must be rendered (overdue + upcoming counters).
         // Even with zero items the chips are displayed with count 0.
