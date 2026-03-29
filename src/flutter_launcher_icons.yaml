@@ -1,0 +1,26 @@
+flutter_launcher_icons:
+  # ── iOS ────────────────────────────────────────────────────────────────────
+  ios: true
+  # Primary icon (light mode / default)
+  image_path_ios: "assets/app_icons/generated/icon_light.png"
+  # Remove alpha channel — App Store rejects icons with transparency.
+  # Transparent corners are filled with the brand blue background.
+  remove_alpha_ios: true
+  background_color_ios: "#00478D"
+  # iOS 18+ dark-mode alternate icon (shown when user selects dark app icons)
+  image_path_ios_dark_transparent: "assets/app_icons/generated/icon_dark.png"
+  # iOS 18+ tinted icon — auto-desaturated grayscale from the primary icon
+  image_path_ios_tinted_grayscale: "assets/app_icons/generated/icon_light.png"
+  desaturate_tinted_to_grayscale_ios: true
+
+  # ── Android ────────────────────────────────────────────────────────────────
+  android: true
+  image_path_android: "assets/app_icons/generated/icon_light.png"
+  # Adaptive icon: foreground uses the full artwork; background is the brand blue
+  adaptive_icon_foreground: "assets/app_icons/generated/icon_light.png"
+  adaptive_icon_background: "#00478D"
+  # Monochrome (Android 13+ themed icons)
+  adaptive_icon_monochrome: "assets/app_icons/generated/icon_light.png"
+
+  # macOS deferred (mobile first) — omit to skip
+  # web not needed
