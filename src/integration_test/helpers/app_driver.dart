@@ -46,7 +46,7 @@ Future<void> seedUser(WidgetTester tester, {String name = 'Test User'}) async {
     await tester.enterText(nameField, name);
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Create Profile'));
+    await tester.tap(find.byKey(const Key('submitProfileButton')));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
   expect(find.byType(MainScreen), findsOneWidget,

@@ -28,7 +28,7 @@ Future<void> _reachRecordsTab(WidgetTester tester) async {
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), 'Flow Tester');
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Create Profile'));
+    await tester.tap(find.byKey(const Key('submitProfileButton')));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 

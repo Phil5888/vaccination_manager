@@ -63,7 +63,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Submit — the create-profile screen shows "Create Profile".
-        await tester.tap(find.text('Create Profile'));
+        await tester.tap(find.byKey(const Key('submitProfileButton')));
         await tester.pumpAndSettle(const Duration(seconds: 2));
 
         // After profile creation the app should land on MainScreen.

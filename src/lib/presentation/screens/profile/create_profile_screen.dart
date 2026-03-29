@@ -252,6 +252,7 @@ class _CreateProfileScreenState extends ConsumerState<CreateProfileScreen> {
                           ],
                         ),
                         child: FilledButton(
+                          key: const Key('submitProfileButton'),
                           onPressed: _isSaving ? null : _save,
                           style: FilledButton.styleFrom(
                             backgroundColor: Colors.transparent,

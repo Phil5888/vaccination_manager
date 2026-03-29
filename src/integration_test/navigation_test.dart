@@ -32,7 +32,7 @@ Future<void> _seedUserAndReachMainScreen(WidgetTester tester) async {
     await tester.pumpAndSettle();
     await tester.enterText(find.byType(TextField), 'Nav Tester');
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Create Profile'));
+    await tester.tap(find.byKey(const Key('submitProfileButton')));
     await tester.pumpAndSettle(const Duration(seconds: 2));
   }
 
