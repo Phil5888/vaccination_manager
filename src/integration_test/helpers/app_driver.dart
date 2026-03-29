@@ -5,6 +5,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:vaccination_manager/core/database/app_database.dart';
 import 'package:vaccination_manager/main.dart' as app;
@@ -16,6 +17,10 @@ export 'package:integration_test/integration_test.dart';
 /// Call once in [setUpAll] to initialise the integration test binding.
 void initIntegrationTest() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  // Prevent google_fonts from hitting fonts.gstatic.com during tests.
+  // Without this the first test fails with a SocketException in sandboxed
+  // environments (CI, iOS simulator, restricted networks).
+  GoogleFonts.config.allowRuntimeFetching = false;
 }
 
 /// Wipe the database and restart the app.  Call in [setUp] for each test.
