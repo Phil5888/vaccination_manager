@@ -122,17 +122,33 @@ class _GlassNavBar extends StatelessWidget {
     return ClipRect(
       child: BackdropFilter(
         filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
-        child: NavigationBar(
-          selectedIndex: selectedIndex,
-          onDestinationSelected: onDestinationSelected,
-          destinations: destinations,
-          // Semi-transparent background for the glass effect
-          backgroundColor: baseColor.withAlpha(isDark ? 200 : 220),
-          surfaceTintColor: colorScheme.surfaceTint,
-          indicatorColor: colorScheme.primaryContainer,
-          shadowColor: Colors.transparent,
-          elevation: 0,
-          labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+        // Override only the icon colour so selected icons use onPrimaryContainer
+        // (#C8DAFF light / #D6E3FF dark) — designed for contrast on the
+        // primaryContainer indicator pill. M3's default pairing is
+        // onSecondaryContainer which clashes with a primaryContainer indicator.
+        child: Theme(
+          data: Theme.of(context).copyWith(
+            navigationBarTheme: NavigationBarThemeData(
+              iconTheme: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.selected)) {
+                  return IconThemeData(color: colorScheme.onPrimaryContainer);
+                }
+                return IconThemeData(color: colorScheme.onSurfaceVariant);
+              }),
+            ),
+          ),
+          child: NavigationBar(
+            selectedIndex: selectedIndex,
+            onDestinationSelected: onDestinationSelected,
+            destinations: destinations,
+            // Semi-transparent background for the glass effect
+            backgroundColor: baseColor.withAlpha(isDark ? 200 : 220),
+            surfaceTintColor: colorScheme.surfaceTint,
+            indicatorColor: colorScheme.primaryContainer,
+            shadowColor: Colors.transparent,
+            elevation: 0,
+            labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+          ),
         ),
       ),
     );
