@@ -145,18 +145,28 @@ server is required.
 - **Settings storage:** `SharedPreferences` is the current persistence mechanism for all five
   reminder settings.
 
-## Open Questions
+### Decisions
 
-- Should the user be prompted to grant notification permissions on first launch, or only when they
-  first enable notifications in settings?
-- Should the overdue badge count be capped at a display maximum (e.g. "9+") for large overdue
-  counts?
-- Should calendar events include a reminder/alarm embedded in the `.ics` file, or only a plain
-  event entry?
-- Is there a requirement to sync calendar events for shots that are due soon but not yet past, or
-  only strictly future shots relative to today?
+The following questions were raised during initial authoring and are now closed:
+
+- **Permission prompt timing:** Notification permission is requested lazily — only when the user
+  first enables notifications in settings (`notificationsEnabled` toggled on). There is no
+  first-launch permission prompt. This avoids alarming users who have not yet opted into
+  reminders.
+- **Overdue badge cap:** The badge displays the raw overdue count with no upper cap (e.g. no
+  "9+" truncation). Typical vaccination overdue counts are very low (0–5), making a cap
+  unnecessary in practice. This decision can be revisited if UX testing reveals a problem.
+- **ICS alarm:** The `.ics` export includes a `VALARM` block
+  (`TRIGGER:-PT{alarmMinutesBefore}M`), so each exported calendar event carries an embedded
+  reminder alarm. Plain event entries without an alarm are not sufficient.
+- **Future shots only:** Answered by **REM-008**, which already specifies that only shots whose
+  vaccination date or next vaccination date is strictly in the future are included in calendar
+  sync or notification scheduling.
 
 ## Change Log
 
 - 2026-05-30: Initial requirements file created, covering local notifications, native calendar
   sync, `.ics` export, reminder settings, overdue badge, and sync lifecycle.
+- 2026-05-31: Resolved all open questions; replaced Open Questions section with a Decisions
+  subsection in Technical Notes (permission prompt timing, badge cap, ICS alarm, future-shots
+  scope).
