@@ -231,6 +231,17 @@ Requirement file: `docs/requirements/vaccination_records.md`
 
 ---
 
+### QA-VAX-REC-DEL-004 · Delete is case-insensitive on vaccine name
+
+| | |
+|---|---|
+| **Goal** | Deleting `"flu"` also removes shots stored under `"Flu"` or `"FLU"` |
+| **Test data** | Shot saved as `"Flu"`, delete called with `"flu"` |
+| **Expected** | All shots for that name removed; repository is empty |
+| **Automation** | `test/use_cases/delete_vaccination_series_test.dart` · *case-insensitive name match deletes correctly* |
+
+---
+
 ## Record Next Shot
 
 ### QA-VAX-REC-RNXT-001 · Record next shot on planned series

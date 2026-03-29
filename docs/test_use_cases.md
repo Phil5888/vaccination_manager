@@ -40,7 +40,7 @@ Automation target:
 
 - Test file: src/test/presentation/viewmodels/vaccination_viewmodel_test.dart
 - Test name: switches from user with vaccinations to user with vaccinations without reinitialization crash
-- Test file: src/test/presentation/screens/vaccinations/vaccinations_screen_test.dart
+- Test file: src/test/presentation/screens/records_screen_test.dart
 - Test name: while vaccinations are visible, switching active user updates records without crash
 
 ## QA-VAX-REG-USER-SWITCH-002
@@ -70,7 +70,7 @@ Automation target:
 
 - Test file: src/test/presentation/viewmodels/vaccination_viewmodel_test.dart
 - Test name: switches from user with vaccinations to user without vaccinations without reinitialization crash
-- Test file: src/test/presentation/screens/vaccinations/vaccinations_screen_test.dart
+- Test file: src/test/presentation/screens/records_screen_test.dart
 - Test name: while vaccinations are visible, switching active user to empty records updates empty state without crash
 
 ## QA-VAX-REG-USER-SWITCH-003
@@ -100,7 +100,7 @@ Automation target:
 
 - Test file: src/test/presentation/viewmodels/vaccination_viewmodel_test.dart
 - Test name: switches from user without vaccinations to user with vaccinations without reinitialization crash
-- Test file: src/test/presentation/screens/vaccinations/vaccinations_screen_test.dart
+- Test file: src/test/presentation/screens/records_screen_test.dart
 - Test name: while empty state is visible, switching active user updates to vaccination records without crash
 
 ## QA-VAX-REG-USER-SWITCH-004
@@ -130,5 +130,5 @@ Automation target:
 
 - Test file: src/test/presentation/viewmodels/vaccination_viewmodel_test.dart
 - Test name: switches from user without vaccinations to user without vaccinations without reinitialization crash
-- Test file: src/test/presentation/screens/vaccinations/vaccinations_screen_test.dart
+- Test file: src/test/presentation/screens/records_screen_test.dart
 - Test name: while empty state is visible, switching active user with no records keeps empty state without crash

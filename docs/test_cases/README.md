@@ -17,6 +17,7 @@ describes preconditions/steps, and cross-references the automated test file and 
 | [vaccination_records.md](vaccination_records.md) | Add / edit / delete vaccination records, multi-shot series, record next shot | QA-VAX-REC-* |
 | [vaccination_reminders.md](vaccination_reminders.md) | Reminder computation, schedule filtering, lead-time settings | QA-VAX-REM-* |
 | [user_profiles.md](user_profiles.md) | Profile creation, active user switching, per-user data isolation | QA-VAX-USR-* |
+| [widget_and_screen_tests.md](widget_and_screen_tests.md) | Widget rendering, screen integration, navigation flows | QA-NAV-*, QA-DASH-*, QA-REC-SCR-*, QA-SCH-SCR-*, QA-ADD-SCR-*, QA-PROF-SCR-*, QA-CARD-* |
 
 ---
 
@@ -31,3 +32,10 @@ describes preconditions/steps, and cross-references the automated test file and 
 | `QA-VAX-REC-RNXT-*` | Record next shot |
 | `QA-VAX-REM-*` | Reminder computation |
 | `QA-VAX-USR-*` | User profiles / switching |
+| `QA-NAV-*` | Shell navigation (tabs, FAB, routing) |
+| `QA-DASH-*` | Dashboard screen rendering |
+| `QA-REC-SCR-*` | Records screen rendering |
+| `QA-SCH-SCR-*` | Schedule screen rendering |
+| `QA-ADD-SCR-*` | Add vaccination screen rendering |
+| `QA-PROF-SCR-*` | Profile screen rendering |
+| `QA-CARD-*` | VaccinationSeriesCard widget |

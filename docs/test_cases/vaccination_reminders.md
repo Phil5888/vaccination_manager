@@ -129,3 +129,36 @@ Requirement file: `docs/requirements/vaccination_reminders.md`
 |---|---|
 | **Goal** | The "Overdue" filter shows only overdue reminders |
 | **Automation** | `test/presentation/viewmodels/vaccination_reminders_viewmodel_test.dart` · *filter=overdue returns only overdue reminders* |
+
+---
+
+### QA-VAX-REM-012 · filter=dueSoon returns only dueSoon reminders
+
+| | |
+|---|---|
+| **Goal** | The "Due Soon" filter shows only reminders with `dueSoon` status |
+| **Test data** | Mix of overdue, dueSoon, and upToDate reminders; filter set to `dueSoon` |
+| **Expected** | Only the dueSoon reminder is returned |
+| **Automation** | `test/presentation/viewmodels/vaccination_reminders_viewmodel_test.dart` · *filter=dueSoon returns only dueSoon reminders* |
+
+---
+
+### QA-VAX-REM-013 · filter=upToDate returns only upToDate reminders
+
+| | |
+|---|---|
+| **Goal** | The "Up to Date" filter shows only reminders with `upToDate` status |
+| **Test data** | Mix of overdue, dueSoon, and upToDate reminders; filter set to `upToDate` |
+| **Expected** | Only the upToDate reminder is returned |
+| **Automation** | `test/presentation/viewmodels/vaccination_reminders_viewmodel_test.dart` · *filter=upToDate returns only upToDate reminders* |
+
+---
+
+### QA-VAX-REM-014 · No active user → empty reminder list
+
+| | |
+|---|---|
+| **Goal** | When no user is selected (null active user) the Schedule screen shows nothing |
+| **Preconditions** | `activeUserProvider` emits `null` |
+| **Expected** | `filteredRemindersProvider` returns an empty list; no crash |
+| **Automation** | `test/presentation/viewmodels/vaccination_reminders_viewmodel_test.dart` · *returns empty list when active user is null* |
