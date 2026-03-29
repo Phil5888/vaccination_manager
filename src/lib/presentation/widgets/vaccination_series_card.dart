@@ -199,6 +199,21 @@ class _VaccinationSeriesCardState extends ConsumerState<VaccinationSeriesCard> {
                     ),
                   ),
                 ),
+                const SizedBox(width: 8),
+                // Delete series button
+                IconButton(
+                  onPressed: widget.onDelete,
+                  icon: Icon(Icons.delete_outline,
+                      size: 20, color: colorScheme.error),
+                  tooltip: local.delete,
+                  style: IconButton.styleFrom(
+                    backgroundColor:
+                        colorScheme.errorContainer.withValues(alpha: 0.3),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
               ],
             ),
           ],

@@ -1,13 +1,15 @@
 // Integration test helpers.
 //
-// Provides [pumpApp] which boots the real app (real SQLite, real navigation)
-// and [resetDatabase] which wipes the database between tests so each test
-// starts with a clean slate.
+// Provides helpers that boot the real app (real SQLite, real navigation) and
+// reset state between tests so each test starts with a clean slate.
 
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:vaccination_manager/core/database/app_database.dart';
 import 'package:vaccination_manager/main.dart' as app;
+import 'package:vaccination_manager/presentation/screens/main/main_screen.dart';
+import 'package:vaccination_manager/presentation/screens/welcome/welcome_screen.dart';
 
 export 'package:integration_test/integration_test.dart';
 
@@ -23,6 +25,43 @@ Future<void> resetAndPumpApp(WidgetTester tester) async {
   // Give the app enough time to finish its initial async build (startup gate,
   // provider initialisation, SQLite open).
   await tester.pumpAndSettle(const Duration(seconds: 3));
+}
+
+/// Create a user via the Welcome → Create Profile UI flow and land on
+/// [MainScreen].  Safe to call even when the app has already navigated past
+/// the welcome screen (no-op in that case).
+///
+/// Call after [resetAndPumpApp] when a test needs a seeded user profile.
+Future<void> seedUser(WidgetTester tester, {String name = 'Test User'}) async {
+  if (find.byType(WelcomeScreen).evaluate().isNotEmpty) {
+    await tester.tap(find.text('Get Started'));
+    await tester.pumpAndSettle();
+
+    final nameField = find.byType(TextField);
+    await tester.enterText(nameField, name);
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text('Create Profile'));
+    await tester.pumpAndSettle(const Duration(seconds: 2));
+  }
+  expect(find.byType(MainScreen), findsOneWidget,
+      reason: 'Expected to land on MainScreen after seeding user "$name"');
+}
+
+/// Reset the app and seed a user in one step.  Most integration tests should
+/// start with this call.
+Future<void> resetAndSeedUser(WidgetTester tester,
+    {String name = 'Test User'}) async {
+  await resetAndPumpApp(tester);
+  await seedUser(tester, name: name);
+}
+
+/// Navigate to the named [tab] of [MainScreen] by tapping its bottom-nav icon.
+/// [tabIcon] should be an icon that uniquely identifies the tab
+/// (e.g. [Icons.description_outlined] for Records).
+Future<void> navigateToTab(WidgetTester tester, IconData tabIcon) async {
+  await tester.tap(find.byIcon(tabIcon));
+  await settleOrTimeout(tester);
 }
 
 /// Convenience: wait up to [timeout] for a condition that requires async
