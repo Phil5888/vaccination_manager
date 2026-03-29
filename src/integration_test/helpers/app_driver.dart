@@ -62,10 +62,15 @@ Future<void> resetAndSeedUser(WidgetTester tester,
 }
 
 /// Navigate to the named [tab] of [MainScreen] by tapping its bottom-nav icon.
-/// [tabIcon] should be an icon that uniquely identifies the tab
+/// [tabIcon] should be an icon that uniquely identifies the **unselected** tab
 /// (e.g. [Icons.description_outlined] for Records).
+///
+/// If the finder returns no results the tab is already active (the navigation
+/// bar is showing its selectedIcon variant), so the tap is skipped.
 Future<void> navigateToTab(WidgetTester tester, IconData tabIcon) async {
-  await tester.tap(find.byIcon(tabIcon));
+  final finder = find.byIcon(tabIcon);
+  if (finder.evaluate().isEmpty) return; // already on this tab
+  await tester.tap(finder);
   await settleOrTimeout(tester);
 }
 
