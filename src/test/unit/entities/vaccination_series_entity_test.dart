@@ -258,4 +258,108 @@ void main() {
       expect(s.seriesStatus, VaccinationSeriesStatus.inProgress);
     });
   });
+
+  // ── isMultiShot ────────────────────────────────────────────────────────────
+  group('isMultiShot', () {
+    test('single shot returns false', () {
+      final s = _series([_shot()]);
+      expect(s.isMultiShot, isFalse);
+    });
+
+    test('two shots returns true', () {
+      final s = _series([
+        _shot(shotNumber: 1, totalShots: 2),
+        _shot(shotNumber: 2, totalShots: 2),
+      ]);
+      expect(s.isMultiShot, isTrue);
+    });
+
+    test('empty shots list returns false', () {
+      expect(_series([]).isMultiShot, isFalse);
+    });
+  });
+
+  // ── totalShots ─────────────────────────────────────────────────────────────
+  group('totalShots', () {
+    test('returns totalShots from first shot', () {
+      final s = _series([_shot(totalShots: 3)]);
+      expect(s.totalShots, 3);
+    });
+
+    test('empty shots list returns 0', () {
+      expect(_series([]).totalShots, 0);
+    });
+  });
+
+  // ── latestShot / nextVaccinationDate ───────────────────────────────────────
+  group('latestShot', () {
+    test('returns the last shot in list', () {
+      final shot1 = _shot(shotNumber: 1, totalShots: 2);
+      final shot2 = _shot(shotNumber: 2, totalShots: 2);
+      final s = _series([shot1, shot2]);
+      expect(s.latestShot, shot2);
+    });
+
+    test('throws on empty shots list', () {
+      expect(() => _series([]).latestShot, throwsStateError);
+    });
+  });
+
+  group('nextVaccinationDate', () {
+    test('returns nextVaccinationDate from latest shot', () {
+      final s = _series([
+        _shot(shotNumber: 1, totalShots: 2, vaccinationDate: Fixtures.thirtyDaysAgo),
+        _shot(
+          shotNumber: 2,
+          totalShots: 2,
+          vaccinationDate: Fixtures.yesterday,
+          nextVaccinationDate: Fixtures.inThirtyDays,
+        ),
+      ]);
+      expect(s.nextVaccinationDate, Fixtures.inThirtyDays);
+    });
+
+    test('returns null when latest shot has no nextVaccinationDate', () {
+      final s = _series([_shot(vaccinationDate: Fixtures.yesterday)]);
+      expect(s.nextVaccinationDate, isNull);
+    });
+  });
+
+  // ── seriesStatus additional edge cases ────────────────────────────────────
+  group('seriesStatus edge cases', () {
+    test(
+        'multi-shot complete: last shot has past nextVaccinationDate → complete '
+        '(overdue check only applies to single-shot series)', () {
+      // The overdue path in seriesStatus is guarded by `totalShots == 1`.
+      // A multi-shot series that is complete stays complete even if
+      // nextVaccinationDate on the last shot is in the past.
+      final s = _series([
+        _shot(shotNumber: 1, totalShots: 2, vaccinationDate: Fixtures.thirtyDaysAgo),
+        _shot(
+          shotNumber: 2,
+          totalShots: 2,
+          vaccinationDate: Fixtures.yesterday,
+          nextVaccinationDate: Fixtures.thirtyDaysAgo, // past — ignored
+        ),
+      ]);
+      expect(s.seriesStatus, VaccinationSeriesStatus.complete);
+    });
+
+    test(
+        'all shots have past dates but completedShots < totalShots '
+        '(totalShots mismatch) → inProgress guard', () {
+      // Shot 1 says totalShots=3 but only 2 shots exist with past dates.
+      // completedShots == 2 but totalShots == 3 → isComplete is false.
+      // All remaining shots have past dates → remainingShots is empty.
+      // The guard returns inProgress.
+      final s = _series([
+        _shot(shotNumber: 1, totalShots: 3, vaccinationDate: Fixtures.thirtyDaysAgo),
+        _shot(shotNumber: 2, totalShots: 3, vaccinationDate: Fixtures.yesterday),
+        // shot 3 is missing from the list — totalShots mismatch
+      ]);
+      // completedShots=2, totalShots=3 → isComplete=false
+      // remaining (future/null) = [] → guard triggers → inProgress
+      expect(s.seriesStatus, VaccinationSeriesStatus.inProgress);
+    });
+  });
 }

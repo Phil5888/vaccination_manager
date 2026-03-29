@@ -142,6 +142,24 @@ void main() {
           await containerB.read(vaccinationRemindersProvider.future);
       expect(remindersB.first.status, ReminderStatus.upToDate);
     });
+
+    test('returns empty list when active user is null', () async {
+      // When there is no active user, the viewmodel must return an empty list
+      // rather than crashing or returning all users' vaccinations.
+      fakeRepo.seedAll([Fixtures.singleShotPast(userId: 1)]);
+      final container = ProviderContainer(overrides: [
+        activeUserProvider
+            .overrideWith(() => FakeActiveUserNotifier(null)), // no user
+        vaccinationRepositoryProvider.overrideWith((_) => fakeRepo),
+        settingsRepositoryProvider
+            .overrideWith((_) => FakeSettingsRepository()),
+      ]);
+      addTearDown(container.dispose);
+
+      final reminders =
+          await container.read(vaccinationRemindersProvider.future);
+      expect(reminders, isEmpty);
+    });
   });
 
   group('filteredRemindersProvider', () {
@@ -178,6 +196,64 @@ void main() {
       filtered.whenData((list) {
         expect(list.length, 1);
         expect(list.first.series.name, 'Tetanus');
+      });
+    });
+
+    test('filter=dueSoon returns only dueSoon reminders', () async {
+      fakeRepo.seedAll([
+        // upToDate: complete, no next reminder
+        Fixtures.singleShotPast(name: 'Flu', userId: 1),
+        // dueSoon: planned shot within lead time
+        Fixtures.singleShotUnscheduled(name: 'MMR', userId: 1).copyWith(
+          vaccinationDate: Fixtures.today.add(const Duration(days: 5)),
+        ),
+        // overdue
+        Fixtures.singleShotComplete(
+          name: 'Tetanus',
+          userId: 1,
+          nextVaccinationDate: Fixtures.thirtyDaysAgo,
+        ),
+      ]);
+      final container = makeContainer(leadTimeDays: 30);
+      addTearDown(container.dispose);
+      await container.read(vaccinationRemindersProvider.future);
+
+      container
+          .read(scheduleFilterProvider.notifier)
+          .setFilter(ReminderFilter.dueSoon);
+      final filtered = container.read(filteredRemindersProvider);
+      filtered.whenData((list) {
+        expect(list.length, 1);
+        expect(list.first.series.name, 'MMR');
+      });
+    });
+
+    test('filter=upToDate returns only upToDate reminders', () async {
+      fakeRepo.seedAll([
+        // upToDate: complete, no next reminder
+        Fixtures.singleShotPast(name: 'Flu', userId: 1),
+        // dueSoon
+        Fixtures.singleShotUnscheduled(name: 'MMR', userId: 1).copyWith(
+          vaccinationDate: Fixtures.today.add(const Duration(days: 5)),
+        ),
+        // overdue
+        Fixtures.singleShotComplete(
+          name: 'Tetanus',
+          userId: 1,
+          nextVaccinationDate: Fixtures.thirtyDaysAgo,
+        ),
+      ]);
+      final container = makeContainer(leadTimeDays: 30);
+      addTearDown(container.dispose);
+      await container.read(vaccinationRemindersProvider.future);
+
+      container
+          .read(scheduleFilterProvider.notifier)
+          .setFilter(ReminderFilter.upToDate);
+      final filtered = container.read(filteredRemindersProvider);
+      filtered.whenData((list) {
+        expect(list.length, 1);
+        expect(list.first.series.name, 'Flu');
       });
     });
   });

@@ -123,5 +123,59 @@ void main() {
       final names = result.map((s) => s.name).toList();
       expect(names, ['Flu', 'MMR', 'Typhoid']);
     });
+
+    test('overrideUserId is applied to all produced series', () {
+      final entries = [
+        VaccinationEntryEntity(
+          userId: 5,
+          name: 'Flu',
+          shotNumber: 1,
+          totalShots: 1,
+          vaccinationDate: Fixtures.yesterday,
+        ),
+        VaccinationEntryEntity(
+          userId: 6, // different user
+          name: 'MMR',
+          shotNumber: 1,
+          totalShots: 1,
+          vaccinationDate: Fixtures.yesterday,
+        ),
+      ];
+      final result = useCase.fromEntries(entries, overrideUserId: 99);
+      expect(result, hasLength(2));
+      expect(result.every((s) => s.userId == 99), isTrue);
+    });
+
+    test('without overrideUserId uses each entry\'s own userId', () {
+      // Each series takes userId from its first (lowest shotNumber) entry.
+      final entries = [
+        VaccinationEntryEntity(
+          userId: 5,
+          name: 'Flu',
+          shotNumber: 1,
+          totalShots: 1,
+          vaccinationDate: Fixtures.yesterday,
+        ),
+      ];
+      final result = useCase.fromEntries(entries);
+      expect(result.first.userId, 5);
+    });
+
+    test('five-shot series groups all shots correctly', () {
+      final entries = List.generate(
+        5,
+        (i) => VaccinationEntryEntity(
+          userId: 1,
+          name: 'Multi',
+          shotNumber: i + 1,
+          totalShots: 5,
+          vaccinationDate: Fixtures.yesterday,
+        ),
+      );
+      final result = useCase.fromEntries(entries);
+      expect(result, hasLength(1));
+      expect(result.first.shots, hasLength(5));
+      expect(result.first.shots.map((s) => s.shotNumber).toList(), [1, 2, 3, 4, 5]);
+    });
   });
 }

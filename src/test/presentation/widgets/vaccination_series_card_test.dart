@@ -273,6 +273,20 @@ void main() {
         await tester.tap(find.byIcon(Icons.edit_outlined));
         expect(editCalled, isTrue);
       });
+
+      testWidgets('onDelete is called when delete button is tapped',
+          (tester) async {
+        var deleteCalled = false;
+        await tester.pumpWidget(buildTestApp(VaccinationSeriesCard(
+          series: _completeSeries(),
+          onEdit: () {},
+          onDelete: () => deleteCalled = true,
+        )));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byIcon(Icons.delete_outline));
+        expect(deleteCalled, isTrue);
+      });
     });
 
     group('no overflow at any screen size', () {

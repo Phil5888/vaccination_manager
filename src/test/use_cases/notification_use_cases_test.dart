@@ -349,6 +349,68 @@ void main() {
         expect(summaryLine, isNot(contains('Shot')));
       },
     );
+
+    // ── alarmMinutesBefore = 0 ───────────────────────────────────────────
+
+    test(
+      'alarmMinutesBefore=0 → TRIGGER:-PT0M (zero-minute alarm is valid RFC-5545)',
+      () {
+        final shot = _shot(id: 1, vaccinationDate: _in30Days);
+        final ics = useCase(shots: [shot], alarmMinutesBefore: 0);
+        expect(ics, contains('TRIGGER:-PT0M'));
+      },
+    );
+
+    // ── nextVaccinationDate fallback ─────────────────────────────────────
+
+    test(
+      'shot with null vaccinationDate but set nextVaccinationDate → included '
+      'in export using nextVaccinationDate as the event date',
+      () {
+        // A shot that has only a reminder date (no recorded date) must still
+        // appear in the exported calendar so the user sees the upcoming event.
+        final shot = _shot(
+          id: 1,
+          vaccinationDate: null,
+          nextVaccinationDate: _in30Days,
+        );
+        final ics = useCase(shots: [shot], alarmMinutesBefore: 30);
+        expect(ics, contains('BEGIN:VEVENT'));
+        expect(ics, contains('END:VEVENT'));
+      },
+    );
+
+    test(
+      'shot with both vaccinationDate and nextVaccinationDate null → skipped',
+      () {
+        final shot = _shot(
+          id: 1,
+          vaccinationDate: null,
+          nextVaccinationDate: null,
+        );
+        final ics = useCase(shots: [shot], alarmMinutesBefore: 30);
+        expect(ics, isNot(contains('BEGIN:VEVENT')));
+      },
+    );
+
+    // ── UID uniqueness ───────────────────────────────────────────────────
+
+    test(
+      'two shots in a series produce distinct UIDs',
+      () {
+        final shots = [
+          _shot(id: 1, shotNumber: 1, totalShots: 2, vaccinationDate: _yesterday),
+          _shot(id: 2, shotNumber: 2, totalShots: 2, vaccinationDate: _in30Days),
+        ];
+        final ics = useCase(shots: shots, alarmMinutesBefore: 30);
+
+        final uids = RegExp(r'UID:([^\r\n]+)')
+            .allMatches(ics)
+            .map((m) => m.group(1))
+            .toSet();
+        expect(uids.length, 2, reason: 'Each shot must have a unique UID');
+      },
+    );
   });
 
   // ---------------------------------------------------------------------------
