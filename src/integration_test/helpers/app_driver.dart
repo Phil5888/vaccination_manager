@@ -27,9 +27,26 @@ void initIntegrationTest() {
 Future<void> resetAndPumpApp(WidgetTester tester) async {
   await AppDatabase.resetForTesting();
   app.main();
-  // Give the app enough time to finish its initial async build (startup gate,
-  // provider initialisation, SQLite open).
-  await tester.pumpAndSettle(const Duration(seconds: 3));
+  // AppStartupGate shows a CircularProgressIndicator while it queries SQLite
+  // and then navigates via addPostFrameCallback — a continuous animation that
+  // prevents a plain pumpAndSettle from ever settling.  Instead, pump in small
+  // steps until the startup routing completes (WelcomeScreen for an empty DB,
+  // MainScreen if users already exist), then do a final settle for animations.
+  const maxWait = Duration(seconds: 15);
+  const step = Duration(milliseconds: 200);
+  var elapsed = Duration.zero;
+  while (elapsed < maxWait) {
+    await tester.pump(step);
+    elapsed += step;
+    if (find.byType(WelcomeScreen).evaluate().isNotEmpty ||
+        find.byType(MainScreen).evaluate().isNotEmpty) {
+      // Routing done — let any entrance animations finish.
+      await tester.pumpAndSettle(const Duration(seconds: 2));
+      return;
+    }
+  }
+  // Timeout: fall through and let the next assertion report the failure.
+  await tester.pump();
 }
 
 /// Create a user via the Welcome → Create Profile UI flow and land on

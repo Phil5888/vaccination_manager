@@ -170,8 +170,9 @@ void main() {
         // Add with 1 extra increment → shotCount = 2.
         await _addVaccination(tester, 'Hepatitis A', extraShots: 1);
 
-        // The series card progress label shows "X / 2".
-        expect(find.textContaining('/ 2'), findsWidgets,
+        // The series card progress label shows "Done X of 2"
+        // (from the progressDone ARB string: "Done {completed} of {total}").
+        expect(find.textContaining('of 2'), findsWidgets,
             reason:
                 'Records card must show 2 total shots for a 2-shot series');
         expect(find.text('Hepatitis A'), findsWidgets);
