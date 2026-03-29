@@ -29,7 +29,7 @@ Future<void> _saveVaccination(WidgetTester tester, String name) async {
   expect(find.byType(AddVaccinationScreen), findsOneWidget);
 
   await tester.enterText(
-    find.widgetWithText(TextField, 'Vaccine Name'),
+    find.byKey(const Key('vaccineNameField')),
     name,
   );
   await tester.pumpAndSettle();

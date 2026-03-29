@@ -38,7 +38,7 @@ Future<void> _addVaccination(WidgetTester tester, String name,
 
   // Enter vaccine name.
   await tester.enterText(
-    find.widgetWithText(TextField, 'Vaccine Name'),
+    find.byKey(const Key('vaccineNameField')),
     name,
   );
   await tester.pumpAndSettle();

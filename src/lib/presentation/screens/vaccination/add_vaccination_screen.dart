@@ -330,6 +330,7 @@ class _AddVaccinationScreenState extends ConsumerState<AddVaccinationScreen> {
                           textTheme: textTheme),
                       const SizedBox(height: 6),
                       TextField(
+                        key: const Key('vaccineNameField'),
                         controller: _nameController,
                         onChanged: (_) => setState(() => _nameError = null),
                         style: textTheme.bodyMedium

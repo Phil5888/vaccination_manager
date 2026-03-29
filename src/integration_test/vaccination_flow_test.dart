@@ -57,7 +57,7 @@ void main() {
         await tester.pumpAndSettle();
 
         // Enter vaccine name.
-        final nameField = find.widgetWithText(TextField, 'Vaccine Name');
+        final nameField = find.byKey(const Key('vaccineNameField'));
         expect(nameField, findsOneWidget,
             reason: 'Vaccine Name field must be present on AddVaccinationScreen');
         await tester.enterText(nameField, 'Influenza');
@@ -87,7 +87,7 @@ void main() {
           await tester.pumpAndSettle();
 
           await tester.enterText(
-            find.widgetWithText(TextField, 'Vaccine Name'),
+            find.byKey(const Key('vaccineNameField')),
             name,
           );
           await tester.pumpAndSettle();
@@ -111,7 +111,7 @@ void main() {
 
         // Type a name but do NOT save — pop via navigator instead.
         await tester.enterText(
-          find.widgetWithText(TextField, 'Vaccine Name'),
+          find.byKey(const Key('vaccineNameField')),
           'ShouldNotAppear',
         );
         await tester.pumpAndSettle();
