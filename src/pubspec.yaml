@@ -43,3 +43,24 @@ dev_dependencies:
 flutter:
     uses-material-design: true
     generate: true
+
+    assets:
+        - assets/fonts/
+
+    fonts:
+        - family: Manrope
+          fonts:
+              - asset: assets/fonts/Manrope-Regular.ttf
+                weight: 400
+              - asset: assets/fonts/Manrope-Medium.ttf
+                weight: 500
+              - asset: assets/fonts/Manrope-SemiBold.ttf
+                weight: 600
+              - asset: assets/fonts/Manrope-Bold.ttf
+                weight: 700
+        - family: Inter
+          fonts:
+              - asset: assets/fonts/Inter-Regular.ttf
+                weight: 400
+              - asset: assets/fonts/Inter-Medium.ttf
+                weight: 500
