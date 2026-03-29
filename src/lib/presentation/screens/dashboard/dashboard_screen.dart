@@ -203,31 +203,48 @@ class DashboardScreen extends ConsumerWidget {
                       ),
                       const SizedBox(width: 12),
 
-                      // App name + subtitle
+                      // App name + subtitle with logo mark
                       Expanded(
                         child: FittedBox(
                           fit: BoxFit.scaleDown,
                           alignment: Alignment.centerLeft,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                'VaccineCare',
-                                style: textTheme.titleMedium?.copyWith(
-                                  fontFamily: 'Manrope',
-                                  fontWeight: FontWeight.w900,
-                                  color: colorScheme.primary,
+                              // Mini logo mark
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(7),
+                                child: Image.asset(
+                                  Theme.of(context).brightness == Brightness.dark
+                                      ? 'assets/app_icons/generated/icon_dark.png'
+                                      : 'assets/app_icons/generated/icon_light.png',
+                                  width: 28,
+                                  height: 28,
                                 ),
                               ),
-                              Text(
-                                'PERSONAL PROFILE',
-                                style: textTheme.labelSmall?.copyWith(
-                                  color: colorScheme.primary,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: 1.5,
-                                  fontSize: 9,
-                                ),
+                              const SizedBox(width: 8),
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'VaccineCare',
+                                    style: textTheme.titleMedium?.copyWith(
+                                      fontFamily: 'Manrope',
+                                      fontWeight: FontWeight.w900,
+                                      color: colorScheme.primary,
+                                    ),
+                                  ),
+                                  Text(
+                                    'PERSONAL PROFILE',
+                                    style: textTheme.labelSmall?.copyWith(
+                                      color: colorScheme.primary,
+                                      fontWeight: FontWeight.w700,
+                                      letterSpacing: 1.5,
+                                      fontSize: 9,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),

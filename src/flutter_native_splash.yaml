@@ -1,0 +1,27 @@
+flutter_native_splash:
+  # ── Light mode ────────────────────────────────────────────────────────────
+  # Brand blue background, white logo mark centred
+  color: "#00478D"
+  image: assets/app_icons/generated/logo_foreground_light.png
+
+  # ── Dark mode ─────────────────────────────────────────────────────────────
+  # Vitalis Midnight background, dark-blue logo mark centred
+  color_dark: "#060E20"
+  image_dark: assets/app_icons/generated/logo_foreground_dark.png
+
+  # ── Platform options ──────────────────────────────────────────────────────
+  # Android 12+ splash screen: no branding text, just the icon
+  android_12:
+    color: "#00478D"
+    image: assets/app_icons/generated/logo_foreground_light.png
+    color_dark: "#060E20"
+    image_dark: assets/app_icons/generated/logo_foreground_dark.png
+    # Icon background for the circular splash icon on Android 12+
+    icon_background_color: "#00478D"
+    icon_background_color_dark: "#060E20"
+
+  # Keep the splash visible until Flutter is fully loaded
+  # (prevents white flash before first frame)
+  android_gravity: center
+  ios_content_mode: center
+  web: false

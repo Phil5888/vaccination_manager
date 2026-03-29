@@ -20,33 +20,31 @@ class WelcomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const Spacer(flex: 2),
-              // App icon / logo placeholder
+              // App icon — uses the real brand icon matching what the user
+              // sees on their home screen. Light/dark variant auto-selected.
               Center(
                 child: Container(
-                  width: 96,
-                  height: 96,
+                  width: 110,
+                  height: 110,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [
-                        colorScheme.primary,
-                        colorScheme.primaryContainer,
-                      ],
-                    ),
                     borderRadius: BorderRadius.circular(28),
                     boxShadow: [
                       BoxShadow(
-                        color: colorScheme.primary.withValues(alpha: 0.25),
-                        blurRadius: 24,
-                        offset: const Offset(0, 8),
+                        color: colorScheme.primary.withValues(alpha: 0.30),
+                        blurRadius: 32,
+                        offset: const Offset(0, 10),
                       ),
                     ],
                   ),
-                  child: Icon(
-                    Icons.vaccines_rounded,
-                    size: 48,
-                    color: colorScheme.onPrimary,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(28),
+                    child: Image.asset(
+                      Theme.of(context).brightness == Brightness.dark
+                          ? 'assets/app_icons/generated/icon_dark.png'
+                          : 'assets/app_icons/generated/icon_light.png',
+                      width: 110,
+                      height: 110,
+                    ),
                   ),
                 ),
               ),

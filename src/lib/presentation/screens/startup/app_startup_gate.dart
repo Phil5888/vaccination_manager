@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:vaccination_manager/core/constants/routes.dart';
 import 'package:vaccination_manager/presentation/providers/user_providers.dart';
@@ -15,15 +16,19 @@ class AppStartupGate extends ConsumerWidget {
       loading: () => const Scaffold(
         body: Center(child: CircularProgressIndicator()),
       ),
-      error: (err, _) => Scaffold(
-        body: Center(child: Text('Error: $err')),
-      ),
+      error: (err, _) {
+        FlutterNativeSplash.remove();
+        return Scaffold(
+          body: Center(child: Text('Error: $err')),
+        );
+      },
       data: (users) {
         if (users.isEmpty) {
           // Use addPostFrameCallback so we don't navigate during build.
           // This gate is only mounted at app startup — once we navigate away,
           // this widget is removed from the tree and will never re-fire.
           WidgetsBinding.instance.addPostFrameCallback((_) {
+            FlutterNativeSplash.remove();
             if (context.mounted) {
               Navigator.of(context).pushReplacementNamed(Routes.welcome);
             }
@@ -32,8 +37,8 @@ class AppStartupGate extends ConsumerWidget {
             body: Center(child: CircularProgressIndicator()),
           );
         }
-        // Users exist — go straight to the shell. Never navigated back to here
-        // after profile creation (CreateProfileScreen pushes MainScreen directly).
+        // Users exist — dismiss splash and go straight to the shell.
+        FlutterNativeSplash.remove();
         return const MainScreen();
       },
     );

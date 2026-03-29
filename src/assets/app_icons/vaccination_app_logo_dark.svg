@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Logo mark only — no background. Dark-blue artwork on transparent.
+     Used for: splash screen foreground in dark mode, in-app logo on light surfaces. -->
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <title>VaccineCare logo mark</title>
+
+  <!-- Shield -->
+  <path d="M512 240
+           C596 240 673 261 736 300
+           V467
+           C736 649 621 776 512 832
+           C403 776 288 649 288 467
+           V300
+           C351 261 428 240 512 240Z"
+        fill="#002A5C"/>
+
+  <!-- Syringe -->
+  <g transform="rotate(-35 512 512)">
+    <rect x="408" y="452" width="208" height="88" rx="28" fill="#002A5C"/>
+    <rect x="350" y="484" width="58" height="24" rx="12" fill="#002A5C"/>
+    <rect x="320" y="468" width="22" height="56" rx="11" fill="#002A5C"/>
+    <rect x="304" y="444" width="14" height="104" rx="7" fill="#002A5C"/>
+    <rect x="612" y="478" width="44" height="36" rx="14" fill="#002A5C"/>
+    <path d="M656 496 H748" stroke="#002A5C" stroke-width="16" stroke-linecap="round"/>
+    <rect x="452" y="468" width="12" height="56" rx="6" fill="#85ADFF" opacity="0.5"/>
+    <rect x="495" y="468" width="12" height="56" rx="6" fill="#85ADFF" opacity="0.5"/>
+    <rect x="538" y="468" width="12" height="56" rx="6" fill="#85ADFF" opacity="0.5"/>
+  </g>
+</svg>
